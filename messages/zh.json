@@ -18,5 +18,9 @@
     "mae-on": "湄安",
     "mae-ai": "湄艾",
     "san-kamphaeng": "讪甘烹"
+  },
+  "MapUI": { 
+    "quick_select": "快速选择", 
+    "district_label": "行政区"
   }
 }
