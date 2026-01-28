@@ -22,5 +22,9 @@
   "MapUI": { 
     "quick_select": "快速选择", 
     "district_label": "行政区"
+  },
+
+  "Home": {
+    "EXCLUSIVE_COLLECTION": "獨家系列"
   }
 }

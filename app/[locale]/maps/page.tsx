@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { motion, AnimatePresence, Variants } from 'framer-motion'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl' // 1. Import Hook สำหรับแปลภาษา
-import { districts } from '@/app/src/data/chiangmai-districts'
+import { districts } from '@/src/data/chiangmai-districts'
 
 // --- Animation Variants ---
 const containerVariants: Variants = {

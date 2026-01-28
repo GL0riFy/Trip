@@ -25,9 +25,9 @@ export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const [isClient, setIsClient] = useState(false)
-  const [logoSrc, setLogoSrc] = useState<string>('')
+  const [logoSrc, setLogoSrc] = useState<string>('/Logo/Logo.png')
   const [isLangOpen, setIsLangOpen] = useState(false)
-  
+
   const [isMobile, setIsMobile] = useState(false)
 
   const navigationLinks = [
@@ -107,7 +107,7 @@ export default function Navigation() {
           <div className="flex items-center flex-shrink-0">
             <Link href="/" className="flex items-center" onClick={() => setIsMenuOpen(false)}>
               {logoSrc ? (
-                <Image src={logoSrc} alt="logo" width={40} height={40} className="object-contain drop-shadow-sm" />
+                <Image src={logoSrc} alt="logo" width={100} height={100} className="object-contain drop-shadow-sm" />
               ) : (
                 <div className="bg-blue-600 h-8 w-24 flex items-center justify-center rounded shadow-sm">
                   <span className="text-white font-bold text-xs">LOGO</span>

@@ -24,5 +24,9 @@
   "MapUI": {
     "quick_select": "Quick Select",
     "district_label": "District"
+  },
+
+  "Home": {
+    "EXCLUSIVE_COLLECTION": "EXCLUSIVE COLLECTION"
   }
 }
