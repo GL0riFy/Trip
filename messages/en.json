@@ -27,6 +27,8 @@
   },
 
   "Home": {
-    "EXCLUSIVE_COLLECTION": "EXCLUSIVE COLLECTION"
+    "EXCLUSIVE_COLLECTION": "EXCLUSIVE COLLECTION",
+    "ESSENTIAL": "Essential Tools",
+    "ESSENTIAL_TOOLS": "Essential tools you should know (Map, SOS, Money)"
   }
 }

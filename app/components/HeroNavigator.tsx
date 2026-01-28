@@ -4,10 +4,14 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
+import { useTranslations, useLocale } from 'next-intl';
 
 export default function ChiangMaiHero() {
   const pathname = usePathname();
   const router = useRouter();
+  const locale = useLocale();
+  const t = useTranslations('Home');
+
 
   const setLanguage = (lang: 'en' | 'zh') => {
     // เปลี่ยน locale ใน pathname
@@ -94,8 +98,11 @@ export default function ChiangMaiHero() {
               >
                 <span className="text-2xl">🧰</span>
                 <div className="flex flex-col items-start">
-                  <span className="text-lg font-semibold tracking-wide">Essential Tools</span>
-                  <span className="text-xs text-white/70">เครื่องมือสำคัญที่ต้องรู้ (Map, SOS, Money)</span>
+                  <span className="text-lg font-semibold tracking-wide">{t('ESSENTIAL')}</span>
+                  <span className="text-xs text-white/70">{t('ESSENTIAL_TOOLS')}
+                  
+                  
+                  </span>
                 </div>
                 <span className="ml-auto text-white/50">➔</span>
               </motion.button>

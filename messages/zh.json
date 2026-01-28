@@ -25,6 +25,8 @@
   },
 
   "Home": {
-    "EXCLUSIVE_COLLECTION": "獨家系列"
+    "EXCLUSIVE_COLLECTION": "獨家系列",
+    "ESSENTIAL":"必备工具",
+    "ESSENTIAL_TOOLS":"必须了解的重要工具（地图、SOS、金钱）"
   }
 }
