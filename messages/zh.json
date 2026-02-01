@@ -28,5 +28,22 @@
     "EXCLUSIVE_COLLECTION": "獨家系列",
     "ESSENTIAL":"必备工具",
     "ESSENTIAL_TOOLS":"必须了解的重要工具（地图、SOS、金钱）"
+  },
+  "essentials": {
+    "emergency": {
+      "title": "紧急",
+      "subtitle": "求助热线与安全",
+      "desc": "警方、救护车、消防部门。24/7 支援。"
+    },
+    "currency": {
+      "title": "货币",
+      "subtitle": "兑换与汇率",
+      "desc": "在 Super Rich 与本地银行查询最佳汇率。"
+    },
+    "apps": {
+      "title": "必备应用",
+      "subtitle": "旅行者必备",
+      "desc": "Grab、Google 地图、翻译工具。"
+    }
   }
 }

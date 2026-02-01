@@ -76,7 +76,6 @@ export default function FeaturedProducts() {
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            // เพิ่ม items-center เพื่อจัดตำแหน่งแนวแกน Y
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 items-center"
           >
             {featuredProducts.map((product, index) => {
@@ -97,7 +96,7 @@ export default function FeaturedProducts() {
                     custom={index} // ส่ง index ไปให้ variant เพื่อทำ delay
                     // Requirement 1: เปลี่ยน h-64 เป็น aspect-[3/4] เพื่อให้รูปใหญ่และเป็นแนวตั้ง
                     // เพิ่ม rounded-2xl และ shadow เพื่อความสวยงาม
-                    className="relative w-full aspect-[3/4]"
+                    className="relative w-full aspect-3/4"
                   >
                     <motion.img
                       src={product.image}
@@ -107,7 +106,7 @@ export default function FeaturedProducts() {
                       transition={{ duration: 0.5 }}
                     />
                     {/* Optional: เงาบางๆ ทับรูปเพื่อให้ดูไม่ลอยจากพื้นหลังเกินไป */}
-                    <div className="absolute inset-0 bg-black/5 pointer-events-none" />
+                    <div className="absolute inset-0 pointer-events-none" />
                   </motion.div>
                 </motion.div>
               );

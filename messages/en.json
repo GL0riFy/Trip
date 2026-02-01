@@ -30,5 +30,23 @@
     "EXCLUSIVE_COLLECTION": "EXCLUSIVE COLLECTION",
     "ESSENTIAL": "Essential Tools",
     "ESSENTIAL_TOOLS": "Essential tools you should know (Map, SOS, Money)"
+  },
+
+  "essentials": {
+    "emergency": {
+      "title": "EMERGENCY",
+      "subtitle": "HELPLINES & SAFETY",
+      "desc": "Police, Ambulance, Fire Dept. 24/7 Support."
+    },
+    "currency": {
+      "title": "CURRENCY",
+      "subtitle": "EXCHANGE & RATES",
+      "desc": "Find best rates at Super Rich & Local Banks."
+    },
+    "apps": {
+      "title": "ESSENTIAL APPS",
+      "subtitle": "FOR TRAVELERS",
+      "desc": "Grab, Google Maps, Translation tools."
+    }
   }
 }

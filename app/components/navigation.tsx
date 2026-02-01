@@ -1,5 +1,5 @@
 'use client'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -19,6 +19,7 @@ type HomeItem = {
 
 export default function Navigation() {
   const t = useTranslations('Nav')
+  const locale = useLocale()
   const pathname = usePathname()
 
   const [, setHome] = useState<HomeItem[]>([])
@@ -37,7 +38,8 @@ export default function Navigation() {
   ]
 
   const locales = [
-    { code: 'en', label: 'English' },
+    // เวลาอยู่ภาษาจีน แสดงแบบ 2 ภาษาเพื่อให้หาทางกลับได้ง่าย
+    { code: 'en', label: locale === 'zh' ? 'English' : 'English' },
     { code: 'zh', label: '中文' }
   ]
 
@@ -104,7 +106,7 @@ export default function Navigation() {
         <div className="relative w-full px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between shrink-0">
 
           {/* LEFT : LOGO */}
-          <div className="flex items-center flex-shrink-0">
+          <div className="flex items-center shrink-0">
             <Link href="/" className="flex items-center" onClick={() => setIsMenuOpen(false)}>
               {logoSrc ? (
                 <Image src={logoSrc} alt="logo" width={100} height={100} className="object-contain drop-shadow-sm" />
@@ -142,7 +144,7 @@ export default function Navigation() {
               // เพิ่ม text-shadow
               className="flex items-center gap-1 text-white font-semibold hover:text-blue-400 text-sm drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)]"
             >
-              <span>{locales.find(l => pathname.includes(l.code))?.label || 'Language'}</span>
+              <span>{locales.find(l => l.code === locale)?.label || 'Language'}</span>
               <svg className={`w-4 h-4 transition-transform ${isLangOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
               </svg>
@@ -225,7 +227,7 @@ export default function Navigation() {
                       href={switchLocale(l.code)}
                       onClick={() => setIsMenuOpen(false)}
                       className={`text-center py-2 rounded-lg text-sm font-medium transition border shadow-sm ${
-                         pathname.includes(`/${l.code}`) 
+                         locale === l.code
                          // ปรับสีปุ่มที่เลือกให้ดูใสๆ
                          ? 'bg-white/20 border-white/40 text-white' 
                          : 'border-white/10 text-white hover:bg-white/10'

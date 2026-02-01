@@ -24,7 +24,7 @@ const Footer = () => {
       initial={{ opacity: 0, y: 40 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: 'easeOut' }}
-      className="mt-auto w-full border-t bg-white dark:bg-slate-950 dark:border-slate-800 transition-colors"
+      className="mt-auto w-full border-t bg-slate-950 border-slate-800 transition-colors"
     >
       <div className="max-w-7xl mx-auto px-4 py-6 md:flex md:items-center md:justify-between">
 
