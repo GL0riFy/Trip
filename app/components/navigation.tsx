@@ -13,11 +13,16 @@ const kanit = Kanit({
   display: 'swap'
 })
 
+type HomeItem = {
+  logo: string | null
+}
+
 export default function Navigation() {
   const t = useTranslations('Nav')
   const locale = useLocale()
   const pathname = usePathname()
 
+  const [, setHome] = useState<HomeItem[]>([])
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const [isClient, setIsClient] = useState(false)
@@ -43,12 +48,9 @@ export default function Navigation() {
     pathname.replace(/^\/(en|zh)/, `/${locale}`)
 
   useEffect(() => {
-    // ใช้ requestAnimationFrame เพื่อให้ setState ทำงานในรอบถัดไป เลี่ยง cascading render warning
-    requestAnimationFrame(() => {
-      setIsClient(true)
-      const cached = localStorage.getItem('navbar_logo_src')
-      if (cached) setLogoSrc(cached)
-    })
+    setIsClient(true)
+    const cached = localStorage.getItem('navbar_logo_src')
+    if (cached) setLogoSrc(cached)
     
     const handleResize = () => setIsMobile(window.innerWidth < 768)
     handleResize()
@@ -58,15 +60,15 @@ export default function Navigation() {
 
   useEffect(() => {
     if (!isClient) return
-    const onScroll = () => {
-      const scrolled = window.scrollY > 50
-      setIsScrolled(scrolled)
-      if (scrolled) setIsMenuOpen(false)
-    }
+    const onScroll = () => setIsScrolled(window.scrollY > 50)
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [isClient])
+
+  useEffect(() => {
+    if (isScrolled) setIsMenuOpen(false)
+  }, [isScrolled])
 
   if (!isClient) return null
 
@@ -105,7 +107,7 @@ export default function Navigation() {
         <div className="relative w-full px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between shrink-0">
 
           {/* LEFT : LOGO */}
-          <div className="flex items-center shrink-0 gap-2">
+          <div className="flex items-center shrink-0">
             <Link href={`/${locale}`} className="flex items-center" onClick={() => setIsMenuOpen(false)}>
               {logoSrc ? (
                 <Image src={logoSrc} alt="logo" width={100} height={100} className="object-contain drop-shadow-sm" />
