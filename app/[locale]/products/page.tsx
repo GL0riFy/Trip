@@ -51,7 +51,7 @@ export default function RefactoredProductShowcase() {
     }).format(price / 100);
   };
 
-  const allDistricts = Array.from(new Set(products.map((product) => product.district))).sort();
+  const allDistricts = Array.from(new Set(products.map((product) => product.district).filter((d): d is string => Boolean(d)))).sort();
 
   let filteredProducts = products;
   if (selectedDistrict !== "all") {
@@ -64,8 +64,8 @@ export default function RefactoredProductShowcase() {
     filteredProducts = [...filteredProducts].sort((a, b) => b.price - a.price);
   }
 
-  const phoneHref = selectedProduct ? `tel:${selectedProduct.phone.replace(/\s+/g, "")}` : "#";
-  const mapHref = selectedProduct
+  const phoneHref = selectedProduct?.phone ? `tel:${selectedProduct.phone.replace(/\s+/g, "")}` : "#";
+  const mapHref = selectedProduct?.address
     ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selectedProduct.address)}`
     : "#";
 
@@ -210,9 +210,8 @@ export default function RefactoredProductShowcase() {
                   className="h-64 w-full object-cover"
                 />
                 <div
-                  className={`absolute inset-0 bg-gradient-to-t from-black/65 via-black/0 transition-opacity ${
-                    hoveredProduct === product.id ? "opacity-100" : "opacity-0"
-                  }`}
+                  className={`absolute inset-0 bg-gradient-to-t from-black/65 via-black/0 transition-opacity ${hoveredProduct === product.id ? "opacity-100" : "opacity-0"
+                    }`}
                 />
               </div>
 
