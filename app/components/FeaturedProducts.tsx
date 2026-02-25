@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { products } from "../../src/data/products";
 import { motion, Variants } from "framer-motion";
 import { useTranslations, useLocale } from 'next-intl';
@@ -39,17 +38,12 @@ const jiggleVariants: Variants = {
 export default function FeaturedProducts() {
   const locale = useLocale();
   const t = useTranslations('Home');
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, [locale]);
 
   const featuredProducts = products.filter(product => product.tag === "star").slice(0, 3);
 
   return (
     <div className="pb-30 bg-transparent">
-      {featuredProducts.length > 0 && mounted && (
+      {featuredProducts.length > 0 && (
         // เพิ่ม padding-y ให้มากขึ้น (py-24) เพื่อรองรับการขยับขึ้นของรูปตรงกลาง
         <section key={locale} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 bg-transparent">
           {/* Decorative Header */}

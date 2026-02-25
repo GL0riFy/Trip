@@ -4,7 +4,6 @@ import { motion } from "framer-motion"
 import { Kanit } from 'next/font/google'
 import Image from "next/image"
 import { useLocale } from "next-intl"
-import { useEffect, useState } from "react"
 
 // ✅ Import ข้อมูลดิบเข้ามา (ตอนนี้ export แล้ว จะไม่มี error)
 import { appCategories } from "@/src/data/essentials"
@@ -30,11 +29,6 @@ const itemVariants = {
 
 export default function AppsPage() {
   const locale = useLocale()
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, [locale]);
 
   // ✅ Logic ภาษา
   const isEn = locale === 'en';
@@ -90,12 +84,10 @@ export default function AppsPage() {
                         {/* Apps Grid */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                             {category.apps.map((app, appIdx) => {
-                                // Logic เลือกภาษาของ App (ถ้ามี any error ให้ใส่ type หรือปล่อยผ่านถ้า config ไม่เคร่ง)
-                                // ใช้ (app as any) เพื่อเลี่ยง error ในกรณีที่ TS ตรวจ property ไม่เจอ
-                                const appAny = app as any; 
-                                const appName = isEn ? app.name : (appAny.nameCn || app.name);
-                                const appDesc = isEn ? app.desc : (appAny.descCn || app.desc);
-                                const appTag = isEn ? app.tag : (appAny.tagCn || app.tag);
+                                // Logic เลือกภาษาของ App
+                                const appName = isEn ? app.name : (app.nameCn || app.name);
+                                const appDesc = isEn ? app.desc : (app.descCn || app.desc);
+                                const appTag = isEn ? app.tag : (app.tagCn || app.tag);
 
                                 return (
                                     <motion.div

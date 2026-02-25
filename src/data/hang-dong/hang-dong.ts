@@ -135,3 +135,87 @@ export const HangDongTrip = [
     }
   }
 ];
+
+export const HangDongOTOP = [
+  {
+    id: "Wood-Carving-Crafts",
+    title: {
+      en: "Hand-carved Wood Crafts",
+      zh: "手工木雕工艺品"
+    },
+    price: {
+      en: "200 - 2000 THB",
+      zh: "200 - 2000 泰铢"
+    },
+    hours: {
+      en: "Daily 09:00 - 18:00",
+      zh: "每天 09:00 - 18:00"
+    },
+    detail: {
+      en: "Exquisite wood carvings and wooden furniture crafted by skilled artisans in Ban Tawai. Including home decorations, statues, and decorative pieces made from various wood types.",
+      zh: "由班塔外熟练工匠精心雕刻的精美木工艺品和家具。包括各种木材制成的家居装饰品、雕像和装饰品。"
+    },
+    detail_more: {
+      location: "Ban Tawai Woodcarving Village, Khun Khong Subdistrict",
+      lat: 18.6846473,
+      lng: 98.9502479,
+      img: "ImgTrip/hang-dong/Ban-Tawai-Wood-Carving.jpg",
+      video: "",
+      credit: ""
+    }
+  },
+  {
+    id: "Lacquerware-Pottery",
+    title: {
+      en: "Lacquerware & Traditional Pottery",
+      zh: "漆器和传统陶器"
+    },
+    price: {
+      en: "150 - 1500 THB",
+      zh: "150 - 1500 泰铢"
+    },
+    hours: {
+      en: "Daily 09:00 - 18:00",
+      zh: "每天 09:00 - 18:00"
+    },
+    detail: {
+      en: "Beautiful lacquerware and hand-thrown pottery produced by local artisans. Traditional patterns and techniques passed down through generations. Perfect for home decoration.",
+      zh: "由当地工匠制作的精美漆器和手工陶器。传统图案和代代相传的工艺技法。是家居装饰的完美选择。"
+    },
+    detail_more: {
+      location: "Lacquerware workshops, Hang Dong District",
+      lat: 18.6900000,
+      lng: 98.8900000,
+      img: "ImgTrip/hang-dong/Ban-Tawai-Wood-Carving.jpg",
+      video: "",
+      credit: ""
+    }
+  },
+  {
+    id: "Local-Snacks-Souvenirs",
+    title: {
+      en: "Local Snacks & Preserved Foods",
+      zh: "本地零食和腌制食品"
+    },
+    price: {
+      en: "50 - 300 THB",
+      zh: "50 - 300 泰铢"
+    },
+    hours: {
+      en: "Daily 08:00 - 17:00",
+      zh: "每天 08:00 - 17:00"
+    },
+    detail: {
+      en: "Traditional snacks and preserved foods from Hang Dong including dried fruits, roasted nuts, and local confectionery. All made using traditional methods.",
+      zh: "来自杭东的传统零食和腌制食品，包括干果、烤坚果和本地糖果。均采用传统方法制作。"
+    },
+    detail_more: {
+      location: "Local markets, Hang Dong District",
+      lat: 18.6950000,
+      lng: 98.8800000,
+      img: "ImgTrip/hang-dong/grand-canyon-water-park.jpg",
+      video: "",
+      credit: ""
+    }
+  }
+];

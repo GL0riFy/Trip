@@ -4,7 +4,6 @@ import { motion } from "framer-motion"
 import { Kanit } from 'next/font/google'
 import { PhoneCall } from "lucide-react"
 import { useLocale } from "next-intl"
-import { useEffect, useState } from "react"
 
 // Import Data จากไฟล์กลาง
 import { emergencyContacts } from "@/src/data/essentials"
@@ -40,11 +39,6 @@ const cardVariants = {
 export default function EmergencyPage() {
   // 1. ย้าย Hooks เข้ามาข้างใน Function Component
   const locale = useLocale();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, [locale]);
 
   // 2. กำหนด Logic ภาษา
   const isEn = locale === 'en';

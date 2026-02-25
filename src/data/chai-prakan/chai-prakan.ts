@@ -108,3 +108,87 @@ export const ChaiPrakanTrips = [
     }
   }
 ];
+
+export const ChaiPrakanOTOP = [
+  {
+    id: "Date-Palm-Products",
+    title: {
+      en: "Date Palm Products",
+      zh: "椰枣制品"
+    },
+    price: {
+      en: "50 - 300 THB",
+      zh: "50 - 300 泰铢"
+    },
+    hours: {
+      en: "Daily 08:00 - 17:00",
+      zh: "每天 08:00 - 17:00"
+    },
+    detail: {
+      en: "Fresh date palm fruits, dried dates, date syrup, and date jam - natural and healthy OTOP products from Chai Prakan. Perfect souvenirs with authentic local flavors.",
+      zh: "新鲜椰枣、干枣、椰枣糖浆和椰枣果酱 - 来自柴帕拉干的天然健康 OTOP 产品。完美的纪念品，具有正宗的本地风味。"
+    },
+    detail_more: {
+      location: "Chai Prakan OTOP Center, Sri Dong Yen Subdistrict",
+      lat: 19.6526634,
+      lng: 99.1406334,
+      img: "ImgTrip/chai-prakan/Ko-Lak-Date-Palm.jpg",
+      video: "",
+      credit: ""
+    }
+  },
+  {
+    id: "Local-Honey",
+    title: {
+      en: "Local Honey & Bee Products",
+      zh: "本地蜂蜜和蜂产品"
+    },
+    price: {
+      en: "100 - 400 THB",
+      zh: "100 - 400 泰铢"
+    },
+    hours: {
+      en: "Daily 08:00 - 17:00",
+      zh: "每天 08:00 - 17:00"
+    },
+    detail: {
+      en: "Pure wildflower honey and bee-related products including pollen and propolis. Harvested from local beekeepers in the Chai Prakan area, known for high quality and therapeutic benefits.",
+      zh: "纯天然野花蜂蜜和蜂产品，包括花粉和蜂胶。由柴帕拉干地区的当地养蜂人采集，以高质量和治疗功效而闻名。"
+    },
+    detail_more: {
+      location: "Local beekeeping farms, Sri Dong Yen Subdistrict",
+      lat: 19.6600000,
+      lng: 99.1350000,
+      img: "ImgTrip/chai-prakan/Ko-Lak-Date-Palm.jpg",
+      video: "",
+      credit: ""
+    }
+  },
+  {
+    id: "Dried-Herbs-Tea",
+    title: {
+      en: "Dried Herbs & Herbal Tea",
+      zh: "干草药和草药茶"
+    },
+    price: {
+      en: "80 - 250 THB",
+      zh: "80 - 250 泰铢"
+    },
+    hours: {
+      en: "Daily 08:00 - 17:00",
+      zh: "每天 08:00 - 17:00"
+    },
+    detail: {
+      en: "Selection of dried medicinal herbs and herbal tea blends collected from the forest. Traditional remedies used for wellness and health, carefully dried and packaged.",
+      zh: "从森林中采集的干药材和草药茶混合液精选。用于健康和保健的传统疗法，经过精心干燥和包装。"
+    },
+    detail_more: {
+      location: "Forest herb collection centers, Chai Prakan District",
+      lat: 19.6550000,
+      lng: 99.1400000,
+      img: "ImgTrip/chai-prakan/Ko-Lak-Date-Palm.jpg",
+      video: "",
+      credit: ""
+    }
+  }
+];

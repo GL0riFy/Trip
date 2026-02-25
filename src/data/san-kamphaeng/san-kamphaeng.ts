@@ -108,3 +108,114 @@ export const SanKamphaengTrip = [
     }
   }
 ];
+
+export const SanKamphaengOTOP = [
+  {
+    id: "Ceramic-Pottery",
+    title: {
+      en: "Handcrafted Ceramics & Pottery",
+      zh: "手工陶瓷和陶器"
+    },
+    price: {
+      en: "100 - 1500 THB",
+      zh: "100 - 1500 泰铢"
+    },
+    hours: {
+      en: "Daily 09:00 - 18:00",
+      zh: "每天 09:00 - 18:00"
+    },
+    detail: {
+      en: "Beautiful hand-thrown pottery and ceramic products from San Kamphaeng's famous pottery community. Includes bowls, vases, decorative items, and tableware with traditional designs.",
+      zh: "来自三甘佩陶艺社区的精美手工陶制品和陶瓷。包括碗、花瓶、装饰品和具有传统设计的餐具。"
+    },
+    detail_more: {
+      location: "Ceramic pottery centers, San Kamphaeng District",
+      lat: 18.7300000,
+      lng: 99.1900000,
+      img: "ImgTrip/san-kamphaeng/Dutch-Farm-Miniature-Horse-Farm.jpg",
+      video: "",
+      credit: ""
+    }
+  },
+  {
+    id: "Umbrella-Painting",
+    title: {
+      en: "Hand-painted Umbrellas & Parasols",
+      zh: "手绘雨伞和遮阳伞"
+    },
+    price: {
+      en: "150 - 600 THB",
+      zh: "150 - 600 泰铢"
+    },
+    hours: {
+      en: "Daily 09:00 - 18:00",
+      zh: "每天 09:00 - 18:00"
+    },
+    detail: {
+      en: "Traditional hand-painted Lanna-style umbrellas made from bamboo and handmade paper. Featuring intricate designs and vibrant colors. A unique Chiang Mai souvenir.",
+      zh: "由竹子和手工纸制成的传统手工绘制兰纳风格雨伞。具有复杂的设计和鲜艳的色彩。独特的清迈纪念品。"
+    },
+    detail_more: {
+      location: "Umbrella painting workshops, San Kamphaeng",
+      lat: 18.7350000,
+      lng: 99.1950000,
+      img: "ImgTrip/san-kamphaeng/Dutch-Farm-Miniature-Horse-Farm.jpg",
+      video: "",
+      credit: ""
+    }
+  },
+  {
+    id: "Thai-Silk-San-Kamphaeng",
+    title: {
+      en: "Traditional Thai Silk Fabric",
+      zh: "传统泰国丝绸织物"
+    },
+    price: {
+      en: "250 - 1200 THB",
+      zh: "250 - 1200 泰铢"
+    },
+    hours: {
+      en: "Daily 09:00 - 18:00",
+      zh: "每天 09:00 - 18:00"
+    },
+    detail: {
+      en: "Premium hand-woven Thai silk from San Kamphaeng silk weaving centers. Made with natural dyes and traditional looms. Includes silk fabric, scarves, and ready-made garments.",
+      zh: "来自三甘佩丝绸编织中心的优质手工织泰国丝绸。使用天然染料和传统织布机制作。包括丝绸布料、围巾和成品服装。"
+    },
+    detail_more: {
+      location: "Silk weaving factories, San Kamphaeng District",
+      lat: 18.7400000,
+      lng: 99.2000000,
+      img: "ImgTrip/san-kamphaeng/Dutch-Farm-Miniature-Horse-Farm.jpg",
+      video: "",
+      credit: ""
+    }
+  },
+  {
+    id: "Lacquerware-Crafts",
+    title: {
+      en: "Lacquerware & Black Lacquer Items",
+      zh: "漆器和黑漆制品"
+    },
+    price: {
+      en: "100 - 2000 THB",
+      zh: "100 - 2000 泰铢"
+    },
+    hours: {
+      en: "Daily 09:00 - 18:00",
+      zh: "每天 09:00 - 18:00"
+    },
+    detail: {
+      en: "Traditional lacquerware including bowls, trays, boxes, and furniture with intricate inlay work. Produced using time-honored techniques creating beautiful glossy finishes.",
+      zh: "传统漆器，包括碗、托盘、盒子和具有复杂镶嵌工作的家具。使用传统技法生产，创造美丽的光泽表面。"
+    },
+    detail_more: {
+      location: "Lacquerware workshops, San Kamphaeng",
+      lat: 18.7250000,
+      lng: 99.1850000,
+      img: "ImgTrip/san-kamphaeng/Dutch-Farm-Miniature-Horse-Farm.jpg",
+      video: "",
+      credit: ""
+    }
+  }
+];

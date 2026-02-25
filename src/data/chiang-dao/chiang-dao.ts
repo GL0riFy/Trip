@@ -135,3 +135,87 @@ export const ChiangDaoTrips = [
     }
   }
 ];
+
+export const ChiangDaoOTOP = [
+  {
+    id: "Highland-Coffee",
+    title: {
+      en: "Highland Coffee",
+      zh: "高地咖啡"
+    },
+    price: {
+      en: "150 - 500 THB",
+      zh: "150 - 500 泰铢"
+    },
+    hours: {
+      en: "Daily 08:00 - 17:00",
+      zh: "每天 08:00 - 17:00"
+    },
+    detail: {
+      en: "Premium arabica and robusta coffee grown in the cool highlands of Chiang Dao. Freshly roasted and ground, featuring rich flavors distinctive to the region.",
+      zh: "在清道寒冷的高地种植的优质阿拉比卡和罗布斯塔咖啡。新鲜烘焙和研磨，具有该地区独特的浓郁风味。"
+    },
+    detail_more: {
+      location: "Chiang Dao Highland Coffee Farmers Co-op, Chiang Dao District",
+      lat: 19.4200000,
+      lng: 98.8500000,
+      img: "ImgTrip/chiang-dao/Doi-Chiang-Dao.jpg",
+      video: "",
+      credit: ""
+    }
+  },
+  {
+    id: "Hill-Tribe-Handicrafts",
+    title: {
+      en: "Hill Tribe Handicrafts & Textiles",
+      zh: "山地部落手工艺品和纺织品"
+    },
+    price: {
+      en: "100 - 800 THB",
+      zh: "100 - 800 泰铢"
+    },
+    hours: {
+      en: "Daily 09:00 - 18:00",
+      zh: "每天 09:00 - 18:00"
+    },
+    detail: {
+      en: "Handmade crafts from local hill tribe communities including hand-woven textiles, embroidered items, and traditional weaving. Beautiful patterns and authentic cultural pieces.",
+      zh: "来自当地山地部落社区的手工艺品，包括手工织布、刺绣物品和传统纺织。美丽的图案和真实的文化工艺品。"
+    },
+    detail_more: {
+      location: "Hill Tribe Craft Centers, Chiang Dao Subdistrict",
+      lat: 19.4150000,
+      lng: 98.7800000,
+      img: "ImgTrip/chiang-dao/Mueang-Khong.jpg",
+      video: "",
+      credit: ""
+    }
+  },
+  {
+    id: "Forest-Bee-Products",
+    title: {
+      en: "Forest Bee Products",
+      zh: "森林蜂产品"
+    },
+    price: {
+      en: "80 - 350 THB",
+      zh: "80 - 350 泰铢"
+    },
+    hours: {
+      en: "Daily 08:00 - 17:00",
+      zh: "每天 08:00 - 17:00"
+    },
+    detail: {
+      en: "Pure forest honey, bee pollen, and propolis collected from natural beehives in the pristine forests. Rich in natural nutrients and therapeutic properties.",
+      zh: "从原始森林中的自然蜂巢采集的纯森林蜂蜜、蜂花粉和蜂胶。富含天然营养物质和治疗功效。"
+    },
+    detail_more: {
+      location: "Forest beekeeping sites, Chiang Dao District",
+      lat: 19.4300000,
+      lng: 98.8400000,
+      img: "ImgTrip/chiang-dao/Doi-Chiang-Dao.jpg",
+      video: "",
+      credit: ""
+    }
+  }
+];

@@ -162,3 +162,87 @@ export const MueangChiangMaiTrip = [
     }
   }
 ];
+
+export const MueangChiangMaiOTOP = [
+  {
+    id: "Thai-Silk-Lacquerware",
+    title: {
+      en: "Premium Thai Silk & Lacquerware",
+      zh: "优质泰国丝绸和漆器"
+    },
+    price: {
+      en: "300 - 2000 THB",
+      zh: "300 - 2000 泰铢"
+    },
+    hours: {
+      en: "Daily 09:00 - 18:00",
+      zh: "每天 09:00 - 18:00"
+    },
+    detail: {
+      en: "High-quality Thai silk from Mueang Chiang Mai workshops and traditional lacquerware. Includes scarves, garments, decorative items, and furniture with exquisite craftsmanship.",
+      zh: "来自美翁清迈工坊的高质量泰国丝绸和传统漆器。包括围巾、服装、装饰品和具有精湛工艺的家具。"
+    },
+    detail_more: {
+      location: "Silk & lacquerware workshops, Mueang Chiang Mai",
+      lat: 18.7850000,
+      lng: 98.9900000,
+      img: "ImgTrip/mueang-chiang-mai/Three-Kings-Monument.jpg",
+      video: "",
+      credit: ""
+    }
+  },
+  {
+    id: "Local-Handicrafts-Chiang-Mai",
+    title: {
+      en: "Local Handicrafts & Art",
+      zh: "本地手工艺品和艺术"
+    },
+    price: {
+      en: "50 - 1000 THB",
+      zh: "50 - 1000 泰铢"
+    },
+    hours: {
+      en: "Daily 09:00 - 18:00",
+      zh: "每天 09:00 - 18:00"
+    },
+    detail: {
+      en: "Beautiful handcrafted items from Chiang Mai artisans including wood carvings, clay pottery, painted masks, and decorative art pieces. Authentic cultural products perfect for souvenirs.",
+      zh: "来自清迈工匠的精美手工艺品，包括木雕、陶制品、绘画面具和装饰艺术品。完美的真实文化礼物。"
+    },
+    detail_more: {
+      location: "Craft markets & workshops, Mueang Chiang Mai",
+      lat: 18.7900000,
+      lng: 98.9950000,
+      img: "ImgTrip/mueang-chiang-mai/Three-Kings-Monument.jpg",
+      video: "",
+      credit: ""
+    }
+  },
+  {
+    id: "Traditional-Sweets-Foods",
+    title: {
+      en: "Traditional Sweets & Local Foods",
+      zh: "传统甜点和本地食品"
+    },
+    price: {
+      en: "40 - 300 THB",
+      zh: "40 - 300 泰铢"
+    },
+    hours: {
+      en: "Daily 08:00 - 17:00",
+      zh: "每天 08:00 - 17:00"
+    },
+    detail: {
+      en: "Authentic Chiang Mai sweets and traditional snacks made using time-honored recipes. Including sticky rice cakes, coconut candies, and preserved fruits.",
+      zh: "采用传统食谱制作的正宗清迈甜点和传统零食。包括糯米蛋糕、椰子糖果和腌制水果。"
+    },
+    detail_more: {
+      location: "Local markets, Mueang Chiang Mai District",
+      lat: 18.7800000,
+      lng: 98.9850000,
+      img: "ImgTrip/mueang-chiang-mai/Three-Kings-Monument.jpg",
+      video: "",
+      credit: ""
+    }
+  }
+];

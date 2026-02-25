@@ -1,25 +1,20 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import Image from 'next/image';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useTranslations, useLocale } from 'next-intl';
 
 export default function ChiangMaiHero() {
-  const pathname = usePathname();
   const router = useRouter();
   const locale = useLocale();
   const t = useTranslations('Home');
 
 
   const setLanguage = (lang: 'en' | 'zh') => {
-    // เปลี่ยน locale ใน pathname
-    const newPath = pathname.replace(/^\/(en|zh)/, `/${lang}`);
     // Redirect ไปยังหน้า maps พร้อม locale ใหม่
     router.push(`/${lang}/maps`);
   };
-
   return (
     <section className="relative pb-30 w-full overflow-hidden">
 

@@ -135,3 +135,87 @@ export const DoiSaketTrips = [
     }
   }
 ];
+
+export const DoiSaketOTOP = [
+  {
+    id: "Orchids-Flowers",
+    title: {
+      en: "Fresh & Dried Orchids",
+      zh: "新鲜和干花兰花"
+    },
+    price: {
+      en: "100 - 500 THB",
+      zh: "100 - 500 泰铢"
+    },
+    hours: {
+      en: "Daily 08:00 - 17:00",
+      zh: "每天 08:00 - 17:00"
+    },
+    detail: {
+      en: "Beautiful orchid flowers and arrangements from Doi Saket cultivation centers. Fresh orchids for bouquets and dried flowers for decoration. Premium quality flowers known nationwide.",
+      zh: "来自多沙革种植中心的美丽兰花和花卉布置。新鲜兰花用于花束，干花用于装饰。全国闻名的优质花卉。"
+    },
+    detail_more: {
+      location: "Orchid farms, Chiang Doi Subdistrict",
+      lat: 18.8700000,
+      lng: 99.1450000,
+      img: "ImgTrip/doi-saket/Wat-Phra-That-Doi-Saket.jpg",
+      video: "",
+      credit: ""
+    }
+  },
+  {
+    id: "Aromatic-Herbs-Plants",
+    title: {
+      en: "Aromatic Herbs & Medicinal Plants",
+      zh: "芳香草药和药用植物"
+    },
+    price: {
+      en: "50 - 300 THB",
+      zh: "50 - 300 泰铢"
+    },
+    hours: {
+      en: "Daily 08:00 - 17:00",
+      zh: "每天 08:00 - 17:00"
+    },
+    detail: {
+      en: "Fresh and dried aromatic herbs including lemongrass, basil, and medicinal plants. Used in traditional Thai cooking and herbal remedies, cultivated locally.",
+      zh: "新鲜和干芳香草药，包括柠檬草、罗勒和药用植物。用于传统泰国烹饪和草药疗法，由当地种植。"
+    },
+    detail_more: {
+      location: "Herb cultivation centers, Doi Saket District",
+      lat: 18.8750000,
+      lng: 99.1500000,
+      img: "ImgTrip/doi-saket/Take-a-Walk-house-&-coffee.jpg",
+      video: "",
+      credit: ""
+    }
+  },
+  {
+    id: "Flower-Arrangements-Crafts",
+    title: {
+      en: "Flower Crafts & Dried Arrangements",
+      zh: "花卉工艺品和干花布置"
+    },
+    price: {
+      en: "150 - 600 THB",
+      zh: "150 - 600 泰铢"
+    },
+    hours: {
+      en: "Daily 09:00 - 17:00",
+      zh: "每天 09:00 - 17:00"
+    },
+    detail: {
+      en: "Handmade flower crafts including dried flower arrangements, pressed flowers, and decorative pieces. Unique souvenirs showcasing Doi Saket's beautiful flora.",
+      zh: "手工制作的花卉工艺品，包括干花布置、压花和装饰品。展示多沙革美丽植物群的独特纪念品。"
+    },
+    detail_more: {
+      location: "Flower craft workshops, Chiang Doi & Pa Miang",
+      lat: 18.8800000,
+      lng: 99.1600000,
+      img: "ImgTrip/doi-saket/Wat-Phra-That-Doi-Saket.jpg",
+      video: "",
+      credit: ""
+    }
+  }
+];

@@ -81,3 +81,87 @@ export const ChomThongTrips = [
     }
   }
 ];
+
+export const ChomThongOTOP = [
+  {
+    id: "Sticky-Rice-Products",
+    title: {
+      en: "Sticky Rice & Glutinous Products",
+      zh: "糯米和糯米制品"
+    },
+    price: {
+      en: "50 - 200 THB",
+      zh: "50 - 200 泰铢"
+    },
+    hours: {
+      en: "Daily 07:00 - 17:00",
+      zh: "每天 07:00 - 17:00"
+    },
+    detail: {
+      en: "Famous local sticky rice (Khao Neaw) and rice-based products including rice flour and traditional rice cakes. High-quality sticky rice harvested from Chom Thong's fertile farmlands.",
+      zh: "著名的本地糯米（Khao Neaw）和米制产品，包括米粉和传统米蛋糕。来自终东肥沃农场的高质量糯米。"
+    },
+    detail_more: {
+      location: "Chom Thong OTOP Market, Ban Luang Subdistrict",
+      lat: 18.5950000,
+      lng: 98.5000000,
+      img: "ImgTrip/chom-thong/Doi-Inthanon-National-Park.jpg",
+      video: "",
+      credit: ""
+    }
+  },
+  {
+    id: "Local-Textiles-Weaving",
+    title: {
+      en: "Hand-woven Textiles & Fabrics",
+      zh: "手工织布和织物"
+    },
+    price: {
+      en: "150 - 800 THB",
+      zh: "150 - 800 泰铢"
+    },
+    hours: {
+      en: "Daily 08:00 - 17:00",
+      zh: "每天 08:00 - 17:00"
+    },
+    detail: {
+      en: "Traditional hand-woven cotton and silk textiles using traditional looms. Beautiful patterns and high-quality fabrics made by local artisans in Chom Thong.",
+      zh: "使用传统织布机制作的传统手工织棉布和丝绸纺织品。由终东当地工匠制作的漂亮图案和高质量织物。"
+    },
+    detail_more: {
+      location: "Traditional weaving centers, Chom Thong District",
+      lat: 18.5850000,
+      lng: 98.4900000,
+      img: "ImgTrip/chom-thong/Mae-Ya-Waterfall.jpg",
+      video: "",
+      credit: ""
+    }
+  },
+  {
+    id: "Mountain-Vegetables",
+    title: {
+      en: "Fresh Mountain Vegetables",
+      zh: "新鲜山菜"
+    },
+    price: {
+      en: "80 - 300 THB",
+      zh: "80 - 300 泰铢"
+    },
+    hours: {
+      en: "Daily 08:00 - 17:00",
+      zh: "每天 08:00 - 17:00"
+    },
+    detail: {
+      en: "Fresh vegetables and herbs grown in the cool highlands of Chom Thong. Including leafy greens, roots, and medicinal plants harvested from sustainable farming.",
+      zh: "在终东寒冷高地种植的新鲜蔬菜和草药。包括叶菜类、根茎类和从可持续农业中采收的药用植物。"
+    },
+    detail_more: {
+      location: "Highland farms, Ban Luang & Amphoe Chom Thong",
+      lat: 18.5900000,
+      lng: 98.5100000,
+      img: "ImgTrip/chom-thong/Mae-Ya-Waterfall.jpg",
+      video: "",
+      credit: ""
+    }
+  }
+];

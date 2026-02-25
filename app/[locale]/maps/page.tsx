@@ -2,7 +2,8 @@
 import { useState } from 'react'
 import { motion, AnimatePresence, Variants } from 'framer-motion'
 import Link from 'next/link'
-import { useLocale, useTranslations } from 'next-intl' // 1. Import Hook สำหรับแปลภาษา
+import Image from 'next/image'
+import { useLocale, useTranslations } from 'next-intl'
 import { districts } from '@/src/data/chiangmai-districts'
 
 // --- Animation Variants ---
@@ -27,9 +28,7 @@ const itemVariants: Variants = {
 
 
 export default function ChiangMaiMap() {
-  // 2. เรียกใช้ Hook แปลภาษา (ระบุ Namespace ให้ตรงกับ JSON)
   const t = useTranslations('District') 
-  const tNav = useTranslations('Nav') // สมมติว่าอยากใช้คำว่า Map หรือ Home จาก Nav
   const tUI = useTranslations('MapUI') 
   const locale = useLocale()
 
@@ -50,12 +49,14 @@ export default function ChiangMaiMap() {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
-          className="relative w-full"
+          className="relative w-full aspect-[4/5] md:aspect-square"
         >
-          <img
+          <Image
             src="/Maps/CNX3.png"
             alt="Chiang Mai Map"
-            className="w-full h-auto object-contain drop-shadow-xl rounded-2xl"
+            fill
+            className="object-contain drop-shadow-xl rounded-2xl"
+            priority
           />
 
           {/* Pin Dots */}
@@ -105,7 +106,6 @@ export default function ChiangMaiMap() {
                         {tUI('district_label')}
                       </span>
                       <span className="block text-lg font-bold leading-none whitespace-nowrap">
-                        {/* 3. ใช้ t() แทน formatName() */}
                         {t(activeDistrict.id)}
                       </span>
                     </div>
@@ -138,7 +138,6 @@ export default function ChiangMaiMap() {
             variants={itemVariants}
             className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-3 ml-1"
           >
-             {/* คุณควรเพิ่ม key "quick_select" ใน JSON เพื่อแปลคำนี้ด้วย */}
              {tUI('quick_select')}
           </motion.h3>
           
@@ -159,7 +158,6 @@ export default function ChiangMaiMap() {
                 `}
               >
                 <div className="flex items-center justify-between">
-                  {/* 4. ใช้ t() ตรงนี้เช่นกัน */}
                   <span>{t(d.id)}</span>
                   {active === d.id && (
                     <motion.span 

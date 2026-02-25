@@ -24,7 +24,7 @@ export async function GET() {
       if (fileContent.trim()) {
         try {
           data = JSON.parse(fileContent);
-        } catch (e) {
+        } catch {
           console.error("JSON Parse Error, resetting count.");
           data = { count: 0 };
         }
@@ -38,9 +38,10 @@ export async function GET() {
     fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8');
 
     return NextResponse.json(data);
-  } catch (error: any) {
+  } catch (error: unknown) {
     // พิมพ์ Error ออกมาดูที่ Terminal ของ VS Code ว่าทำไมถึงเขียนไม่ได้
-    console.error("❌ FULL ERROR:", error.message);
-    return NextResponse.json({ count: 0, error: "Storage error", detail: error.message }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    console.error("❌ FULL ERROR:", errorMessage);
+    return NextResponse.json({ count: 0, error: "Storage error", detail: errorMessage }, { status: 500 });
   }
 }

@@ -162,3 +162,87 @@ export const MaeTaengTrips = [
       }
     }
   ];
+
+export const MaeTaengOTOP = [
+  {
+    id: "Thai-Silk-Production",
+    title: {
+      en: "Thai Silk Products & Fabrics",
+      zh: "泰国丝绸产品和织物"
+    },
+    price: {
+      en: "200 - 1500 THB",
+      zh: "200 - 1500 泰铢"
+    },
+    hours: {
+      en: "Daily 09:00 - 18:00",
+      zh: "每天 09:00 - 18:00"
+    },
+    detail: {
+      en: "Handwoven Thai silk from Mae Taeng's weaving communities. Beautiful traditional patterns using natural dyes. Includes scarves, clothing, and home decor items.",
+      zh: "来自美坦地区编织社区的手工织泰国丝绸。采用天然染料的美丽传统图案。包括围巾、服装和家居装饰品。"
+    },
+    detail_more: {
+      location: "Silk weaving centers, Mae Taeng District",
+      lat: 19.1200000,
+      lng: 98.9450000,
+      img: "ImgTrip/mae-taeng/Dantewada-Land-of-Angels-Waterfall.jpg",
+      video: "",
+      credit: ""
+    }
+  },
+  {
+    id: "Local-Crafts-Souvenirs",
+    title: {
+      en: "Local Handicrafts & Souvenirs",
+      zh: "本地手工艺品和纪念品"
+    },
+    price: {
+      en: "50 - 400 THB",
+      zh: "50 - 400 泰铢"
+    },
+    hours: {
+      en: "Daily 08:00 - 18:00",
+      zh: "每天 08:00 - 18:00"
+    },
+    detail: {
+      en: "Handmade souvenirs and crafts from Mae Taeng artisans. Including carved items, woven baskets, and decorative pieces using local materials and traditional techniques.",
+      zh: "来自美坦工匠的手制纪念品和工艺品。包括雕刻品、编织篮筐和使用本地材料和传统工艺制作的装饰品。"
+    },
+    detail_more: {
+      location: "Craft centers, Mae Taeng District",
+      lat: 19.1250000,
+      lng: 98.9500000,
+      img: "ImgTrip/mae-taeng/Dantewada-Land-of-Angels-Waterfall.jpg",
+      video: "",
+      credit: ""
+    }
+  },
+  {
+    id: "Agricultural-Products-Mae-Taeng",
+    title: {
+      en: "Fresh Local Agricultural Products",
+      zh: "新鲜本地农产品"
+    },
+    price: {
+      en: "60 - 300 THB",
+      zh: "60 - 300 泰铢"
+    },
+    hours: {
+      en: "Daily 08:00 - 17:00",
+      zh: "每天 08:00 - 17:00"
+    },
+    detail: {
+      en: "Fresh fruits and vegetables from Mae Taeng's farms. Including tropical fruits, leafy greens, and seasonal produce grown without harmful chemicals.",
+      zh: "来自美坦农场的新鲜水果和蔬菜。包括热带水果、叶菜和不含有害化学物质的季节性农产品。"
+    },
+    detail_more: {
+      location: "Local farms, Mae Taeng District",
+      lat: 19.1150000,
+      lng: 98.9400000,
+      img: "ImgTrip/mae-taeng/Dantewada-Land-of-Angels-Waterfall.jpg",
+      video: "",
+      credit: ""
+    }
+  }
+];

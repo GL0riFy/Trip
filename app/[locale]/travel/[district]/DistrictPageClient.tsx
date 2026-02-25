@@ -5,10 +5,11 @@
 import Link from "next/link";
 import { motion, useScroll, useTransform, cubicBezier, type Variants } from "framer-motion";
 import { useRef } from "react";
-import TripMapModal from "@/app/components/TripMapModal";
+import TripMapModal, { type TripMapEntry } from "@/app/components/TripMapModal";
 import DistrictBg from "@/app/components/DistrictBg";
 import DistrictHistorySection from "@/app/components/DistrictHistorySection";
-import type { DistrictTrip } from "@/src/data/district-trips";
+import type { DistrictOTOP, DistrictTrip } from "@/src/data/district-trips";
+import { products } from "@/src/data/products";
 
 // ─── Easing ───────────────────────────────────────────────────────────────────
 // Framer Motion v11+ ต้องใช้ cubicBezier() แทน number[] ใน Variants
@@ -79,12 +80,16 @@ type Props = {
   locale: "en" | "zh";
   district: string;
   trips: DistrictTrip[];
+  otop: DistrictOTOP[];
   districtName: string;
 };
 
+// Helper function to convert "Chai Prakan" to "chai-prakan"
+const slugify = (text: string) => text.toLowerCase().replace(/\s+/g, "-");
+
 // ─── Component ────────────────────────────────────────────────────────────────
 
-export default function DistrictPageClient({ locale, district, trips, districtName }: Props) {
+export default function DistrictPageClient({ locale, district, trips, otop, districtName }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: containerRef });
 
@@ -92,6 +97,44 @@ export default function DistrictPageClient({ locale, district, trips, districtNa
   const blobY2 = useTransform(scrollYProgress, [0, 1], [0, 60]);
   const heroY = useTransform(scrollYProgress, [0, 0.3], [0, -40]);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.25], [1, 0.4]);
+
+  // Add product markers on district map and align coordinates with each district's OTOP points.
+  const districtProducts = products.filter((product) => slugify(product.district) === district);
+
+  const productMapLocations: TripMapEntry[] = districtProducts
+    .map((product, index) => {
+      const refLocation = otop.length > 0 ? otop[index % otop.length]?.detail_more : undefined;
+
+      return {
+        id: `product-${product.id}`,
+        title: { en: product.name, zh: product.nameCN },
+        price: { en: `${product.price} THB`, zh: `${product.price} 泰铢` },
+        hours: {
+          en: "Contact seller for opening hours",
+          zh: "营业时间请联系商家",
+        },
+        detail: { en: product.description, zh: product.descriptionCN },
+        detail_more: {
+          img: product.image,
+          lat: refLocation?.lat,
+          lng: refLocation?.lng,
+          location: locale === "zh" ? product.addressCN : product.address,
+          video: "",
+          credit: "",
+        },
+      };
+    })
+    .filter(
+      (productLocation) =>
+        typeof productLocation.detail_more.lat === "number" &&
+        typeof productLocation.detail_more.lng === "number"
+    );
+
+  // Combine trips and products for map display.
+  const combinedLocations: TripMapEntry[] = [
+    ...(trips as TripMapEntry[]),
+    ...productMapLocations,
+  ];
 
   return (
     <div
@@ -185,7 +228,7 @@ export default function DistrictPageClient({ locale, district, trips, districtNa
             </h2>
           </motion.div>
           <TripMapModal
-            trips={trips as any}
+            trips={combinedLocations}
             locale={locale}
             districtName={districtName}
             districtId={district}

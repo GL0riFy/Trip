@@ -189,3 +189,87 @@ export const MaeRimTrips = [
     }
   }
 ];
+
+export const MaeRimOTOP = [
+  {
+    id: "Orchids-Mac-Rim",
+    title: {
+      en: "Fresh Orchids & Decorative Plants",
+      zh: "新鲜兰花和装饰植物"
+    },
+    price: {
+      en: "80 - 600 THB",
+      zh: "80 - 600 泰铢"
+    },
+    hours: {
+      en: "Daily 08:00 - 17:00",
+      zh: "每天 08:00 - 17:00"
+    },
+    detail: {
+      en: "Beautiful orchid flowers and tropical plants cultivated in Mae Rim's greenhouses. Premium quality flowers perfect for gifts and home decoration. Fresh arrangements available.",
+      zh: "在美琳温室种植的美丽兰花和热带植物。优质花卉非常适合礼物和家居装饰。提供新鲜花卉布置。"
+    },
+    detail_more: {
+      location: "Orchid nurseries, Mae Rim District",
+      lat: 18.8550000,
+      lng: 98.9600000,
+      img: "ImgTrip/mae-rim/Wat-Pa-Dara-Phirom.jpg",
+      video: "",
+      credit: ""
+    }
+  },
+  {
+    id: "Garden-Products-Mae-Rim",
+    title: {
+      en: "Fresh Vegetables & Garden Products",
+      zh: "新鲜蔬菜和花园产品"
+    },
+    price: {
+      en: "50 - 200 THB",
+      zh: "50 - 200 泰铢"
+    },
+    hours: {
+      en: "Daily 08:00 - 17:00",
+      zh: "每天 08:00 - 17:00"
+    },
+    detail: {
+      en: "Organically grown vegetables and herbs from Mae Rim's community gardens. Includes leafy greens, root vegetables, and cooking herbs without pesticides.",
+      zh: "来自美琳社区花园的有机种植蔬菜和草药。包括叶菜、根菜和无农药烹饪草药。"
+    },
+    detail_more: {
+      location: "Community gardens, Mae Rim District",
+      lat: 18.8600000,
+      lng: 98.9700000,
+      img: "ImgTrip/mae-rim/Wat-Pa-Dara-Phirom.jpg",
+      video: "",
+      credit: ""
+    }
+  },
+  {
+    id: "Local-Honey-Herbs",
+    title: {
+      en: "Honey & Herbal Products",
+      zh: "蜂蜜和草药产品"
+    },
+    price: {
+      en: "100 - 350 THB",
+      zh: "100 - 350 泰铢"
+    },
+    hours: {
+      en: "Daily 08:00 - 17:00",
+      zh: "每天 08:00 - 17:00"
+    },
+    detail: {
+      en: "Pure honey from orchid and garden flower nectar. Also includes herbal tea blends and medicinal plant products for wellness and health.",
+      zh: "从兰花和花园花朵蜜源生产的纯蜂蜜。还包括草药茶混合液和保健和疗愈的药用植物产品。"
+    },
+    detail_more: {
+      location: "Honey producers & herbal centers, Mae Rim",
+      lat: 18.8650000,
+      lng: 98.9650000,
+      img: "ImgTrip/mae-rim/Wat-Pa-Dara-Phirom.jpg",
+      video: "",
+      credit: ""
+    }
+  }
+];

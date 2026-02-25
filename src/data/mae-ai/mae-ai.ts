@@ -135,3 +135,87 @@ export const MaeAiTrips = [
       }
     }
   ];
+
+export const MaeAiOTOP = [
+  {
+    id: "Hill-Tribe-Crafts-Mae-Ai",
+    title: {
+      en: "Hill Tribe Handicrafts & Textiles",
+      zh: "山地部落手工艺品和纺织品"
+    },
+    price: {
+      en: "100 - 800 THB",
+      zh: "100 - 800 泰铢"
+    },
+    hours: {
+      en: "Daily 09:00 - 18:00",
+      zh: "每天 09:00 - 18:00"
+    },
+    detail: {
+      en: "Handmade crafts from Mae Ai's hill tribe communities including intricate textiles, embroidered items, beadwork, and traditional weaving. Authentic cultural products with unique patterns.",
+      zh: "来自美艾山地部落社区的手工艺品，包括复杂的纺织品、刺绣物品、珠工和传统纺织。具有独特图案的真实文化产品。"
+    },
+    detail_more: {
+      location: "Hill tribe craft centers, Mae Ai District",
+      lat: 20.0700000,
+      lng: 99.2500000,
+      img: "ImgTrip/mae-ai/Mon-Doi-Lang.jpg",
+      video: "",
+      credit: ""
+    }
+  },
+  {
+    id: "Medicinal-Herbs-Mae-Ai",
+    title: {
+      en: "Mountain Medicinal Herbs",
+      zh: "山地药用草药"
+    },
+    price: {
+      en: "80 - 300 THB",
+      zh: "80 - 300 泰铢"
+    },
+    hours: {
+      en: "Daily 08:00 - 17:00",
+      zh: "每天 08:00 - 17:00"
+    },
+    detail: {
+      en: "Fresh and dried medicinal herbs collected from Mae Ai's forests. Used in traditional healing and wellness remedies. Includes rare highland herbs with therapeutic properties.",
+      zh: "从美艾森林中采集的新鲜和干药物草药。用于传统治疗和保健疗法。包含具有治疗功效的稀有高地草药。"
+    },
+    detail_more: {
+      location: "Herbal collection centers, Mae Ai District",
+      lat: 20.0750000,
+      lng: 99.2600000,
+      img: "ImgTrip/mae-ai/Mon-Doi-Lang.jpg",
+      video: "",
+      credit: ""
+    }
+  },
+  {
+    id: "Highland-Agricultural-Products",
+    title: {
+      en: "Highland Agricultural Products",
+      zh: "高地农产品"
+    },
+    price: {
+      en: "60 - 250 THB",
+      zh: "60 - 250 泰铢"
+    },
+    hours: {
+      en: "Daily 08:00 - 17:00",
+      zh: "每天 08:00 - 17:00"
+    },
+    detail: {
+      en: "Fresh fruits and vegetables grown in Mae Ai's cool highlands including strawberries, peaches, and mountain vegetables. Pesticide-free and naturally cultivated.",
+      zh: "在美艾凉爽高地种植的新鲜水果和蔬菜，包括草莓、桃子和山地蔬菜。不含农药，自然种植。"
+    },
+    detail_more: {
+      location: "Highland farms, Mae Ai District",
+      lat: 20.0800000,
+      lng: 99.2700000,
+      img: "ImgTrip/mae-ai/Mon-Doi-Lang.jpg",
+      video: "",
+      credit: ""
+    }
+  }
+];

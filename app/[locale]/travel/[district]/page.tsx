@@ -3,7 +3,7 @@
 
 import { notFound } from "next/navigation";
 import { districts } from "@/src/data/chiangmai-districts";
-import { districtTrips } from "@/src/data/district-trips";
+import { districtTrips, districtOTOP } from "@/src/data/district-trips";
 import DistrictPageClient from "./DistrictPageClient";
 
 type DistrictPageProps = {
@@ -32,6 +32,7 @@ export default async function DistrictPage({ params }: DistrictPageProps) {
   if (!districtExists) notFound();
 
   const trips = districtTrips[district] ?? [];
+  const otop = districtOTOP[district] ?? [];
   const districtName = getDistrictName(district);
 
   // ส่งข้อมูลทั้งหมดเข้า Client Component
@@ -40,6 +41,7 @@ export default async function DistrictPage({ params }: DistrictPageProps) {
       locale={normalizedLocale}
       district={district}
       trips={trips}
+      otop={otop}
       districtName={districtName}
     />
   );

@@ -10,9 +10,21 @@ import {
     Car,
     Map
   } from "lucide-react"
+import { ReactNode } from "react"
+
+  export interface EmergencyContact {
+    id: number
+    title: string
+    titleCn: string
+    number: string
+    icon: ReactNode
+    color: string
+    shadow: string
+    gradient: string
+  }
   
   // --- 1. Emergency Data ---
-  export const emergencyContacts = [
+  export const emergencyContacts: EmergencyContact[] = [
       {
         id: 1,
         title: "Police",
@@ -85,7 +97,24 @@ import {
       }
   ]
 
-  export const appCategories = [
+  export interface App {
+    name: string
+    nameCn?: string
+    desc: string
+    descCn: string
+    logo: string
+    tag?: string
+    tagCn?: string
+  }
+
+  export interface AppCategory {
+    title: string
+    titleCn: string
+    icon: ReactNode
+    apps: App[]
+  }
+
+  export const appCategories: AppCategory[] = [
     {
       title: "Ride Hailing",
       titleCn: "网约车服务",

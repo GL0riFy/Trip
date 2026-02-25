@@ -108,3 +108,87 @@ export const fangTrips = [
     }
   }
 ];
+
+export const FangOTOP = [
+  {
+    id: "Highland-Coffee-Fang",
+    title: {
+      en: "Premium Highland Coffee",
+      zh: "优质高地咖啡"
+    },
+    price: {
+      en: "180 - 600 THB",
+      zh: "180 - 600 泰铢"
+    },
+    hours: {
+      en: "Daily 08:00 - 17:00",
+      zh: "每天 08:00 - 17:00"
+    },
+    detail: {
+      en: "High-altitude arabica and robusta coffee beans grown in Fang's cool valleys. Freshly roasted with distinctive smoky and fruity flavors. Award-winning quality recognized nationwide.",
+      zh: "在芳县凉爽山谷种植的高海拔阿拉比卡和罗布斯塔咖啡豆。新鲜烘焙，具有独特的烟熏和果香风味。全国公认的获奖品质。"
+    },
+    detail_more: {
+      location: "Fang Coffee Cooperative, Pong Nam Ron Subdistrict",
+      lat: 19.9700000,
+      lng: 99.1600000,
+      img: "ImgTrip/fang/doi-pha-hom-pok.jpg",
+      video: "",
+      credit: ""
+    }
+  },
+  {
+    id: "Wild-Honey-Products",
+    title: {
+      en: "Wild Forest Honey & Bee Products",
+      zh: "野生森林蜂蜜和蜂产品"
+    },
+    price: {
+      en: "120 - 400 THB",
+      zh: "120 - 400 泰铢"
+    },
+    hours: {
+      en: "Daily 08:00 - 17:00",
+      zh: "每天 08:00 - 17:00"
+    },
+    detail: {
+      en: "Pure wildflower and forest honey collected from natural beehives in Fang's pristine forests. Rich flavor with natural antibacterial properties. Also includes bee pollen and propolis.",
+      zh: "从芳县原始森林中自然蜂巢采集的纯野花和森林蜂蜜。风味浓郁，具有天然抗菌特性。还包括蜂花粉和蜂胶。"
+    },
+    detail_more: {
+      location: "Fang beekeeping farms, Pong Nam Ron",
+      lat: 19.9750000,
+      lng: 99.1550000,
+      img: "ImgTrip/fang/fang-hot-spring.jpg",
+      video: "",
+      credit: ""
+    }
+  },
+  {
+    id: "Herbal-Teas-Remedies",
+    title: {
+      en: "Medicinal Herbal Teas",
+      zh: "药用草药茶"
+    },
+    price: {
+      en: "80 - 250 THB",
+      zh: "80 - 250 泰铢"
+    },
+    hours: {
+      en: "Daily 08:00 - 17:00",
+      zh: "每天 08:00 - 17:00"
+    },
+    detail: {
+      en: "Handcrafted herbal tea blends from mountain herbs and medicinal plants. Used for wellness, immunity, and traditional healing. Dried herbs packaged in premium quality.",
+      zh: "用山地草药和药用植物手工制作的草药茶混合液。用于保健、增强免疫力和传统治疗。高质量包装的干草药。"
+    },
+    detail_more: {
+      location: "Herbal medicine centers, Fang District",
+      lat: 19.9600000,
+      lng: 99.1500000,
+      img: "ImgTrip/fang/doi-pha-hom-pok.jpg",
+      video: "",
+      credit: ""
+    }
+  }
+];
