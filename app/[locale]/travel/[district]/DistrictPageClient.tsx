@@ -85,7 +85,7 @@ type Props = {
 };
 
 // Helper function to convert "Chai Prakan" to "chai-prakan"
-const slugify = (text: string) => text.toLowerCase().replace(/\s+/g, "-");
+const slugify = (text?: string) => (text ?? "").toLowerCase().replace(/\s+/g, "-");
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
@@ -99,7 +99,8 @@ export default function DistrictPageClient({ locale, district, trips, otop, dist
   const heroOpacity = useTransform(scrollYProgress, [0, 0.25], [1, 0.4]);
 
   // Add product markers on district map and align coordinates with each district's OTOP points.
-  const districtProducts = products.filter((product) => slugify(product.district) === district);
+  const districtSlug = slugify(district);
+  const districtProducts = products.filter((product) => slugify(product.district) === districtSlug);
 
   const productMapLocations: TripMapEntry[] = districtProducts
     .map((product, index) => {

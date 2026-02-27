@@ -5,9 +5,33 @@ import { useEffect, useState } from "react";
 import { useLocale } from "next-intl";
 import Image from "next/image";
 import { products } from "@/src/data/products";
+import { verifiedDistrictLocationOverrides } from "@/src/data/verified-product-locations";
 
 type SortType = "default" | "price-asc" | "price-desc";
-type Product = (typeof products)[number];
+type BaseProduct = (typeof products)[number];
+type Product = Omit<BaseProduct, "shopName" | "shopNameCN" | "phone" | "address" | "addressCN"> & {
+  shopName?: string;
+  shopNameCN?: string;
+  phone?: string;
+  address?: string;
+  addressCN?: string;
+  mapRating?: number;
+  mapsQuery?: string;
+};
+
+const districtItemCounter = new Map<string, number>();
+const productsWithVerifiedLocations: Product[] = products.map((product) => {
+  if (!product.district) return product;
+
+  const districtOverrides = verifiedDistrictLocationOverrides[product.district];
+  if (!districtOverrides || districtOverrides.length === 0) return product;
+
+  const index = districtItemCounter.get(product.district) ?? 0;
+  districtItemCounter.set(product.district, index + 1);
+
+  const override = districtOverrides[index] ?? districtOverrides[districtOverrides.length - 1];
+  return { ...product, ...override };
+});
 
 const containerVariants: Variants = {
   hidden: {},
@@ -51,9 +75,9 @@ export default function RefactoredProductShowcase() {
     }).format(price / 100);
   };
 
-  const allDistricts = Array.from(new Set(products.map((product) => product.district).filter((d): d is string => Boolean(d)))).sort();
+  const allDistricts = Array.from(new Set(productsWithVerifiedLocations.map((product) => product.district).filter((d): d is string => Boolean(d)))).sort();
 
-  let filteredProducts = products;
+  let filteredProducts = productsWithVerifiedLocations;
   if (selectedDistrict !== "all") {
     filteredProducts = filteredProducts.filter((product) => product.district === selectedDistrict);
   }
@@ -65,8 +89,10 @@ export default function RefactoredProductShowcase() {
   }
 
   const phoneHref = selectedProduct?.phone ? `tel:${selectedProduct.phone.replace(/\s+/g, "")}` : "#";
-  const mapHref = selectedProduct?.address
-    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selectedProduct.address)}`
+  const mapHref = selectedProduct?.mapsQuery || selectedProduct?.address
+    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+      selectedProduct?.mapsQuery || selectedProduct?.address || ""
+    )}`
     : "#";
 
   return (
@@ -100,7 +126,7 @@ export default function RefactoredProductShowcase() {
           </motion.div>
 
           <motion.div
-            onClick={() => setSelectedProduct(products[0])}
+            onClick={() => setSelectedProduct(productsWithVerifiedLocations[0])}
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8 }}
@@ -108,8 +134,8 @@ export default function RefactoredProductShowcase() {
           >
             <div className="relative overflow-hidden rounded-2xl">
               <Image
-                src={products[0].image}
-                alt={products[0].name}
+                src={productsWithVerifiedLocations[0].image}
+                alt={productsWithVerifiedLocations[0].name}
                 fill
                 priority
                 sizes="(max-width: 1024px) 100vw, 50vw"
@@ -117,9 +143,9 @@ export default function RefactoredProductShowcase() {
               />
               <div className="absolute bottom-6 left-6 max-w-xs rounded-lg bg-white/90 p-4 shadow-md backdrop-blur">
                 <h3 className="text-lg font-bold">
-                  {isEn ? products[0].name : products[0].nameCN}
+                  {isEn ? productsWithVerifiedLocations[0].name : productsWithVerifiedLocations[0].nameCN}
                 </h3>
-                <p className="text-sm text-gray-600">{formatPrice(products[0].price)}</p>
+                <p className="text-sm text-gray-600">{formatPrice(productsWithVerifiedLocations[0].price)}</p>
                 <p className="mt-1 text-xs font-semibold text-orange-700">
                   {isEn ? "Tap to view contact" : "点击查看联系方式"}
                 </p>
@@ -177,7 +203,7 @@ export default function RefactoredProductShowcase() {
                   <option key={district} value={district}>
                     {isEn
                       ? district
-                      : products.find((product) => product.district === district)?.districtCN || district}
+                      : productsWithVerifiedLocations.find((product) => product.district === district)?.districtCN || district}
                   </option>
                 ))}
               </select>
@@ -228,7 +254,9 @@ export default function RefactoredProductShowcase() {
                   </div>
                   <div className="text-right">
                     <div className="text-lg font-extrabold">{formatPrice(product.price)}</div>
-                    <div className="text-sm text-yellow-500">★★★★★</div>
+                    <div className="text-sm text-yellow-500">
+                      {product.mapRating ? `Google ${product.mapRating.toFixed(1)}` : isEn ? "Popular local shop" : "本地热门商店"}
+                    </div>
                   </div>
                 </div>
 
@@ -375,3 +403,4 @@ export default function RefactoredProductShowcase() {
     </div>
   );
 }
+
