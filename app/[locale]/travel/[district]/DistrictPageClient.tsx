@@ -10,6 +10,7 @@ import DistrictBg from "@/app/components/DistrictBg";
 import DistrictHistorySection from "@/app/components/DistrictHistorySection";
 import type { DistrictOTOP, DistrictTrip } from "@/src/data/district-trips";
 import { products } from "@/src/data/products";
+import { verifiedDistrictLocationOverrides } from "@/src/data/verified-product-locations";
 
 // ─── Easing ───────────────────────────────────────────────────────────────────
 // Framer Motion v11+ ต้องใช้ cubicBezier() แทน number[] ใน Variants
@@ -86,6 +87,7 @@ type Props = {
 
 // Helper function to convert "Chai Prakan" to "chai-prakan"
 const slugify = (text?: string) => (text ?? "").toLowerCase().replace(/\s+/g, "-");
+const SKIP_LOCATION_UPDATE_IDS = new Set([1, 2, 3, 4, 6, 7, 8]);
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
@@ -101,10 +103,32 @@ export default function DistrictPageClient({ locale, district, trips, otop, dist
   // Add product markers on district map and align coordinates with each district's OTOP points.
   const districtSlug = slugify(district);
   const districtProducts = products.filter((product) => slugify(product.district) === districtSlug);
+  const districtOverrides =
+    districtProducts.length > 0
+      ? verifiedDistrictLocationOverrides[districtProducts[0].district] ?? []
+      : [];
 
   const productMapLocations: TripMapEntry[] = districtProducts
     .map((product, index) => {
       const refLocation = otop.length > 0 ? otop[index % otop.length]?.detail_more : undefined;
+      const shouldUseVerifiedLocation = !SKIP_LOCATION_UPDATE_IDS.has(product.id);
+      const override =
+        districtOverrides.length > 0
+          ? districtOverrides[index] ?? districtOverrides[districtOverrides.length - 1]
+          : undefined;
+      const fallbackMapQuery = product.address || [product.shopName, product.address]
+        .filter((value): value is string => typeof value === "string" && value.trim().length > 0)
+        .join(", ");
+      const location = locale === "zh"
+        ? shouldUseVerifiedLocation
+          ? override?.addressCN || product.addressCN
+          : product.addressCN
+        : shouldUseVerifiedLocation
+          ? override?.address || product.address
+          : product.address;
+      const mapsQuery = shouldUseVerifiedLocation
+        ? override?.mapsQuery || fallbackMapQuery || undefined
+        : fallbackMapQuery || undefined;
 
       return {
         id: `product-${product.id}`,
@@ -119,7 +143,8 @@ export default function DistrictPageClient({ locale, district, trips, otop, dist
           img: product.image,
           lat: refLocation?.lat,
           lng: refLocation?.lng,
-          location: locale === "zh" ? product.addressCN : product.address,
+          location,
+          mapsQuery,
           video: "",
           credit: "",
         },

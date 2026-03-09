@@ -19,6 +19,8 @@ type Product = Omit<BaseProduct, "shopName" | "shopNameCN" | "phone" | "address"
   mapsQuery?: string;
 };
 
+const SKIP_LOCATION_UPDATE_IDS = new Set([1, 2, 3, 4, 6, 7, 8]);
+
 const districtItemCounter = new Map<string, number>();
 const productsWithVerifiedLocations: Product[] = products.map((product) => {
   if (!product.district) return product;
@@ -29,8 +31,16 @@ const productsWithVerifiedLocations: Product[] = products.map((product) => {
   const index = districtItemCounter.get(product.district) ?? 0;
   districtItemCounter.set(product.district, index + 1);
 
+  if (SKIP_LOCATION_UPDATE_IDS.has(product.id)) {
+    return product;
+  }
+
   const override = districtOverrides[index] ?? districtOverrides[districtOverrides.length - 1];
-  return { ...product, ...override };
+  return {
+    ...product,
+    ...override,
+    phone: override.phone ?? product.phone,
+  };
 });
 
 const containerVariants: Variants = {
@@ -89,10 +99,13 @@ export default function RefactoredProductShowcase() {
   }
 
   const phoneHref = selectedProduct?.phone ? `tel:${selectedProduct.phone.replace(/\s+/g, "")}` : "#";
-  const mapHref = selectedProduct?.mapsQuery || selectedProduct?.address
-    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-      selectedProduct?.mapsQuery || selectedProduct?.address || ""
-    )}`
+  const mapSearchText = selectedProduct
+    ? selectedProduct.mapsQuery || selectedProduct.address || ""
+    : "";
+  const mapHref = mapSearchText
+    ? mapSearchText.startsWith("http")
+      ? mapSearchText
+      : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapSearchText)}`
     : "#";
 
   return (

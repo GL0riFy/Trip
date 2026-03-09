@@ -64,6 +64,7 @@ export interface TripMapEntry {
     lat?: number;
     lng?: number;
     location?: string;
+    mapsQuery?: string;
     video?: string;
     [key: string]: unknown;
   };
@@ -85,6 +86,26 @@ function imgSrc(trip: TripMapEntry): string | null {
   const p = trip.detail_more.img?.trim();
   if (!p || !/\.(jpg|jpeg|png|webp|gif)$/i.test(p)) return null;
   return p.startsWith("/") ? p : `/${p}`;
+}
+
+function mapHref(detail: TripMapEntry["detail_more"]): string | null {
+  if (typeof detail.mapsQuery === "string" && detail.mapsQuery.trim()) {
+    const query = detail.mapsQuery.trim();
+    if (query.startsWith("http")) {
+      return query;
+    }
+    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
+  }
+
+  if (typeof detail.location === "string" && detail.location.trim()) {
+    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(detail.location.trim())}`;
+  }
+
+  if (typeof detail.lat === "number" && typeof detail.lng === "number") {
+    return `https://www.google.com/maps?q=${detail.lat},${detail.lng}&ll=${detail.lat},${detail.lng}&z=17`;
+  }
+
+  return null;
 }
 
 // ─── Framer Motion variants ───────────────────────────────────────────────
@@ -145,6 +166,7 @@ export default function TripMapModal({
   const mapRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState<TripMapEntry | null>(null);
   const [boundaryStatus, setBoundaryStatus] = useState<"loading" | "ok" | "error">("loading");
+  const activeMapHref = active ? mapHref(active.detail_more) : null;
 
   // Lock body scroll when modal is open
   useEffect(() => {
@@ -482,9 +504,9 @@ export default function TripMapModal({
                         {active.detail_more.location as string}
                       </p>
                       {/* Open in Google Maps button */}
-                      {active.detail_more.lat && active.detail_more.lng && (
+                      {activeMapHref && (
                         <motion.a
-                          href={`https://www.google.com/maps?q=${active.detail_more.lat},${active.detail_more.lng}&ll=${active.detail_more.lat},${active.detail_more.lng}&z=17`}
+                          href={activeMapHref}
                           target="_blank"
                           rel="noopener noreferrer"
                           whileHover={{ scale: 1.05 }}
