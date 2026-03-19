@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, Variants } from "framer-motion";
+import { motion, Variants, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useLocale } from "next-intl";
 import Image from "next/image";
@@ -24,33 +24,29 @@ const SKIP_LOCATION_UPDATE_IDS = new Set([1, 2, 3, 4, 6, 7, 8]);
 const districtItemCounter = new Map<string, number>();
 const productsWithVerifiedLocations: Product[] = products.map((product) => {
   if (!product.district) return product;
-
   const districtOverrides = verifiedDistrictLocationOverrides[product.district];
   if (!districtOverrides || districtOverrides.length === 0) return product;
-
   const index = districtItemCounter.get(product.district) ?? 0;
   districtItemCounter.set(product.district, index + 1);
-
-  if (SKIP_LOCATION_UPDATE_IDS.has(product.id)) {
-    return product;
-  }
-
+  if (SKIP_LOCATION_UPDATE_IDS.has(product.id)) return product;
   const override = districtOverrides[index] ?? districtOverrides[districtOverrides.length - 1];
-  return {
-    ...product,
-    ...override,
-    phone: override.phone ?? product.phone,
-  };
+  return { ...product, ...override, phone: override.phone ?? product.phone };
 });
 
-const containerVariants: Variants = {
+// ─── Animation Variants ────────────────────────────────────────────────────
+const staggerContainer: Variants = {
   hidden: {},
-  visible: { transition: { staggerChildren: 0.06 } },
+  visible: { transition: { staggerChildren: 0.07, delayChildren: 0.1 } },
 };
 
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 24 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: "easeOut" } },
+const fadeUp: Variants = {
+  hidden: { opacity: 0, y: 32 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
+};
+
+const scaleIn: Variants = {
+  hidden: { opacity: 0, scale: 0.94 },
+  visible: { opacity: 1, scale: 1, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] } },
 };
 
 export default function RefactoredProductShowcase() {
@@ -58,362 +54,664 @@ export default function RefactoredProductShowcase() {
   const isEn = locale === "en";
 
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [hoveredProduct, setHoveredProduct] = useState<number | null>(null);
   const [sortType, setSortType] = useState<SortType>("default");
   const [selectedDistrict, setSelectedDistrict] = useState<string>("all");
 
-  const closeContactPopup = () => {
-    setSelectedProduct(null);
-  };
+  const closeContactPopup = () => setSelectedProduct(null);
 
   useEffect(() => {
-    function onKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") {
-        closeContactPopup();
-      }
-    }
-
+    const onKeyDown = (e: KeyboardEvent) => { if (e.key === "Escape") closeContactPopup(); };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, []);
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat(isEn ? "en-US" : "zh-CN", {
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    document.body.style.overflow = selectedProduct ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [selectedProduct]);
+
+  const formatPrice = (price: number) =>
+    new Intl.NumberFormat(isEn ? "en-US" : "zh-CN", {
       style: "currency",
       currency: "USD",
       minimumFractionDigits: 2,
     }).format(price / 100);
-  };
 
-  const allDistricts = Array.from(new Set(productsWithVerifiedLocations.map((product) => product.district).filter((d): d is string => Boolean(d)))).sort();
+  const allDistricts = Array.from(
+    new Set(productsWithVerifiedLocations.map((p) => p.district).filter((d): d is string => Boolean(d)))
+  ).sort();
 
   let filteredProducts = productsWithVerifiedLocations;
   if (selectedDistrict !== "all") {
-    filteredProducts = filteredProducts.filter((product) => product.district === selectedDistrict);
+    filteredProducts = filteredProducts.filter((p) => p.district === selectedDistrict);
   }
-
-  if (sortType === "price-asc") {
-    filteredProducts = [...filteredProducts].sort((a, b) => a.price - b.price);
-  } else if (sortType === "price-desc") {
-    filteredProducts = [...filteredProducts].sort((a, b) => b.price - a.price);
-  }
+  if (sortType === "price-asc") filteredProducts = [...filteredProducts].sort((a, b) => a.price - b.price);
+  else if (sortType === "price-desc") filteredProducts = [...filteredProducts].sort((a, b) => b.price - a.price);
 
   const phoneHref = selectedProduct?.phone ? `tel:${selectedProduct.phone.replace(/\s+/g, "")}` : "#";
-  const mapSearchText = selectedProduct
-    ? selectedProduct.mapsQuery || selectedProduct.address || ""
-    : "";
+  const mapSearchText = selectedProduct ? selectedProduct.mapsQuery || selectedProduct.address || "" : "";
   const mapHref = mapSearchText
-    ? mapSearchText.startsWith("http")
-      ? mapSearchText
-      : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapSearchText)}`
+    ? mapSearchText.startsWith("http") ? mapSearchText : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapSearchText)}`
     : "#";
 
   return (
-    <div className="min-h-screen text-gray-900 antialiased">
-      <header className="relative overflow-hidden">
-        <div className="mx-auto flex max-w-7xl flex-col items-center gap-12 px-6 py-24 lg:flex-row">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7 }}
-            className="flex-1"
-          >
-            <h1 className="mb-4 text-5xl font-extrabold leading-tight md:text-6xl">
-              {isEn ? "Find Local OTOP Products" : "探索本地 OTOP 产品"}
-            </h1>
-            <p className="mb-6 max-w-xl text-lg text-gray-600">
-              {isEn
-                ? "Browse products by district and open each product contact popup to call the shop or open its map location instantly."
-                : "按地区浏览商品，并通过每件商品的联系弹窗直接拨打电话或打开地图导航。"}
-            </p>
+    <>
+      {/* ─── Global Styles ─────────────────────────────────────────────────── */}
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap');
 
-            <a
-              href="#products"
-              className="inline-flex items-center gap-3 rounded-md bg-gray-900 px-6 py-3 font-semibold text-white shadow-lg transition hover:scale-[1.02]"
-            >
-              {isEn ? "Browse Products" : "浏览商品"}
-              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </a>
-          </motion.div>
+        :root {
+          --ink: #0a0a0a;
+          --ink-soft: #3a3a3a;
+          --ink-muted: #888;
+          --surface: #fafaf8;
+          --card: #ffffff;
+          --accent: #e8501a;
+          --accent-light: #fff1ec;
+          --accent-mid: #fad5c7;
+          --border: #e8e4df;
+          --border-strong: #c8c2bb;
+        }
 
-          <motion.div
-            onClick={() => setSelectedProduct(productsWithVerifiedLocations[0])}
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8 }}
-            className="flex-1 cursor-pointer"
-          >
-            <div className="relative overflow-hidden rounded-2xl">
-              <Image
-                src={productsWithVerifiedLocations[0].image}
-                alt={productsWithVerifiedLocations[0].name}
-                fill
-                priority
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                className="h-[30rem] w-full object-cover"
-              />
-              <div className="absolute bottom-6 left-6 max-w-xs rounded-lg bg-white/90 p-4 shadow-md backdrop-blur">
-                <h3 className="text-lg font-bold">
-                  {isEn ? productsWithVerifiedLocations[0].name : productsWithVerifiedLocations[0].nameCN}
-                </h3>
-                <p className="text-sm text-gray-600">{formatPrice(productsWithVerifiedLocations[0].price)}</p>
-                <p className="mt-1 text-xs font-semibold text-orange-700">
-                  {isEn ? "Tap to view contact" : "点击查看联系方式"}
+        .page-root { font-family: 'DM Sans', sans-serif; background: transparent; color: var(--ink); }
+        .display { font-family: 'Syne', sans-serif; }
+
+        /* Filter bar */
+        .filter-select {
+          appearance: none;
+          background: rgba(255,255,255,0.75);
+          backdrop-filter: blur(8px);
+          border: 1.5px solid rgba(255,255,255,0.5);
+          border-radius: 10px;
+          padding: 10px 40px 10px 14px;
+          font-family: 'DM Sans', sans-serif;
+          font-size: 14px;
+          font-weight: 500;
+          color: var(--ink);
+          cursor: pointer;
+          transition: border-color 0.15s, box-shadow 0.15s;
+          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+          background-repeat: no-repeat;
+          background-position: right 14px center;
+        }
+        .filter-select:focus { outline: none; border-color: var(--ink); box-shadow: 0 0 0 3px rgba(10,10,10,0.08); }
+        .filter-select:hover { border-color: rgba(255,255,255,0.9); background: rgba(255,255,255,0.9); }
+
+        /* Card */
+        .product-card {
+          background: rgba(255,255,255,0.82);
+          backdrop-filter: blur(12px);
+          border-radius: 20px;
+          border: 1.5px solid rgba(255,255,255,0.6);
+          overflow: hidden;
+          cursor: pointer;
+          transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.28s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.2s;
+        }
+        .product-card:hover {
+          transform: translateY(-6px);
+          box-shadow: 0 24px 56px -8px rgba(10,10,10,0.18);
+          border-color: rgba(255,255,255,0.9);
+          background: rgba(255,255,255,0.94);
+        }
+
+        /* Image overlay */
+        .card-img-wrap { position: relative; overflow: hidden; height: 240px; }
+        .card-img-wrap img { transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
+        .product-card:hover .card-img-wrap img { transform: scale(1.05); }
+        .card-price-badge {
+          position: absolute;
+          top: 14px; right: 14px;
+          background: var(--ink);
+          color: #fff;
+          font-family: 'Syne', sans-serif;
+          font-size: 13px;
+          font-weight: 700;
+          padding: 5px 12px;
+          border-radius: 999px;
+          letter-spacing: 0.01em;
+        }
+        .card-district-badge {
+          position: absolute;
+          top: 14px; left: 14px;
+          background: rgba(255,255,255,0.9);
+          backdrop-filter: blur(6px);
+          color: var(--ink-soft);
+          font-size: 11px;
+          font-weight: 600;
+          padding: 4px 10px;
+          border-radius: 999px;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+          border: 1px solid rgba(0,0,0,0.08);
+        }
+
+        /* CTA button */
+        .cta-btn {
+          display: flex; align-items: center; justify-content: center; gap: 8px;
+          width: 100%;
+          background: var(--ink);
+          color: #fff;
+          border: none;
+          border-radius: 12px;
+          padding: 13px 16px;
+          font-family: 'DM Sans', sans-serif;
+          font-size: 14px;
+          font-weight: 600;
+          cursor: pointer;
+          letter-spacing: 0.01em;
+          transition: background 0.15s, transform 0.15s;
+        }
+        .cta-btn:hover { background: var(--accent); transform: translateY(-1px); }
+        .cta-btn-arrow { transition: transform 0.2s; }
+        .cta-btn:hover .cta-btn-arrow { transform: translateX(4px); }
+
+        /* Rating dot */
+        .rating-chip {
+          display: inline-flex; align-items: center; gap: 5px;
+          background: #fffbe6;
+          border: 1px solid #f0e4a0;
+          border-radius: 999px;
+          padding: 3px 9px;
+          font-size: 12px;
+          font-weight: 600;
+          color: #7a5c00;
+        }
+
+        /* Modal */
+        .modal-overlay {
+          position: fixed; inset: 0; z-index: 50;
+          display: flex; align-items: center; justify-content: center;
+          background: rgba(10,10,10,0.55);
+          backdrop-filter: blur(6px);
+          padding: 16px;
+        }
+        .modal-panel {
+          position: relative;
+          width: 100%; max-width: 680px;
+          background: var(--card);
+          border-radius: 28px;
+          overflow: hidden;
+          box-shadow: 0 40px 100px -12px rgba(10,10,10,0.45);
+          border: 1.5px solid var(--border);
+        }
+        .modal-hero { position: relative; height: 220px; overflow: hidden; }
+        .modal-hero img { object-fit: cover; width: 100%; height: 100%; }
+        .modal-hero-overlay {
+          position: absolute; inset: 0;
+          background: linear-gradient(to top, rgba(10,10,10,0.8) 0%, rgba(10,10,10,0.2) 50%, transparent 100%);
+        }
+        .modal-hero-text { position: absolute; bottom: 20px; left: 24px; right: 60px; color: #fff; }
+        .modal-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-bottom: 4px; }
+        .modal-title { font-family: 'Syne', sans-serif; font-size: 26px; font-weight: 800; line-height: 1.15; }
+        .modal-close {
+          position: absolute; top: 14px; right: 14px;
+          width: 36px; height: 36px;
+          background: rgba(255,255,255,0.15);
+          backdrop-filter: blur(8px);
+          border: 1px solid rgba(255,255,255,0.2);
+          border-radius: 50%;
+          color: #fff;
+          font-size: 16px;
+          cursor: pointer;
+          display: flex; align-items: center; justify-content: center;
+          transition: background 0.15s;
+        }
+        .modal-close:hover { background: rgba(255,255,255,0.3); }
+        .modal-body { padding: 24px 28px 28px; }
+        .modal-info-card {
+          background: var(--accent-light);
+          border: 1.5px solid var(--accent-mid);
+          border-radius: 16px;
+          padding: 18px 20px;
+          margin: 16px 0;
+        }
+        .modal-shop-name { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; color: var(--ink); margin-bottom: 12px; }
+        .modal-info-row { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; font-size: 14px; color: var(--ink-soft); }
+        .modal-info-row:last-child { margin-bottom: 0; }
+        .modal-info-icon { font-size: 16px; margin-top: 1px; flex-shrink: 0; }
+        .modal-actions { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 20px; }
+        .modal-btn {
+          display: flex; align-items: center; justify-content: center;
+          border-radius: 12px;
+          padding: 13px 12px;
+          font-family: 'DM Sans', sans-serif;
+          font-size: 13px;
+          font-weight: 600;
+          cursor: pointer;
+          text-decoration: none;
+          transition: transform 0.15s, filter 0.15s;
+          border: none;
+        }
+        .modal-btn:hover { transform: translateY(-2px); filter: brightness(0.95); }
+        .modal-btn-primary { background: var(--ink); color: #fff; }
+        .modal-btn-secondary { background: rgba(255,255,255,0.85); color: var(--ink); border: 1.5px solid var(--border-strong); backdrop-filter: blur(4px); }
+        .modal-btn-ghost { background: var(--accent-light); color: var(--accent); border: 1.5px solid var(--accent-mid); }
+
+        /* Hero */
+        .hero-wrap { position: relative; overflow: hidden; background: transparent; color: #fff; }
+        .hero-grid-bg { display: none; }
+        .hero-accent-circle { display: none; }
+        .hero-tag {
+          display: inline-flex; align-items: center; gap: 6px;
+          background: rgba(0,0,0,0.2);
+          border: 1px solid rgba(255,255,255,0.25);
+          border-radius: 999px;
+          padding: 5px 14px;
+          font-size: 12px;
+          font-weight: 600;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+          color: rgba(255,255,255,0.85);
+          margin-bottom: 20px;
+          backdrop-filter: blur(6px);
+        }
+        .hero-tag-dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.4)} }
+
+        .hero-stat { display: flex; flex-direction: column; }
+        .hero-stat-num { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; line-height: 1; }
+        .hero-stat-label { font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 2px; }
+
+        /* Feature card (hero right) */
+        .hero-feature-card {
+          background: rgba(0,0,0,0.2);
+          border: 1px solid rgba(255,255,255,0.2);
+          border-radius: 20px;
+          overflow: hidden;
+          cursor: pointer;
+          transition: transform 0.3s, border-color 0.2s;
+          backdrop-filter: blur(8px);
+        }
+        .hero-feature-card:hover { transform: scale(1.01); border-color: rgba(255,255,255,0.4); }
+
+        /* Section header */
+        .section-eyebrow {
+          display: inline-flex; align-items: center; gap: 8px;
+          font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+          color: #fff;
+          text-shadow: 0 1px 4px rgba(0,0,0,0.2);
+          margin-bottom: 8px;
+        }
+        .section-eyebrow::before { content: ''; display: block; width: 20px; height: 2px; background: var(--accent); border-radius: 2px; }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--surface); }
+        ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+
+        @media (max-width: 640px) {
+          .modal-actions { grid-template-columns: 1fr; }
+          .hero-stats { display: none; }
+        }
+      `}</style>
+
+      <div className="page-root min-h-screen">
+
+        {/* ─── HERO ─────────────────────────────────────────────────────────── */}
+        <header className="hero-wrap">
+          <div className="hero-grid-bg" />
+          <div className="hero-accent-circle" />
+
+          <div className="relative mx-auto max-w-7xl px-6 py-20 lg:py-28">
+            <div className="flex flex-col gap-16 lg:flex-row lg:items-center">
+
+              {/* Left copy */}
+              <motion.div
+                initial={{ opacity: 0, y: 28 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+                className="flex-1 max-w-xl"
+              >
+                <div className="hero-tag">
+                  <span className="hero-tag-dot" />
+                  {isEn ? "OTOP Marketplace" : "OTOP 市场"}
+                </div>
+
+                <h1 className="display mb-5 text-5xl font-extrabold leading-[1.05] tracking-tight md:text-6xl lg:text-7xl">
+                  {isEn ? (
+                    <>Find <span style={{ color: "var(--accent)" }}>Local</span><br />OTOP Products</>
+                  ) : (
+                    <>探索<span style={{ color: "var(--accent)" }}>本地</span><br />OTOP 产品</>
+                  )}
+                </h1>
+
+                <p className="mb-8 text-base leading-relaxed" style={{ color: "rgba(255,255,255,0.6)", maxWidth: "420px" }}>
+                  {isEn
+                    ? "Browse by district and connect directly with local sellers — call or navigate in one tap."
+                    : "按地区浏览商品，一键联系卖家或打开导航。"}
                 </p>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </header>
 
-      <main id="products" className="mx-auto max-w-7xl px-6 py-16">
-        <div className="mb-10">
-          <div className="mb-10 flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
-            <div>
-              <p className="text-sm uppercase tracking-widest text-gray-500">
-                {isEn ? "Complete Collection" : "完整系列"}
-              </p>
-              <h2 className="text-3xl font-extrabold md:text-4xl">
-                {isEn ? "Products With Direct Contact" : "可直接联系商家的商品"}
-              </h2>
-              <p className="mt-2 text-sm text-gray-600">
-                {isEn
-                  ? `Showing ${filteredProducts.length} products`
-                  : `共显示 ${filteredProducts.length} 件商品`}
-              </p>
-            </div>
-          </div>
+                <div className="flex items-center gap-5 flex-wrap">
+                  <a
+                    href="#products"
+                    className="inline-flex items-center gap-3 rounded-xl px-6 py-3.5 text-sm font-semibold text-white transition"
+                    style={{ background: "var(--accent)" }}
+                    onMouseEnter={e => (e.currentTarget.style.filter = "brightness(1.1)")}
+                    onMouseLeave={e => (e.currentTarget.style.filter = "")}
+                  >
+                    {isEn ? "Browse Products" : "浏览商品"}
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+                  </a>
 
-          <div className="flex flex-col gap-4 md:flex-row md:gap-6">
-            <div className="flex flex-col gap-2">
-              <label className="text-sm font-semibold text-gray-700">
-                {isEn ? "Sort by Price" : "按价格排序"}
-              </label>
-              <select
-                value={sortType}
-                onChange={(event) => setSortType(event.target.value as SortType)}
-                className="rounded-lg border border-gray-300 bg-white px-4 py-2 transition hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900"
-              >
-                <option value="default">{isEn ? "Default" : "默认"}</option>
-                <option value="price-asc">{isEn ? "Low to High" : "价格从低到高"}</option>
-                <option value="price-desc">{isEn ? "High to Low" : "价格从高到低"}</option>
-              </select>
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <label className="text-sm font-semibold text-gray-700">
-                {isEn ? "Filter by District" : "按地区筛选"}
-              </label>
-              <select
-                value={selectedDistrict}
-                onChange={(event) => setSelectedDistrict(event.target.value)}
-                className="rounded-lg border border-gray-300 bg-white px-4 py-2 transition hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900"
-              >
-                <option value="all">{isEn ? "All Districts" : "全部地区"}</option>
-                {allDistricts.map((district) => (
-                  <option key={district} value={district}>
-                    {isEn
-                      ? district
-                      : productsWithVerifiedLocations.find((product) => product.district === district)?.districtCN || district}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          key={`${selectedDistrict}-${sortType}`}
-          className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3"
-        >
-          {filteredProducts.map((product) => (
-            <motion.article
-              key={product.id}
-              variants={itemVariants}
-              onClick={() => setSelectedProduct(product)}
-              onMouseEnter={() => setHoveredProduct(product.id)}
-              onMouseLeave={() => setHoveredProduct(null)}
-              className="group cursor-pointer overflow-hidden rounded-2xl border border-orange-100 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
-            >
-              <div className="relative">
-                <Image
-                  src={product.image}
-                  alt={product.name}
-                  fill
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  className="h-64 w-full object-cover"
-                />
-                <div
-                  className={`absolute inset-0 bg-gradient-to-t from-black/65 via-black/0 transition-opacity ${hoveredProduct === product.id ? "opacity-100" : "opacity-0"
-                    }`}
-                />
-              </div>
-
-              <div className="space-y-4 p-6">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <h3 className="text-lg font-bold">{isEn ? product.name : product.nameCN}</h3>
-                    <p className="mt-1 text-sm text-gray-500">
-                      {product.icon} {isEn ? product.nameCN : product.name}
-                    </p>
-                    <p className="mt-1 text-xs text-gray-400">
-                      {isEn ? product.district : product.districtCN}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-lg font-extrabold">{formatPrice(product.price)}</div>
-                    <div className="text-sm text-yellow-500">
-                      {product.mapRating ? `Google ${product.mapRating.toFixed(1)}` : isEn ? "Popular local shop" : "本地热门商店"}
+                  {/* Stats */}
+                  <div className="hero-stats flex items-center gap-8 pl-2">
+                    <div className="hero-stat">
+                      <span className="hero-stat-num">{productsWithVerifiedLocations.length}+</span>
+                      <span className="hero-stat-label">{isEn ? "Products" : "商品"}</span>
+                    </div>
+                    <div style={{ width: 1, height: 36, background: "rgba(255,255,255,0.15)" }} />
+                    <div className="hero-stat">
+                      <span className="hero-stat-num">{allDistricts.length}</span>
+                      <span className="hero-stat-label">{isEn ? "Districts" : "地区"}</span>
                     </div>
                   </div>
                 </div>
+              </motion.div>
 
-                <p className="line-clamp-2 text-sm text-gray-600">
-                  {isEn ? product.description : product.descriptionCN}
-                </p>
-
-                <div className="rounded-xl border border-orange-100 bg-orange-50/70 p-3">
-                  <p className="text-xs uppercase tracking-wide text-gray-500">
-                    {isEn ? "Seller" : "商家"}
-                  </p>
-                  <p className="mt-1 line-clamp-1 text-sm font-semibold text-gray-900">
-                    {isEn ? product.shopName : product.shopNameCN}
-                  </p>
-                  <p className="mt-1 text-sm text-gray-600">{product.phone}</p>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    setSelectedProduct(product);
-                  }}
-                  className="w-full rounded-xl bg-gray-900 px-4 py-3 text-sm font-semibold text-white transition hover:bg-black"
-                >
-                  {isEn ? "View Contact Popup" : "打开联系方式弹窗"}
-                </button>
-              </div>
-            </motion.article>
-          ))}
-        </motion.div>
-
-        {filteredProducts.length === 0 && (
-          <div className="py-12 text-center">
-            <p className="text-lg text-gray-600">
-              {isEn ? "No products found in this district." : "该地区暂无商品。"}
-            </p>
-          </div>
-        )}
-      </main>
-
-      {selectedProduct && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby={`product-contact-title-${selectedProduct.id}`}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm sm:p-6"
-          onClick={closeContactPopup}
-        >
-          <motion.div
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.22 }}
-            onClick={(event) => event.stopPropagation()}
-            className="relative w-full max-w-2xl overflow-hidden rounded-3xl bg-white shadow-[0_30px_80px_rgba(15,23,42,0.35)]"
-          >
-            <div className="relative h-44 overflow-hidden sm:h-52">
-              <Image
-                src={selectedProduct.image}
-                alt={selectedProduct.name}
-                fill
-                sizes="(max-width: 768px) 100vw, 768px"
-                className="h-full w-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-gray-900/35 to-transparent" />
-              <div className="absolute bottom-4 left-5 right-14 flex items-end justify-between gap-4 text-white">
-                <div>
-                  <p className="text-xs uppercase tracking-[0.2em] text-orange-200">
-                    {isEn ? "Shop Contact" : "商家联系方式"}
-                  </p>
-                  <h2 id={`product-contact-title-${selectedProduct.id}`} className="mt-1 text-2xl font-bold leading-tight">
-                    {isEn ? selectedProduct.name : selectedProduct.nameCN}
-                  </h2>
-                  <p className="mt-1 text-xs text-orange-100">
-                    {isEn ? selectedProduct.district : selectedProduct.districtCN}
-                  </p>
-                </div>
-                <div className="rounded-full bg-white/20 px-4 py-2 text-sm font-semibold backdrop-blur">
-                  {formatPrice(selectedProduct.price)}
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-5 p-6 sm:p-7">
-              <p className="text-sm leading-relaxed text-gray-600">
-                {isEn ? selectedProduct.description : selectedProduct.descriptionCN}
-              </p>
-
-              <div className="rounded-2xl border border-orange-100 bg-gradient-to-br from-orange-50 via-amber-50 to-white p-5">
-                <h3 className="text-lg font-bold text-gray-900">
-                  {isEn ? selectedProduct.shopName : selectedProduct.shopNameCN}
-                </h3>
-                <div className="mt-4 space-y-3 text-sm text-gray-700">
-                  <div className="flex items-start gap-3">
-                    <span className="mt-0.5 text-base">📍</span>
-                    <p className="leading-relaxed">
-                      {isEn ? selectedProduct.address : selectedProduct.addressCN}
+              {/* Right featured card */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.8, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+                className="flex-1 max-w-md lg:max-w-none"
+                onClick={() => setSelectedProduct(productsWithVerifiedLocations[0])}
+              >
+                <div className="hero-feature-card">
+                  <div style={{ position: "relative", height: "300px" }}>
+                    <Image
+                      src={productsWithVerifiedLocations[0].image}
+                      alt={productsWithVerifiedLocations[0].name}
+                      fill
+                      priority
+                      sizes="(max-width: 1024px) 100vw, 45vw"
+                      style={{ objectFit: "cover" }}
+                    />
+                    <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(10,10,10,0.7) 0%, transparent 55%)" }} />
+                  </div>
+                  <div style={{ padding: "20px 22px" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
+                      <div>
+                        <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(255,255,255,0.45)", marginBottom: 4 }}>
+                          {isEn ? "Featured" : "精选商品"}
+                        </p>
+                        <h3 className="display" style={{ fontSize: 20, fontWeight: 800, color: "#fff", lineHeight: 1.2 }}>
+                          {isEn ? productsWithVerifiedLocations[0].name : productsWithVerifiedLocations[0].nameCN}
+                        </h3>
+                      </div>
+                      <div style={{ background: "var(--accent)", color: "#fff", borderRadius: 8, padding: "6px 12px", fontSize: 14, fontWeight: 700, fontFamily: "Syne, sans-serif", flexShrink: 0 }}>
+                        {formatPrice(productsWithVerifiedLocations[0].price)}
+                      </div>
+                    </div>
+                    <p style={{ marginTop: 8, fontSize: 12, color: "rgba(255,255,255,0.5)", fontWeight: 600, letterSpacing: "0.04em" }}>
+                      {isEn ? "↗ Tap to view contact" : "↗ 点击查看联系方式"}
                     </p>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <span className="text-base">📞</span>
-                    <a href={phoneHref} className="font-semibold text-blue-700 transition hover:text-blue-900">
-                      {selectedProduct.phone}
-                    </a>
-                  </div>
+                </div>
+              </motion.div>
+            </div>
+          </div>
+        </header>
+
+        {/* ─── PRODUCTS SECTION ────────────────────────────────────────────── */}
+        <main id="products" className="mx-auto max-w-7xl px-6 py-16">
+
+          {/* Section header + filters */}
+          <div className="mb-10">
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className="mb-8 flex flex-col gap-6 md:flex-row md:items-end md:justify-between"
+            >
+              <div>
+                <p className="section-eyebrow">{isEn ? "Complete Collection" : "完整系列"}</p>
+                <h2 className="display text-3xl font-extrabold leading-tight md:text-4xl" style={{ textShadow: "0 1px 3px rgba(0,0,0,0.15)" }}>
+                  {isEn ? "Products With Direct Contact" : "可直接联系商家的商品"}
+                </h2>
+                <p className="mt-1.5 text-sm" style={{ color: "rgba(255,255,255,0.7)" }}>
+                  {isEn ? `${filteredProducts.length} products` : `${filteredProducts.length} 件商品`}
+                </p>
+              </div>
+
+              {/* Filter row */}
+              <div className="flex flex-wrap gap-3">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.75)" }}>
+                    {isEn ? "Sort" : "排序"}
+                  </label>
+                  <select value={sortType} onChange={e => setSortType(e.target.value as SortType)} className="filter-select">
+                    <option value="default">{isEn ? "Default" : "默认"}</option>
+                    <option value="price-asc">{isEn ? "Price: Low → High" : "价格从低到高"}</option>
+                    <option value="price-desc">{isEn ? "Price: High → Low" : "价格从高到低"}</option>
+                  </select>
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.75)" }}>
+                    {isEn ? "District" : "地区"}
+                  </label>
+                  <select value={selectedDistrict} onChange={e => setSelectedDistrict(e.target.value)} className="filter-select">
+                    <option value="all">{isEn ? "All Districts" : "全部地区"}</option>
+                    {allDistricts.map(d => (
+                      <option key={d} value={d}>
+                        {isEn ? d : productsWithVerifiedLocations.find(p => p.district === d)?.districtCN || d}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
+            </motion.div>
 
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-                <a
-                  href={phoneHref}
-                  className="inline-flex items-center justify-center rounded-xl bg-gray-900 px-4 py-3 text-sm font-semibold text-white transition hover:bg-black"
-                >
-                  {isEn ? "Call Shop" : "拨打电话"}
-                </a>
-                <a
-                  href={mapHref}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center justify-center rounded-xl border border-gray-300 px-4 py-3 text-sm font-semibold text-gray-700 transition hover:border-gray-400 hover:bg-gray-50"
-                >
-                  {isEn ? "Open Map" : "打开地图"}
-                </a>
+            {/* Active district pill */}
+            {selectedDistrict !== "all" && (
+              <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-2 mb-6">
+                <span className="text-sm" style={{ color: "var(--ink-muted)" }}>{isEn ? "Filtering:" : "筛选："}</span>
                 <button
-                  type="button"
-                  onClick={closeContactPopup}
-                  className="inline-flex items-center justify-center rounded-xl border border-orange-200 bg-orange-50 px-4 py-3 text-sm font-semibold text-orange-900 transition hover:bg-orange-100"
+                  onClick={() => setSelectedDistrict("all")}
+                  className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm font-semibold"
+                  style={{ background: "var(--ink)", color: "#fff" }}
                 >
-                  {isEn ? "Close" : "关闭"}
+                  {selectedDistrict}
+                  <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" /></svg>
                 </button>
-              </div>
-            </div>
+              </motion.div>
+            )}
+          </div>
 
-            <button
-              onClick={closeContactPopup}
-              className="absolute right-4 top-4 rounded-full bg-white/90 p-2 text-sm font-bold text-gray-700 shadow transition hover:bg-white"
-              aria-label="Close popup"
-            >
-              ✕
-            </button>
+          {/* Product grid */}
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            animate="visible"
+            key={`${selectedDistrict}-${sortType}`}
+            className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+          >
+            {filteredProducts.map((product) => (
+              <motion.article
+                key={product.id}
+                variants={fadeUp}
+                onClick={() => setSelectedProduct(product)}
+                className="product-card"
+              >
+                {/* Image */}
+                <div className="card-img-wrap">
+                  <Image
+                    src={product.image}
+                    alt={product.name}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    style={{ objectFit: "cover" }}
+                  />
+                  <span className="card-price-badge">{formatPrice(product.price)}</span>
+                  {product.district && (
+                    <span className="card-district-badge">{isEn ? product.district : product.districtCN}</span>
+                  )}
+                </div>
+
+                {/* Body */}
+                <div style={{ padding: "20px 20px 22px" }}>
+                  <div className="flex items-start justify-between gap-3 mb-3">
+                    <div>
+                      <h3 className="display" style={{ fontSize: 17, fontWeight: 800, lineHeight: 1.25, marginBottom: 2 }}>
+                        {isEn ? product.name : product.nameCN}
+                      </h3>
+                      <p style={{ fontSize: 13, color: "var(--ink-muted)" }}>
+                        {isEn ? product.nameCN : product.name}
+                      </p>
+                    </div>
+                    {product.mapRating && (
+                      <span className="rating-chip" style={{ flexShrink: 0 }}>
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style={{ color: "#b8930a" }}><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        {product.mapRating.toFixed(1)}
+                      </span>
+                    )}
+                  </div>
+
+                  <p style={{ fontSize: 13, color: "var(--ink-soft)", lineHeight: 1.6, marginBottom: 16, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+                    {isEn ? product.description : product.descriptionCN}
+                  </p>
+
+                  {/* Seller strip */}
+                  <div style={{ background: "rgba(0,0,0,0.04)", border: "1.5px solid rgba(0,0,0,0.08)", borderRadius: 12, padding: "10px 14px", marginBottom: 14 }}>
+                    <p style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--ink-muted)", marginBottom: 3 }}>
+                      {isEn ? "Seller" : "商家"}
+                    </p>
+                    <p style={{ fontSize: 13, fontWeight: 600, color: "var(--ink)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                      {isEn ? product.shopName : product.shopNameCN}
+                    </p>
+                    {product.phone && (
+                      <p style={{ fontSize: 12, color: "var(--ink-muted)", marginTop: 2 }}>{product.phone}</p>
+                    )}
+                  </div>
+
+                  <button
+                    type="button"
+                    className="cta-btn"
+                    onClick={e => { e.stopPropagation(); setSelectedProduct(product); }}
+                  >
+                    {isEn ? "View Contact" : "联系商家"}
+                    <svg className="cta-btn-arrow" width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                  </button>
+                </div>
+              </motion.article>
+            ))}
           </motion.div>
-        </div>
-      )}
-    </div>
+
+          {filteredProducts.length === 0 && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="py-20 text-center">
+              <div style={{ display: "flex", justifyContent: "center", marginBottom: 12 }}>
+                <svg width="48" height="48" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24" style={{ color: "var(--ink-muted)", opacity: 0.5 }}>
+                  <circle cx="11" cy="11" r="8"/><path strokeLinecap="round" d="M21 21l-4.35-4.35"/>
+                </svg>
+              </div>
+              <p className="display text-xl font-bold" style={{ color: "var(--ink)" }}>
+                {isEn ? "No products found" : "未找到商品"}
+              </p>
+              <p style={{ color: "var(--ink-muted)", marginTop: 6, fontSize: 14 }}>
+                {isEn ? "Try selecting a different district." : "请尝试选择其他地区。"}
+              </p>
+            </motion.div>
+          )}
+        </main>
+
+        {/* ─── CONTACT MODAL ────────────────────────────────────────────────── */}
+        <AnimatePresence>
+          {selectedProduct && (
+            <motion.div
+              className="modal-overlay"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={closeContactPopup}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby={`modal-title-${selectedProduct.id}`}
+            >
+              <motion.div
+                className="modal-panel"
+                variants={scaleIn}
+                initial="hidden"
+                animate="visible"
+                exit="hidden"
+                onClick={e => e.stopPropagation()}
+              >
+                {/* Hero image */}
+                <div className="modal-hero">
+                  <Image
+                    src={selectedProduct.image}
+                    alt={selectedProduct.name}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 680px"
+                    style={{ objectFit: "cover" }}
+                  />
+                  <div className="modal-hero-overlay" />
+                  <div className="modal-hero-text">
+                    <p className="modal-eyebrow">{isEn ? "Shop Contact" : "商家联系方式"}</p>
+                    <h2 id={`modal-title-${selectedProduct.id}`} className="modal-title">
+                      {isEn ? selectedProduct.name : selectedProduct.nameCN}
+                    </h2>
+                    <p style={{ marginTop: 4, fontSize: 12, color: "rgba(255,255,255,0.55)" }}>
+                      {isEn ? selectedProduct.district : selectedProduct.districtCN}
+                    </p>
+                  </div>
+                  <button className="modal-close" onClick={closeContactPopup} aria-label="Close">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" d="M18 6L6 18M6 6l12 12"/></svg>
+                  </button>
+                </div>
+
+                {/* Body */}
+                <div className="modal-body">
+                  <p style={{ fontSize: 14, lineHeight: 1.7, color: "var(--ink-soft)" }}>
+                    {isEn ? selectedProduct.description : selectedProduct.descriptionCN}
+                  </p>
+
+                  <div className="modal-info-card">
+                    <p className="modal-shop-name">
+                      {isEn ? selectedProduct.shopName : selectedProduct.shopNameCN}
+                    </p>
+                    {(selectedProduct.address || selectedProduct.addressCN) && (
+                      <div className="modal-info-row">
+                        <svg className="modal-info-icon" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.75" viewBox="0 0 24 24" style={{ flexShrink: 0, marginTop: 2, color: "var(--accent)" }}><path strokeLinecap="round" strokeLinejoin="round" d="M12 21c-4-4.5-6-8-6-10.5a6 6 0 1112 0C18 13 16 16.5 12 21z"/><circle cx="12" cy="10.5" r="2" fill="currentColor" stroke="none"/></svg>
+                        <span>{isEn ? selectedProduct.address : selectedProduct.addressCN}</span>
+                      </div>
+                    )}
+                    {selectedProduct.phone && (
+                      <div className="modal-info-row">
+                        <svg className="modal-info-icon" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.75" viewBox="0 0 24 24" style={{ flexShrink: 0, marginTop: 2, color: "var(--accent)" }}><path strokeLinecap="round" strokeLinejoin="round" d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8 19.79 19.79 0 01.98 2.18 2 2 0 012.96 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L7.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+                        <a href={phoneHref} style={{ fontWeight: 600, color: "#1d4ed8", textDecoration: "none" }}
+                          onMouseEnter={e => (e.currentTarget.style.textDecoration = "underline")}
+                          onMouseLeave={e => (e.currentTarget.style.textDecoration = "none")}
+                        >
+                          {selectedProduct.phone}
+                        </a>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="modal-actions">
+                    <a href={phoneHref} className="modal-btn modal-btn-primary">
+                      <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8 19.79 19.79 0 01.98 2.18 2 2 0 012.96 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L7.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+                      {isEn ? "Call Shop" : "拨打电话"}
+                    </a>
+                    <a href={mapHref} target="_blank" rel="noreferrer" className="modal-btn modal-btn-secondary">
+                      <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 21c-4-4.5-6-8-6-10.5a6 6 0 1112 0C18 13 16 16.5 12 21z"/><circle cx="12" cy="10.5" r="2" fill="currentColor" stroke="none"/></svg>
+                      {isEn ? "Open Map" : "打开地图"}
+                    </a>
+                    <button type="button" onClick={closeContactPopup} className="modal-btn modal-btn-ghost">
+                      <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" d="M18 6L6 18M6 6l12 12"/></svg>
+                      {isEn ? "Close" : "关闭"}
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </>
   );
 }
-
