@@ -156,9 +156,9 @@ export default function RefactoredProductShowcase() {
         }
 
         /* Image overlay */
-        .card-img-wrap { position: relative; overflow: hidden; height: 240px; }
+        .card-img-wrap { position: relative; overflow: hidden; height: 280px; background: #f5f5f5; display: flex; align-items: center; justify-content: center; }
         .card-img-wrap img { transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
-        .product-card:hover .card-img-wrap img { transform: scale(1.05); }
+        .product-card:hover .card-img-wrap img { transform: scale(1.02); }
         .card-price-badge {
           position: absolute;
           top: 14px; right: 14px;
@@ -541,7 +541,7 @@ export default function RefactoredProductShowcase() {
                     alt={product.name}
                     fill
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    style={{ objectFit: "cover" }}
+                    style={{ objectFit: "contain", objectPosition: "center" }}
                   />
                   <span className="card-price-badge">{formatPrice(product.price)}</span>
                   {product.district && (

@@ -40,6 +40,58 @@
     descriptionCN: "可爱的卡通大象钥匙扣，饰有精致的兰纳图案。带有供旅客扫描的 CMTC 二维码。"
   },
   {
+    id: 39,
+    name: "First Keychain",
+    nameCN: "第一个钥匙扣",
+    district: "",
+    districtCN: "",
+    price: 150,
+    image: "/Products/firstKeychainLikeIt'sActuallyTheActualDamnKeychain.png",
+    tag: "star",
+    icon: "🔑",
+    description: "A beautiful handcrafted keychain design. Perfect souvenir to take home.",
+    descriptionCN: "精美的手工制作钥匙扣。完美的纪念品。"
+  },
+  {
+    id: 40,
+    name: "Second Keychain",
+    nameCN: "第二个钥匙扣",
+    district: "",
+    districtCN: "",
+    price: 150,
+    image: "/Products/secondKeychain.png",
+    tag: "star",
+    icon: "🔑",
+    description: "An elegant keychain featuring traditional design. Great gift for travelers.",
+    descriptionCN: "展示传统设计的优雅钥匙扣。旅客的好礼物。"
+  },
+  {
+    id: 41,
+    name: "Third Keychain",
+    nameCN: "第三个钥匙扣",
+    district: "",
+    districtCN: "",
+    price: 150,
+    image: "/Products/thirdKeychain.png",
+    tag: "star",
+    icon: "🔑",
+    description: "A charming keychain with intricate details. Unique Chiang Mai-inspired design.",
+    descriptionCN: "设计精细的迷人钥匙扣。独特的清迈灵感设计。"
+  },
+  {
+    id: 42,
+    name: "Last Keychain",
+    nameCN: "最后一个钥匙扣",
+    district: "",
+    districtCN: "",
+    price: 150,
+    image: "/Products/lastKeychain.png",
+    tag: "star",
+    icon: "🔑",
+    description: "The final piece in our exclusive keychain collection. A must-have souvenir.",
+    descriptionCN: "我们独家钥匙扣系列的最后一件。必备纪念品。"
+  },
+  {
     id: 4,
     name: "Date Palm Fruits",
     nameCN: "椰枣果实",
