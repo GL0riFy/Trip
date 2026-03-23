@@ -3,14 +3,16 @@ import { districtHistory } from "@/src/data/district-history";
 interface Props {
   districtId: string;
   districtName: string;
-  locale: "en" | "zh";
+  locale: "en" | "zh" | "th";
 }
 
 export default function DistrictHistorySection({ districtId, districtName, locale }: Props) {
-  const history = districtHistory[districtId];
+  const history =
+    districtHistory[districtId === "mueang-chiang-mai" ? "mueang" : districtId];
   if (!history) return null;
 
-  const content = locale === "zh" ? history.zh : history.en;
+  const content =
+    locale === "zh" ? history.zh : locale === "th" ? history.th ?? history.en : history.en;
 
   return (
     <section style={{ marginTop: 80 }}>

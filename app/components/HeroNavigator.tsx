@@ -11,8 +11,7 @@ export default function ChiangMaiHero() {
   const t = useTranslations('Home');
 
 
-  const setLanguage = (lang: 'en' | 'zh') => {
-    // Redirect ไปยังหน้า maps พร้อม locale ใหม่
+  const setLanguage = (lang: 'en' | 'zh' | 'th') => {
     router.push(`/${lang}/maps`);
   };
   return (
@@ -42,13 +41,14 @@ export default function ChiangMaiHero() {
           <div className="flex flex-col md:flex-row gap-6">
             {[
               { id: 'zh', label: '中文', flag: 'CN', sub: 'CHINESE' },
-              { id: 'en', label: 'English', flag: 'GB', sub: 'ENGLISH' }
+              { id: 'en', label: 'English', flag: 'GB', sub: 'ENGLISH' },
+              { id: 'th', label: 'ไทย', flag: 'TH', sub: 'THAI' }
             ].map((lang) => (
               <motion.button
                 key={lang.id}
                 whileHover={{ scale: 1.05, backgroundColor: 'rgba(255, 255, 255, 0.2)' }}
                 whileTap={{ scale: 0.98 }}
-                onClick={() => setLanguage(lang.id as 'en' | 'zh')}
+                onClick={() => setLanguage(lang.id as 'en' | 'zh' | 'th')}
                 className="group relative flex w-72 items-center justify-between rounded-2xl border border-white/30 bg-white/10 p-6 backdrop-blur-md transition-all duration-300 shadow-2xl"
               >
                 <div className="flex flex-col items-start text-left">

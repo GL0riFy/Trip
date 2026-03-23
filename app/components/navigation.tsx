@@ -35,17 +35,19 @@ export default function Navigation() {
     { key: 'home', href: `/${locale}` },
     { key: 'products', href: `/${locale}/products` },
     { key: 'map', href: `/${locale}/maps` },
-    { key: 'essentials', href: `/${locale}/essentials` }
+    { key: 'essentials', href: `/${locale}/essentials` },
+    { key: 'dashboard', href: `/${locale}/dashboard` }
   ]
 
   const locales = [
     // เวลาอยู่ภาษาจีน แสดงแบบ 2 ภาษาเพื่อให้หาทางกลับได้ง่าย
     { code: 'en', label: locale === 'zh' ? 'English' : 'English' },
-    { code: 'zh', label: '中文' }
+    { code: 'zh', label: '中文' },
+    { code: 'th', label: 'ไทย' }
   ]
 
   const switchLocale = (locale: string) =>
-    pathname.replace(/^\/(en|zh)/, `/${locale}`)
+    pathname.replace(/^\/(en|zh|th)/, `/${locale}`)
 
   useEffect(() => {
     setIsClient(true)
@@ -145,7 +147,7 @@ export default function Navigation() {
               // เพิ่ม text-shadow
               className="flex items-center gap-1 text-white font-semibold hover:text-blue-400 text-sm drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)]"
             >
-              <span>{locales.find(l => l.code === locale)?.label || 'Language'}</span>
+              <span>{locales.find(l => l.code === locale)?.label || (locale === 'th' ? 'ภาษา' : 'Language')}</span>
               <svg className={`w-4 h-4 transition-transform ${isLangOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
               </svg>
@@ -219,7 +221,7 @@ export default function Navigation() {
                 ))}
                 <div className="h-px bg-white/20 my-2 mx-4" />
                 <div className="flex items-center gap-2 px-4 py-2">
-                    <span className="text-white/70 text-sm font-medium uppercase tracking-wider drop-shadow-sm">Language</span>
+                    <span className="text-white/70 text-sm font-medium uppercase tracking-wider drop-shadow-sm">{locale === 'th' ? 'ภาษา' : 'Language'}</span>
                 </div>
                 <div className="grid grid-cols-2 gap-2 px-4">
                   {locales.map(l => (

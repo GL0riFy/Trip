@@ -94,7 +94,13 @@ export default function FeaturedProducts() {
                   >
                     <motion.img
                       src={product.image}
-                      alt={locale === "en" ? product.name : product.nameCN}
+                      alt={
+                        locale === "th"
+                          ? (product.nameTH ?? product.name)
+                          : locale === "zh"
+                            ? product.nameCN
+                            : product.name
+                      }
                       className="w-full h-full object-cover"
                       whileHover={{ scale: 1.1 }} // เพิ่ม scale ตอน hover ให้ชัดขึ้นอีกนิด
                       transition={{ duration: 0.5 }}

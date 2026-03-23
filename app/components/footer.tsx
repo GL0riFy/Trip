@@ -70,7 +70,7 @@ const Footer = () => {
               <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
             </span>
 
-            <span className="text-lg font-mono font-semibold text-zinc-200">
+            <span className="text-lg font-mono font-semibold">
               {visitorCount !== null ? visitorCount.toLocaleString() : "..."}
             </span>
           </motion.div>

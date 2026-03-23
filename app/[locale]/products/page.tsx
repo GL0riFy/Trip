@@ -9,15 +9,23 @@ import { verifiedDistrictLocationOverrides } from "@/src/data/verified-product-l
 
 type SortType = "default" | "price-asc" | "price-desc";
 type BaseProduct = (typeof products)[number];
-type Product = Omit<BaseProduct, "shopName" | "shopNameCN" | "phone" | "address" | "addressCN"> & {
+type Product = Omit<BaseProduct, "shopName" | "shopNameCN" | "shopNameTH" | "phone" | "address" | "addressCN" | "addressTH"> & {
   shopName?: string;
   shopNameCN?: string;
+  shopNameTH?: string;
   phone?: string;
   address?: string;
   addressCN?: string;
+  addressTH?: string;
   mapRating?: number;
   mapsQuery?: string;
 };
+
+function tri(locale: string, en: string, zh: string, th: string) {
+  if (locale === "zh") return zh;
+  if (locale === "th") return th;
+  return en;
+}
 
 const SKIP_LOCATION_UPDATE_IDS = new Set([1, 2, 3, 4, 6, 7, 8]);
 
@@ -51,7 +59,19 @@ const scaleIn: Variants = {
 
 export default function RefactoredProductShowcase() {
   const locale = useLocale();
-  const isEn = locale === "en";
+
+  const displayName = (p: Product) =>
+    locale === "th" ? (p.nameTH ?? p.name) : locale === "zh" ? p.nameCN : p.name;
+  const secondaryName = (p: Product) =>
+    locale === "th" ? p.name : locale === "zh" ? p.name : p.nameCN;
+  const displayDesc = (p: Product) =>
+    locale === "th" ? (p.descriptionTH ?? p.description) : locale === "zh" ? p.descriptionCN : p.description;
+  const displayDistrict = (p: Product) =>
+    !p.district ? "" : locale === "th" ? (p.districtTH ?? p.district) : locale === "zh" ? p.districtCN : p.district;
+  const displayShop = (p: Product) =>
+    locale === "th" ? (p.shopNameTH ?? p.shopName ?? "") : locale === "zh" ? (p.shopNameCN ?? "") : (p.shopName ?? "");
+  const displayAddr = (p: Product) =>
+    locale === "th" ? (p.addressTH ?? p.address) : locale === "zh" ? p.addressCN : p.address;
 
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [sortType, setSortType] = useState<SortType>("default");
@@ -72,7 +92,7 @@ export default function RefactoredProductShowcase() {
   }, [selectedProduct]);
 
   const formatPrice = (price: number) =>
-    new Intl.NumberFormat(isEn ? "en-US" : "zh-CN", {
+    new Intl.NumberFormat(locale === "en" ? "en-US" : locale === "th" ? "th-TH" : "zh-CN", {
       style: "currency",
       currency: "USD",
       minimumFractionDigits: 2,
@@ -90,7 +110,9 @@ export default function RefactoredProductShowcase() {
   else if (sortType === "price-desc") filteredProducts = [...filteredProducts].sort((a, b) => b.price - a.price);
 
   const phoneHref = selectedProduct?.phone ? `tel:${selectedProduct.phone.replace(/\s+/g, "")}` : "#";
-  const mapSearchText = selectedProduct ? selectedProduct.mapsQuery || selectedProduct.address || "" : "";
+  const mapSearchText = selectedProduct
+    ? selectedProduct.mapsQuery || displayAddr(selectedProduct) || ""
+    : "";
   const mapHref = mapSearchText
     ? mapSearchText.startsWith("http") ? mapSearchText : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapSearchText)}`
     : "#";
@@ -365,21 +387,26 @@ export default function RefactoredProductShowcase() {
               >
                 <div className="hero-tag">
                   <span className="hero-tag-dot" />
-                  {isEn ? "OTOP Marketplace" : "OTOP 市场"}
+                  {tri(locale, "OTOP Marketplace", "OTOP 市场", "ตลาด OTOP")}
                 </div>
 
                 <h1 className="display mb-5 text-5xl font-extrabold leading-[1.05] tracking-tight md:text-6xl lg:text-7xl">
-                  {isEn ? (
-                    <>Find <span style={{ color: "var(--accent)" }}>Local</span><br />OTOP Products</>
-                  ) : (
+                  {locale === "zh" ? (
                     <>探索<span style={{ color: "var(--accent)" }}>本地</span><br />OTOP 产品</>
+                  ) : locale === "th" ? (
+                    <>ค้นหา<span style={{ color: "var(--accent)" }}>สินค้า</span><br />OTOP ท้องถิ่น</>
+                  ) : (
+                    <>Find <span style={{ color: "var(--accent)" }}>Local</span><br />OTOP Products</>
                   )}
                 </h1>
 
                 <p className="mb-8 text-base leading-relaxed" style={{ color: "rgba(255,255,255,0.6)", maxWidth: "420px" }}>
-                  {isEn
-                    ? "Browse by district and connect directly with local sellers — call or navigate in one tap."
-                    : "按地区浏览商品，一键联系卖家或打开导航。"}
+                  {tri(
+                    locale,
+                    "Browse by district and connect directly with local sellers — call or navigate in one tap.",
+                    "按地区浏览商品，一键联系卖家或打开导航。",
+                    "เลือกตามอำเภอ ติดต่อร้านค้าโดยตรง — โทรหรือเปิดแผนที่ได้ในคลิกเดียว"
+                  )}
                 </p>
 
                 <div className="flex items-center gap-5 flex-wrap">
@@ -390,7 +417,7 @@ export default function RefactoredProductShowcase() {
                     onMouseEnter={e => (e.currentTarget.style.filter = "brightness(1.1)")}
                     onMouseLeave={e => (e.currentTarget.style.filter = "")}
                   >
-                    {isEn ? "Browse Products" : "浏览商品"}
+                    {tri(locale, "Browse Products", "浏览商品", "ดูสินค้า")}
                     <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
                   </a>
 
@@ -398,12 +425,12 @@ export default function RefactoredProductShowcase() {
                   <div className="hero-stats flex items-center gap-8 pl-2">
                     <div className="hero-stat">
                       <span className="hero-stat-num">{productsWithVerifiedLocations.length}+</span>
-                      <span className="hero-stat-label">{isEn ? "Products" : "商品"}</span>
+                      <span className="hero-stat-label">{tri(locale, "Products", "商品", "สินค้า")}</span>
                     </div>
                     <div style={{ width: 1, height: 36, background: "rgba(255,255,255,0.15)" }} />
                     <div className="hero-stat">
                       <span className="hero-stat-num">{allDistricts.length}</span>
-                      <span className="hero-stat-label">{isEn ? "Districts" : "地区"}</span>
+                      <span className="hero-stat-label">{tri(locale, "Districts", "地区", "อำเภอ")}</span>
                     </div>
                   </div>
                 </div>
@@ -421,7 +448,7 @@ export default function RefactoredProductShowcase() {
                   <div style={{ position: "relative", height: "300px" }}>
                     <Image
                       src={productsWithVerifiedLocations[0].image}
-                      alt={productsWithVerifiedLocations[0].name}
+                      alt={displayName(productsWithVerifiedLocations[0])}
                       fill
                       priority
                       sizes="(max-width: 1024px) 100vw, 45vw"
@@ -433,10 +460,10 @@ export default function RefactoredProductShowcase() {
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
                       <div>
                         <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(255,255,255,0.45)", marginBottom: 4 }}>
-                          {isEn ? "Featured" : "精选商品"}
+                          {tri(locale, "Featured", "精选商品", "แนะนำ")}
                         </p>
                         <h3 className="display" style={{ fontSize: 20, fontWeight: 800, color: "#fff", lineHeight: 1.2 }}>
-                          {isEn ? productsWithVerifiedLocations[0].name : productsWithVerifiedLocations[0].nameCN}
+                          {displayName(productsWithVerifiedLocations[0])}
                         </h3>
                       </div>
                       <div style={{ background: "var(--accent)", color: "#fff", borderRadius: 8, padding: "6px 12px", fontSize: 14, fontWeight: 700, fontFamily: "Syne, sans-serif", flexShrink: 0 }}>
@@ -444,7 +471,7 @@ export default function RefactoredProductShowcase() {
                       </div>
                     </div>
                     <p style={{ marginTop: 8, fontSize: 12, color: "rgba(255,255,255,0.5)", fontWeight: 600, letterSpacing: "0.04em" }}>
-                      {isEn ? "↗ Tap to view contact" : "↗ 点击查看联系方式"}
+                      {tri(locale, "↗ Tap to view contact", "↗ 点击查看联系方式", "↗ แตะเพื่อดูข้อมูลติดต่อ")}
                     </p>
                   </div>
                 </div>
@@ -466,12 +493,12 @@ export default function RefactoredProductShowcase() {
               className="mb-8 flex flex-col gap-6 md:flex-row md:items-end md:justify-between"
             >
               <div>
-                <p className="section-eyebrow">{isEn ? "Complete Collection" : "完整系列"}</p>
+                <p className="section-eyebrow">{tri(locale, "Complete Collection", "完整系列", "คอลเลกชันครบ")}</p>
                 <h2 className="display text-3xl font-extrabold leading-tight md:text-4xl" style={{ textShadow: "0 1px 3px rgba(0,0,0,0.15)" }}>
-                  {isEn ? "Products With Direct Contact" : "可直接联系商家的商品"}
+                  {tri(locale, "Products With Direct Contact", "可直接联系商家的商品", "สินค้าที่ติดต่อร้านได้โดยตรง")}
                 </h2>
                 <p className="mt-1.5 text-sm" style={{ color: "rgba(255,255,255,0.7)" }}>
-                  {isEn ? `${filteredProducts.length} products` : `${filteredProducts.length} 件商品`}
+                  {tri(locale, `${filteredProducts.length} products`, `${filteredProducts.length} 件商品`, `${filteredProducts.length} รายการ`)}
                 </p>
               </div>
 
@@ -479,23 +506,27 @@ export default function RefactoredProductShowcase() {
               <div className="flex flex-wrap gap-3">
                 <div className="flex flex-col gap-1.5">
                   <label className="text-xs font-semibold uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.75)" }}>
-                    {isEn ? "Sort" : "排序"}
+                    {tri(locale, "Sort", "排序", "เรียง")}
                   </label>
                   <select value={sortType} onChange={e => setSortType(e.target.value as SortType)} className="filter-select">
-                    <option value="default">{isEn ? "Default" : "默认"}</option>
-                    <option value="price-asc">{isEn ? "Price: Low → High" : "价格从低到高"}</option>
-                    <option value="price-desc">{isEn ? "Price: High → Low" : "价格从高到低"}</option>
+                    <option value="default">{tri(locale, "Default", "默认", "ค่าเริ่มต้น")}</option>
+                    <option value="price-asc">{tri(locale, "Price: Low → High", "价格从低到高", "ราคา: ต่ำ → สูง")}</option>
+                    <option value="price-desc">{tri(locale, "Price: High → Low", "价格从高到低", "ราคา: สูง → ต่ำ")}</option>
                   </select>
                 </div>
                 <div className="flex flex-col gap-1.5">
                   <label className="text-xs font-semibold uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.75)" }}>
-                    {isEn ? "District" : "地区"}
+                    {tri(locale, "District", "地区", "อำเภอ")}
                   </label>
                   <select value={selectedDistrict} onChange={e => setSelectedDistrict(e.target.value)} className="filter-select">
-                    <option value="all">{isEn ? "All Districts" : "全部地区"}</option>
+                    <option value="all">{tri(locale, "All Districts", "全部地区", "ทุกอำเภอ")}</option>
                     {allDistricts.map(d => (
                       <option key={d} value={d}>
-                        {isEn ? d : productsWithVerifiedLocations.find(p => p.district === d)?.districtCN || d}
+                        {locale === "en"
+                          ? d
+                          : locale === "zh"
+                            ? productsWithVerifiedLocations.find(p => p.district === d)?.districtCN || d
+                            : productsWithVerifiedLocations.find(p => p.district === d)?.districtTH ?? d}
                       </option>
                     ))}
                   </select>
@@ -506,7 +537,7 @@ export default function RefactoredProductShowcase() {
             {/* Active district pill */}
             {selectedDistrict !== "all" && (
               <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-2 mb-6">
-                <span className="text-sm" style={{ color: "var(--ink-muted)" }}>{isEn ? "Filtering:" : "筛选："}</span>
+                <span className="text-sm" style={{ color: "var(--ink-muted)" }}>{tri(locale, "Filtering:", "筛选：", "กรอง:")}</span>
                 <button
                   onClick={() => setSelectedDistrict("all")}
                   className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm font-semibold"
@@ -538,14 +569,14 @@ export default function RefactoredProductShowcase() {
                 <div className="card-img-wrap">
                   <Image
                     src={product.image}
-                    alt={product.name}
+                    alt={displayName(product)}
                     fill
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     style={{ objectFit: "contain", objectPosition: "center" }}
                   />
                   <span className="card-price-badge">{formatPrice(product.price)}</span>
                   {product.district && (
-                    <span className="card-district-badge">{isEn ? product.district : product.districtCN}</span>
+                    <span className="card-district-badge">{displayDistrict(product)}</span>
                   )}
                 </div>
 
@@ -554,10 +585,10 @@ export default function RefactoredProductShowcase() {
                   <div className="flex items-start justify-between gap-3 mb-3">
                     <div>
                       <h3 className="display" style={{ fontSize: 17, fontWeight: 800, lineHeight: 1.25, marginBottom: 2 }}>
-                        {isEn ? product.name : product.nameCN}
+                        {displayName(product)}
                       </h3>
                       <p style={{ fontSize: 13, color: "var(--ink-muted)" }}>
-                        {isEn ? product.nameCN : product.name}
+                        {secondaryName(product)}
                       </p>
                     </div>
                     {product.mapRating && (
@@ -569,16 +600,16 @@ export default function RefactoredProductShowcase() {
                   </div>
 
                   <p style={{ fontSize: 13, color: "var(--ink-soft)", lineHeight: 1.6, marginBottom: 16, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
-                    {isEn ? product.description : product.descriptionCN}
+                    {displayDesc(product)}
                   </p>
 
                   {/* Seller strip */}
                   <div style={{ background: "rgba(0,0,0,0.04)", border: "1.5px solid rgba(0,0,0,0.08)", borderRadius: 12, padding: "10px 14px", marginBottom: 14 }}>
                     <p style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--ink-muted)", marginBottom: 3 }}>
-                      {isEn ? "Seller" : "商家"}
+                      {tri(locale, "Seller", "商家", "ร้านค้า")}
                     </p>
                     <p style={{ fontSize: 13, fontWeight: 600, color: "var(--ink)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                      {isEn ? product.shopName : product.shopNameCN}
+                      {displayShop(product)}
                     </p>
                     {product.phone && (
                       <p style={{ fontSize: 12, color: "var(--ink-muted)", marginTop: 2 }}>{product.phone}</p>
@@ -590,7 +621,7 @@ export default function RefactoredProductShowcase() {
                     className="cta-btn"
                     onClick={e => { e.stopPropagation(); setSelectedProduct(product); }}
                   >
-                    {isEn ? "View Contact" : "联系商家"}
+                    {tri(locale, "View Contact", "联系商家", "ดูข้อมูลติดต่อ")}
                     <svg className="cta-btn-arrow" width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                     </svg>
@@ -608,10 +639,10 @@ export default function RefactoredProductShowcase() {
                 </svg>
               </div>
               <p className="display text-xl font-bold" style={{ color: "var(--ink)" }}>
-                {isEn ? "No products found" : "未找到商品"}
+                {tri(locale, "No products found", "未找到商品", "ไม่พบสินค้า")}
               </p>
               <p style={{ color: "var(--ink-muted)", marginTop: 6, fontSize: 14 }}>
-                {isEn ? "Try selecting a different district." : "请尝试选择其他地区。"}
+                {tri(locale, "Try selecting a different district.", "请尝试选择其他地区。", "ลองเลือกอำเภออื่น")}
               </p>
             </motion.div>
           )}
@@ -643,19 +674,19 @@ export default function RefactoredProductShowcase() {
                 <div className="modal-hero">
                   <Image
                     src={selectedProduct.image}
-                    alt={selectedProduct.name}
+                    alt={displayName(selectedProduct)}
                     fill
                     sizes="(max-width: 768px) 100vw, 680px"
                     style={{ objectFit: "cover" }}
                   />
                   <div className="modal-hero-overlay" />
                   <div className="modal-hero-text">
-                    <p className="modal-eyebrow">{isEn ? "Shop Contact" : "商家联系方式"}</p>
+                    <p className="modal-eyebrow">{tri(locale, "Shop Contact", "商家联系方式", "ข้อมูลติดต่อร้าน")}</p>
                     <h2 id={`modal-title-${selectedProduct.id}`} className="modal-title">
-                      {isEn ? selectedProduct.name : selectedProduct.nameCN}
+                      {displayName(selectedProduct)}
                     </h2>
                     <p style={{ marginTop: 4, fontSize: 12, color: "rgba(255,255,255,0.55)" }}>
-                      {isEn ? selectedProduct.district : selectedProduct.districtCN}
+                      {displayDistrict(selectedProduct)}
                     </p>
                   </div>
                   <button className="modal-close" onClick={closeContactPopup} aria-label="Close">
@@ -666,17 +697,17 @@ export default function RefactoredProductShowcase() {
                 {/* Body */}
                 <div className="modal-body">
                   <p style={{ fontSize: 14, lineHeight: 1.7, color: "var(--ink-soft)" }}>
-                    {isEn ? selectedProduct.description : selectedProduct.descriptionCN}
+                    {displayDesc(selectedProduct)}
                   </p>
 
                   <div className="modal-info-card">
                     <p className="modal-shop-name">
-                      {isEn ? selectedProduct.shopName : selectedProduct.shopNameCN}
+                      {displayShop(selectedProduct)}
                     </p>
-                    {(selectedProduct.address || selectedProduct.addressCN) && (
+                    {(selectedProduct.address || selectedProduct.addressCN || selectedProduct.addressTH) && (
                       <div className="modal-info-row">
                         <svg className="modal-info-icon" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.75" viewBox="0 0 24 24" style={{ flexShrink: 0, marginTop: 2, color: "var(--accent)" }}><path strokeLinecap="round" strokeLinejoin="round" d="M12 21c-4-4.5-6-8-6-10.5a6 6 0 1112 0C18 13 16 16.5 12 21z"/><circle cx="12" cy="10.5" r="2" fill="currentColor" stroke="none"/></svg>
-                        <span>{isEn ? selectedProduct.address : selectedProduct.addressCN}</span>
+                        <span>{displayAddr(selectedProduct)}</span>
                       </div>
                     )}
                     {selectedProduct.phone && (
@@ -695,15 +726,15 @@ export default function RefactoredProductShowcase() {
                   <div className="modal-actions">
                     <a href={phoneHref} className="modal-btn modal-btn-primary">
                       <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8 19.79 19.79 0 01.98 2.18 2 2 0 012.96 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L7.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-                      {isEn ? "Call Shop" : "拨打电话"}
+                      {tri(locale, "Call Shop", "拨打电话", "โทรหาร้าน")}
                     </a>
                     <a href={mapHref} target="_blank" rel="noreferrer" className="modal-btn modal-btn-secondary">
                       <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 21c-4-4.5-6-8-6-10.5a6 6 0 1112 0C18 13 16 16.5 12 21z"/><circle cx="12" cy="10.5" r="2" fill="currentColor" stroke="none"/></svg>
-                      {isEn ? "Open Map" : "打开地图"}
+                      {tri(locale, "Open Map", "打开地图", "เปิดแผนที่")}
                     </a>
                     <button type="button" onClick={closeContactPopup} className="modal-btn modal-btn-ghost">
                       <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" d="M18 6L6 18M6 6l12 12"/></svg>
-                      {isEn ? "Close" : "关闭"}
+                      {tri(locale, "Close", "关闭", "ปิด")}
                     </button>
                   </div>
                 </div>

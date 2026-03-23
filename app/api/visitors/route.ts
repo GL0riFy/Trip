@@ -1,47 +1,87 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 
 export const dynamic = 'force-dynamic';
 
+interface VisitorData {
+  count: number;
+  byCountry: Record<string, number>;
+  daily: Record<string, number>;
+  bySource: Record<string, number>;
+  byDevice: Record<string, number>;
+}
+
+function getFilePath() {
+  const dir = path.join(process.cwd(), 'src', 'visitor-data');
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+  return path.join(dir, 'visitor-data.json');
+}
+
+function readData(): VisitorData {
+  const filePath = getFilePath();
+  if (!fs.existsSync(filePath)) return { count: 0, byCountry: {}, daily: {}, bySource: {}, byDevice: {} };
+  try {
+    const parsed = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+    return {
+      count: parsed.count ?? 0,
+      byCountry: parsed.byCountry ?? {},
+      daily: parsed.daily ?? {},
+      bySource: parsed.bySource ?? {},
+      byDevice: parsed.byDevice ?? {},
+    };
+  } catch {
+    return { count: 0, byCountry: {}, daily: {}, bySource: {}, byDevice: {} };
+  }
+}
+
+function writeData(data: VisitorData) {
+  fs.writeFileSync(getFilePath(), JSON.stringify(data, null, 2), 'utf-8');
+}
+
 export async function GET() {
   try {
-    // 1. ระบุตำแหน่งที่ต้องการ (src/visitor-data อยู่ที่ Root ของโปรเจกต์)
-    const dirPath = path.join(process.cwd(), 'src', 'visitor-data');
-    const filePath = path.join(dirPath, 'visitor-data.json');
+    return NextResponse.json(readData());
+  } catch (error: unknown) {
+    const msg = error instanceof Error ? error.message : 'Unknown error';
+    return NextResponse.json({ count: 0, byCountry: {}, daily: {}, bySource: {}, byDevice: {}, error: msg }, { status: 500 });
+  }
+}
 
-    // 2. ตรวจสอบและสร้างโฟลเดอร์อัตโนมัติ (ถ้ายังไม่มี)
-    if (!fs.existsSync(dirPath)) {
-      console.log("Creating directory:", dirPath);
-      fs.mkdirSync(dirPath, { recursive: true });
-    }
+export async function POST(req: NextRequest) {
+  try {
+    const body = await req.json() as {
+      country: string;
+      source?: string;
+      device?: string;
+    };
 
-    let data = { count: 0 };
+    if (!body.country) return NextResponse.json({ error: 'country required' }, { status: 400 });
 
-    // 3. ตรวจสอบว่ามีไฟล์เดิมไหม ถ้ามีให้โหลดมา
-    if (fs.existsSync(filePath)) {
-      const fileContent = fs.readFileSync(filePath, 'utf-8');
-      if (fileContent.trim()) {
-        try {
-          data = JSON.parse(fileContent);
-        } catch {
-          console.error("JSON Parse Error, resetting count.");
-          data = { count: 0 };
-        }
-      }
-    }
+    const data = readData();
 
-    // 4. เพิ่มยอดผู้เข้าชม
-    data.count += 1;
+    // byCountry
+    data.byCountry[body.country] = (data.byCountry[body.country] ?? 0) + 1;
 
-    // 5. เขียนลงไฟล์
-    fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8');
+    // daily — key เป็น YYYY-MM-DD (UTC)
+    const today = new Date().toISOString().slice(0, 10);
+    data.daily[today] = (data.daily[today] ?? 0) + 1;
 
+    // bySource
+    const source = body.source ?? 'direct';
+    data.bySource[source] = (data.bySource[source] ?? 0) + 1;
+
+    // byDevice
+    const device = body.device ?? 'desktop';
+    data.byDevice[device] = (data.byDevice[device] ?? 0) + 1;
+
+    // count = ผลรวมจาก byCountry
+    data.count = Object.values(data.byCountry).reduce((s, v) => s + v, 0);
+
+    writeData(data);
     return NextResponse.json(data);
   } catch (error: unknown) {
-    // พิมพ์ Error ออกมาดูที่ Terminal ของ VS Code ว่าทำไมถึงเขียนไม่ได้
-    const errorMessage = error instanceof Error ? error.message : "Unknown error";
-    console.error("❌ FULL ERROR:", errorMessage);
-    return NextResponse.json({ count: 0, error: "Storage error", detail: errorMessage }, { status: 500 });
+    const msg = error instanceof Error ? error.message : 'Unknown error';
+    return NextResponse.json({ count: 0, byCountry: {}, daily: {}, bySource: {}, byDevice: {}, error: msg }, { status: 500 });
   }
 }

@@ -5,6 +5,8 @@ import Image from "next/image";
 import type { JSX } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
+import type { LocalizedText } from "@/src/data/district-trips";
+import { pickLocalized } from "@/src/data/district-trips";
 
 // ─── geoBoundaries shapeName aliases ──────────────────────────────────────
 const DISTRICT_SHAPE_NAMES: Record<string, string[]> = {
@@ -51,7 +53,7 @@ const DISTRICT_CENTERS: Record<string, [number, number]> = {
 
 
 // ─── Types ────────────────────────────────────────────────────────────────
-export interface LocalizedText { en: string; zh: string; }
+export type { LocalizedText };
 
 export interface TripMapEntry {
   id: string;
@@ -72,15 +74,15 @@ export interface TripMapEntry {
 
 interface Props {
   trips: TripMapEntry[];
-  locale: "en" | "zh";
+  locale: string;
   districtName: string;
   districtId: string;
   defaultLat?: number;
   defaultLng?: number;
 }
 
-function txt(locale: "en" | "zh", v: LocalizedText): string {
-  return locale === "zh" ? v.zh : v.en;
+function txt(locale: string, v: LocalizedText): string {
+  return pickLocalized(locale, v);
 }
 function imgSrc(trip: TripMapEntry): string | null {
   const p = trip.detail_more.img?.trim();
@@ -295,7 +297,7 @@ export default function TripMapModal({
       geoTrips.forEach((trip) => {
         const lat = trip.detail_more.lat as number;
         const lng = trip.detail_more.lng as number;
-        const title = locale === "zh" ? trip.title.zh : trip.title.en;
+        const title = pickLocalized(locale, trip.title);
         const marker = L.marker([lat, lng], { icon: goldIcon }).addTo(map);
         marker.bindTooltip(title, { permanent: true, direction: "top", offset: [0, -28], className: "map-label" });
         marker.on("click", () => setActive(trip));

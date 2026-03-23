@@ -4,6 +4,7 @@
     "products": "产品",
     "map": "地图",
     "essentials": "必要的東西",
+    "dashboard": "数据",
     "openMenu": "打开菜单"
   },
   "District": {
@@ -46,5 +47,25 @@
       "subtitle": "旅行者必备",
       "desc": "Grab、Google 地图、翻译工具。"
     }
+  },
+
+  "Travel": {
+    "title": "按县区游览",
+    "subtitle": "选择县区查看行程数据。",
+    "no_trips": "暂无行程条目。"
+  },
+
+  "Dashboard": {
+    "title": "访问统计",
+    "subtitle": "访客来自哪些国家/地区（依据服务器 geo 请求头）。",
+    "total_visits": "总访问量",
+    "by_country": "按国家/地区",
+    "visits": "次",
+    "share": "占比",
+    "no_data": "暂无访问记录。",
+    "legacy_badge": "估算 · 启用国家细分前",
+    "unknown_country": "未知 / 本地",
+    "note_geo": "国家代码来自主机请求头（如 x-vercel-ip-country、cf-ipcountry）。本地开发通常显示为“未知”。",
+    "last_updated": "数据在每次触发访客计数时于服务器端更新。"
   }
 }

@@ -78,7 +78,7 @@ const dividerVariant: Variants = {
 // ─── Props ────────────────────────────────────────────────────────────────────
 
 type Props = {
-  locale: "en" | "zh";
+  locale: "en" | "zh" | "th";
   district: string;
   trips: DistrictTrip[];
   otop: DistrictOTOP[];
@@ -116,29 +116,55 @@ export default function DistrictPageClient({ locale, district, trips, otop, dist
         districtOverrides.length > 0
           ? districtOverrides[index] ?? districtOverrides[districtOverrides.length - 1]
           : undefined;
-      const fallbackMapQuery = product.address || [product.shopName, product.address]
-        .filter((value): value is string => typeof value === "string" && value.trim().length > 0)
-        .join(", ");
-      const location = locale === "zh"
-        ? shouldUseVerifiedLocation
-          ? override?.addressCN || product.addressCN
-          : product.addressCN
-        : shouldUseVerifiedLocation
-          ? override?.address || product.address
-          : product.address;
+      const addrForMap =
+        locale === "th"
+          ? product.addressTH ?? product.address
+          : locale === "zh"
+            ? product.addressCN
+            : product.address;
+      const fallbackMapQuery =
+        addrForMap ||
+        [product.shopName, addrForMap]
+          .filter((value): value is string => typeof value === "string" && value.trim().length > 0)
+          .join(", ");
+      const location =
+        locale === "zh"
+          ? shouldUseVerifiedLocation
+            ? override?.addressCN || product.addressCN
+            : product.addressCN
+          : locale === "th"
+            ? shouldUseVerifiedLocation
+              ? override?.address || product.addressTH || product.address
+              : product.addressTH || product.address
+            : shouldUseVerifiedLocation
+              ? override?.address || product.address
+              : product.address;
       const mapsQuery = shouldUseVerifiedLocation
         ? override?.mapsQuery || fallbackMapQuery || undefined
         : fallbackMapQuery || undefined;
 
       return {
         id: `product-${product.id}`,
-        title: { en: product.name, zh: product.nameCN },
-        price: { en: `${product.price} THB`, zh: `${product.price} 泰铢` },
+        title: {
+          en: product.name,
+          zh: product.nameCN,
+          th: product.nameTH ?? product.name,
+        },
+        price: {
+          en: `${product.price} THB`,
+          zh: `${product.price} 泰铢`,
+          th: `${product.price} บาท`,
+        },
         hours: {
           en: "Contact seller for opening hours",
           zh: "营业时间请联系商家",
+          th: "สอบถามเวลาเปิดร้านกับผู้ขาย",
         },
-        detail: { en: product.description, zh: product.descriptionCN },
+        detail: {
+          en: product.description,
+          zh: product.descriptionCN,
+          th: product.descriptionTH ?? product.description,
+        },
         detail_more: {
           img: product.image,
           lat: refLocation?.lat,

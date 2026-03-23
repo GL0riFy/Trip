@@ -26,7 +26,8 @@ export function generateStaticParams() {
 
 export default async function DistrictPage({ params }: DistrictPageProps) {
   const { locale, district } = await params;
-  const normalizedLocale: "en" | "zh" = locale === "zh" ? "zh" : "en";
+  const normalizedLocale: "en" | "zh" | "th" =
+    locale === "zh" ? "zh" : locale === "th" ? "th" : "en";
   const districtExists = districts.some((item) => item.id === district);
 
   if (!districtExists) notFound();

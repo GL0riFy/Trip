@@ -1,6 +1,7 @@
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import { districts } from "@/src/data/chiangmai-districts";
-import { districtTrips, type DistrictTrip } from "@/src/data/district-trips";
+import { districtTrips, type DistrictTrip, pickLocalized } from "@/src/data/district-trips";
 
 type TravelPageProps = {
   params: Promise<{ locale: string }>;
@@ -13,13 +14,15 @@ function getDistrictName(districtId: string): string {
     .join(" ");
 }
 
-function getLocalizedTitle(locale: "en" | "zh", trip: DistrictTrip): string {
-  return locale === "zh" ? trip.title.zh : trip.title.en;
+function getLocalizedTitle(locale: string, trip: DistrictTrip): string {
+  return pickLocalized(locale, trip.title);
 }
 
 export default async function TravelPage({ params }: TravelPageProps) {
   const { locale } = await params;
-  const normalizedLocale: "en" | "zh" = locale === "zh" ? "zh" : "en";
+  const normalizedLocale: "en" | "zh" | "th" =
+    locale === "zh" ? "zh" : locale === "th" ? "th" : "en";
+  const t = await getTranslations({ locale, namespace: "Travel" });
 
   return (
     <div className="relative min-h-screen pb-16 text-slate-900">
@@ -30,10 +33,8 @@ export default async function TravelPage({ params }: TravelPageProps) {
 
       <section className="mx-auto w-full max-w-6xl px-4 md:px-6">
         <div className="mb-8 rounded-3xl border border-white/40 bg-white/60 p-6 shadow-lg backdrop-blur-xl">
-          <h1 className="text-3xl font-semibold md:text-4xl">Travel Districts</h1>
-          <p className="mt-2 text-sm text-slate-700/80">
-            Select a district to open its trip data from src/data.
-          </p>
+          <h1 className="text-3xl font-semibold md:text-4xl">{t("title")}</h1>
+          <p className="mt-2 text-sm text-slate-700/80">{t("subtitle")}</p>
         </div>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -65,7 +66,7 @@ export default async function TravelPage({ params }: TravelPageProps) {
                     ))}
                   </ul>
                 ) : (
-                  <div className="mt-4 text-sm text-slate-500">No trip entries yet.</div>
+                  <div className="mt-4 text-sm text-slate-500">{t("no_trips")}</div>
                 )}
               </Link>
             );

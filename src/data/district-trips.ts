@@ -14,7 +14,16 @@ import { SanKamphaengTrip, SanKamphaengOTOP } from "@/src/data/san-kamphaeng/san
 export type LocalizedText = {
   en: string;
   zh: string;
+  /** Thai; when omitted, Thai locale falls back to English */
+  th?: string;
 };
+
+/** Pick string for UI by next-intl / route locale */
+export function pickLocalized(locale: string, v: LocalizedText): string {
+  if (locale === "zh") return v.zh;
+  if (locale === "th") return v.th ?? v.en;
+  return v.en;
+}
 
 export type DistrictTrip = {
   id: string;
