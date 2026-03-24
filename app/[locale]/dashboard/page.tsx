@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { COUNTRIES } from '../../components/Countrypicker';
 
 interface VisitorData {
@@ -49,6 +50,7 @@ function formatDayLabel(iso: string): string {
 }
 
 export default function DashboardPage() {
+  const t = useTranslations('Dashboard');
   const [data, setData] = useState<VisitorData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -116,7 +118,7 @@ export default function DashboardPage() {
           type: 'line',
           data: {
             labels: dayLabels,
-            datasets: [{ label: 'Total Visits', data: dayValues, borderColor: '#378ADD', backgroundColor: 'rgba(55,138,221,0.08)', fill: true, tension: 0.4, pointRadius: 0, borderWidth: 2 }],
+            datasets: [{ label: t('total_visits'), data: dayValues, borderColor: '#378ADD', backgroundColor: 'rgba(55,138,221,0.08)', fill: true, tension: 0.4, pointRadius: 0, borderWidth: 2 }],
           },
           options: {
             responsive: true, maintainAspectRatio: false,
@@ -166,9 +168,9 @@ export default function DashboardPage() {
           data: {
             labels: [''],
             datasets: [
-              { label: 'Mobile', data: [Math.round(((dev.mobile ?? 0) / devTotal) * 100)], backgroundColor: DEVICE_COLORS.mobile, borderRadius: { topLeft: 4, bottomLeft: 4, topRight: 0, bottomRight: 0 } },
-              { label: 'Desktop', data: [Math.round(((dev.desktop ?? 0) / devTotal) * 100)], backgroundColor: DEVICE_COLORS.desktop, borderRadius: 0 },
-              { label: 'Tablet', data: [Math.round(((dev.tablet ?? 0) / devTotal) * 100)], backgroundColor: DEVICE_COLORS.tablet, borderRadius: { topLeft: 0, bottomLeft: 0, topRight: 4, bottomRight: 4 } },
+              { label: t('mobile'), data: [Math.round(((dev.mobile ?? 0) / devTotal) * 100)], backgroundColor: DEVICE_COLORS.mobile, borderRadius: { topLeft: 4, bottomLeft: 4, topRight: 0, bottomRight: 0 } },
+              { label: t('desktop'), data: [Math.round(((dev.desktop ?? 0) / devTotal) * 100)], backgroundColor: DEVICE_COLORS.desktop, borderRadius: 0 },
+              { label: t('tablet'), data: [Math.round(((dev.tablet ?? 0) / devTotal) * 100)], backgroundColor: DEVICE_COLORS.tablet, borderRadius: { topLeft: 0, bottomLeft: 0, topRight: 4, bottomRight: 4 } },
             ],
           },
           options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, scales: { x: { stacked: true, display: false, max: 100 }, y: { stacked: true, display: false } }, plugins: { legend: { display: false }, tooltip: { enabled: false } } },
@@ -183,7 +185,7 @@ export default function DashboardPage() {
       deviceInstance.current?.destroy();
       sourceDonutInstance.current?.destroy();
     };
-  }, [data, period]);
+  }, [data, period, t]);
 
   const sorted = data ? Object.entries(data.byCountry).sort((a, b) => b[1] - a[1]).slice(0, 10) : [];
   const total = sorted.reduce((s, [, v]) => s + v, 0) || 1;
@@ -209,10 +211,10 @@ export default function DashboardPage() {
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
           <div>
-            <h1 style={{ fontSize: 22, fontWeight: 600, margin: 0 }}>Traffic Dashboard</h1>
-            <p style={{ fontSize: 13, color: 'rgba(30,30,30,0.55)', marginTop: 4 }}>สถิติการเข้าชมเว็บไซต์แบบ Real-time</p>
+            <h1 style={{ fontSize: 22, fontWeight: 600, margin: 0 }}>{t('title')}</h1>
+            <p style={{ fontSize: 13, color: 'rgba(30,30,30,0.55)', marginTop: 4 }}>{t('subtitle')}</p>
           </div>
-          <span style={{ fontSize: 11, background: 'rgba(29,158,117,0.15)', color: '#0F6E56', padding: '4px 12px', borderRadius: 20, fontWeight: 500, whiteSpace: 'nowrap' }}>● Live</span>
+          <span style={{ fontSize: 11, background: 'rgba(29,158,117,0.15)', color: '#0F6E56', padding: '4px 12px', borderRadius: 20, fontWeight: 500, whiteSpace: 'nowrap' }}>● {t('live')}</span>
         </div>
 
         {loading && <p style={{ color: 'rgba(30,30,30,0.5)', fontSize: 14 }}>Loading...</p>}
@@ -223,10 +225,10 @@ export default function DashboardPage() {
             {/* Metric Cards */}
             <div className="dash-metrics" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10, marginBottom: 16 }}>
               {[
-                { label: 'Total Visits', value: data.count.toLocaleString(), sub: '' },
-                { label: 'Countries', value: Object.keys(data.byCountry).length.toString(), sub: '' },
-                top ? { label: '#1 Country', value: `${COUNTRY_MAP[top[0]]?.flag ?? '🌐'} ${COUNTRY_MAP[top[0]]?.name ?? top[0]}`, sub: `${top[1].toLocaleString()} visits (${Math.round((top[1] / total) * 100)}%)` } : null,
-                sorted.length > 1 ? { label: 'Others', value: `${100 - Math.round(((top?.[1] ?? 0) / total) * 100)}%`, sub: '' } : null,
+                { label: t('total_visits'), value: data.count.toLocaleString(), sub: '' },
+                { label: t('countries'), value: Object.keys(data.byCountry).length.toString(), sub: '' },
+                top ? { label: t('top_country'), value: `${COUNTRY_MAP[top[0]]?.flag ?? '🌐'} ${COUNTRY_MAP[top[0]]?.name ?? top[0]}`, sub: `${top[1].toLocaleString()} ${t('visits')} (${Math.round((top[1] / total) * 100)}%)` } : null,
+                sorted.length > 1 ? { label: t('others'), value: `${100 - Math.round(((top?.[1] ?? 0) / total) * 100)}%`, sub: '' } : null,
               ].filter(Boolean).map((m, i) => (
                 <div key={i} style={{ background: 'rgba(255,255,255,0.75)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', border: '0.5px solid rgba(255,255,255,0.5)', borderRadius: 12, padding: '14px 16px' }}>
                   <div style={{ fontSize: 11, color: 'rgba(30,30,30,0.5)', marginBottom: 6, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '.05em' }}>{m!.label}</div>
@@ -239,7 +241,7 @@ export default function DashboardPage() {
             {/* Line Chart */}
             <div style={{ ...card, marginBottom: 16 }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12, flexWrap: 'wrap', gap: 8 }}>
-                <div style={sectionTitle}>Daily Visits</div>
+                <div style={sectionTitle}>{t('daily_visits')}</div>
                 <div style={{ display: 'flex', gap: 6 }}>
                   {(['7d', '30d', '90d'] as const).map((p) => (
                     <button key={p} onClick={() => setPeriod(p)} style={{ fontSize: 12, padding: '5px 12px', borderRadius: 20, cursor: 'pointer', border: period === p ? 'none' : '0.5px solid rgba(0,0,0,0.15)', background: period === p ? 'rgba(55,138,221,0.15)' : 'rgba(255,255,255,0.5)', color: period === p ? '#185FA5' : 'rgba(30,30,30,0.6)', fontFamily: 'inherit' }}>
@@ -253,11 +255,11 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            {/* Bottom grid — stacks on mobile */}
+            {/* Bottom grid */}
             <div className="dash-bottom" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 16 }}>
               {/* Country list */}
               <div style={card}>
-                <div style={sectionTitle}>Visits by Country</div>
+                <div style={sectionTitle}>{t('by_country')}</div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                   {sorted.map(([code, count], i) => {
                     const pct = Math.round((count / total) * 100);
@@ -273,18 +275,18 @@ export default function DashboardPage() {
                           <div style={{ width: `${pct}%`, height: '100%', background: BAR_COLORS[i % BAR_COLORS.length], borderRadius: 3 }} />
                         </div>
                         <span style={{ fontSize: 12, color: 'rgba(30,30,30,0.5)', minWidth: 30, textAlign: 'right', flexShrink: 0 }}>{pct}%</span>
-                        <span style={{ fontSize: 12, color: isTop ? '#185FA5' : 'rgba(30,30,30,0.45)', minWidth: 48, textAlign: 'right', fontWeight: isTop ? 600 : 400, flexShrink: 0 }}>{count.toLocaleString()} visits</span>
+                        <span style={{ fontSize: 12, color: isTop ? '#185FA5' : 'rgba(30,30,30,0.45)', minWidth: 48, textAlign: 'right', fontWeight: isTop ? 600 : 400, flexShrink: 0 }}>{count.toLocaleString()} {t('visits')}</span>
                       </div>
                     );
                   })}
-                  {sorted.length === 0 && <p style={{ fontSize: 13, color: 'rgba(30,30,30,0.4)' }}>No data yet</p>}
+                  {sorted.length === 0 && <p style={{ fontSize: 13, color: 'rgba(30,30,30,0.4)' }}>{t('no_data')}</p>}
                 </div>
               </div>
 
               {/* Source + Device + Donut stacked */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                 <div style={{ ...card, flex: 1 }}>
-                  <div style={sectionTitle}>Traffic Source</div>
+                  <div style={sectionTitle}>{t('traffic_source')}</div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
                     <div style={{ position: 'relative', width: 100, height: 100, flexShrink: 0 }}>
                       <canvas ref={sourceDonutRef} width={100} height={100} />
@@ -294,7 +296,7 @@ export default function DashboardPage() {
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                       {sourceEntries.length === 0
-                        ? <span style={{ fontSize: 12, color: 'rgba(30,30,30,0.4)' }}>No data yet</span>
+                        ? <span style={{ fontSize: 12, color: 'rgba(30,30,30,0.4)' }}>{t('no_data')}</span>
                         : sourceEntries.map(([key, val]) => (
                           <div key={key} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'rgba(30,30,30,0.6)' }}>
                             <span style={{ width: 10, height: 10, borderRadius: 2, background: SOURCE_COLORS[key] ?? '#888780', flexShrink: 0 }} />
@@ -307,12 +309,12 @@ export default function DashboardPage() {
                 </div>
 
                 <div style={{ ...card, flex: 1 }}>
-                  <div style={sectionTitle}>Device</div>
+                  <div style={sectionTitle}>{t('device')}</div>
                   <div style={{ position: 'relative', width: '100%', height: 36 }}>
                     <canvas ref={deviceChartRef} />
                   </div>
                   <div style={{ display: 'flex', gap: 12, marginTop: 12 }}>
-                    {[{ key: 'mobile', label: 'Mobile', icon: '📱' }, { key: 'desktop', label: 'Desktop', icon: '💻' }, { key: 'tablet', label: 'Tablet', icon: '📟' }].map(({ key, label, icon }) => (
+                    {[{ key: 'mobile', label: t('mobile'), icon: '📱' }, { key: 'desktop', label: t('desktop'), icon: '💻' }, { key: 'tablet', label: t('tablet'), icon: '📟' }].map(({ key, label, icon }) => (
                       <div key={key} style={{ flex: 1, textAlign: 'center' }}>
                         <div style={{ fontSize: 20, marginBottom: 4 }}>{icon}</div>
                         <div style={{ fontSize: 15, fontWeight: 600 }}>{Math.round(((dev[key] ?? 0) / devTotal) * 100)}%</div>
@@ -324,12 +326,12 @@ export default function DashboardPage() {
 
                 {/* Share donut */}
                 <div style={{ ...card, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <div style={{ ...sectionTitle, alignSelf: 'flex-start' }}>Share</div>
+                  <div style={{ ...sectionTitle, alignSelf: 'flex-start' }}>{t('share')}</div>
                   <div style={{ position: 'relative', width: 140, height: 140 }}>
                     <canvas ref={donutChartRef} width={140} height={140} />
                     <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                       <span style={{ fontSize: 16, fontWeight: 600 }}>{Object.keys(data.byCountry).length}</span>
-                      <span style={{ fontSize: 10, color: 'rgba(30,30,30,0.5)' }}>countries</span>
+                      <span style={{ fontSize: 10, color: 'rgba(30,30,30,0.5)' }}>{t('countries')}</span>
                     </div>
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginTop: 14, alignSelf: 'flex-start', width: '100%' }}>

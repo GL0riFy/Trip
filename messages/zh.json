@@ -54,18 +54,27 @@
     "subtitle": "选择县区查看行程数据。",
     "no_trips": "暂无行程条目。"
   },
-
   "Dashboard": {
-    "title": "访问统计",
-    "subtitle": "访客来自哪些国家/地区（依据服务器 geo 请求头）。",
+    "title": "Traffic Dashboard",
+    "subtitle": "实时网站访问统计",
     "total_visits": "总访问量",
-    "by_country": "按国家/地区",
+    "by_country": "按国家统计访问量",
     "visits": "次",
     "share": "占比",
-    "no_data": "暂无访问记录。",
-    "legacy_badge": "估算 · 启用国家细分前",
+    "no_data": "暂无数据",
+    "legacy_badge": "估算 · 国家分割前",
     "unknown_country": "未知 / 本地",
-    "note_geo": "国家代码来自主机请求头（如 x-vercel-ip-country、cf-ipcountry）。本地开发通常显示为“未知”。",
-    "last_updated": "数据在每次触发访客计数时于服务器端更新。"
+    "note_geo": "通过服务器标头检测国家，本地开发通常显示为\"未知\"",
+    "last_updated": "每次页面加载时数据会保存到服务器",
+    "live": "实时",
+    "daily_visits": "每日访问量",
+    "traffic_source": "流量来源",
+    "device": "设备",
+    "countries": "国家",
+    "top_country": "第一名国家",
+    "others": "其他",
+    "mobile": "手机",
+    "desktop": "电脑",
+    "tablet": "平板"
   }
 }

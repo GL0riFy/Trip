@@ -57,18 +57,27 @@
     "subtitle": "Select a district to open its trip data.",
     "no_trips": "No trip entries yet."
   },
-
   "Dashboard": {
-    "title": "Visit insights",
-    "subtitle": "Where your visitors come from (by server geo headers).",
-    "total_visits": "Total visits",
-    "by_country": "Visits by country",
+    "title": "Traffic Dashboard",
+    "subtitle": "Real-time website visit statistics.",
+    "total_visits": "Total Visits",
+    "by_country": "Visits by Country",
     "visits": "visits",
     "share": "Share",
-    "no_data": "No visits recorded yet.",
+    "no_data": "No data yet",
     "legacy_badge": "Estimated · before country split",
     "unknown_country": "Unknown / local",
-    "note_geo": "Country is detected from hosting headers (e.g. x-vercel-ip-country, cf-ipcountry). Local development usually shows as “Unknown”.",
-    "last_updated": "Data is stored on the server when each page load hits the visitor counter."
+    "note_geo": "Country is detected from hosting headers (e.g. x-vercel-ip-country, cf-ipcountry). Local development usually shows as \"Unknown\".",
+    "last_updated": "Data is stored on the server when each page load hits the visitor counter.",
+    "live": "Live",
+    "daily_visits": "Daily Visits",
+    "traffic_source": "Traffic Source",
+    "device": "Device",
+    "countries": "countries",
+    "top_country": "#1 Country",
+    "others": "Others",
+    "mobile": "Mobile",
+    "desktop": "Desktop",
+    "tablet": "Tablet"
   }
 }
