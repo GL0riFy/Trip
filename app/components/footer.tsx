@@ -11,7 +11,7 @@ const Footer = () => {
   const locale = useLocale();
 
   useEffect(() => {
-    fetch('/api/visitors')
+    fetch('/api/redis')
       .then((res) => res.json())
       .then((data) => {
         if (data && typeof data.count === 'number') {

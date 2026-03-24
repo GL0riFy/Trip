@@ -68,7 +68,7 @@ export default function DashboardPage() {
   const sourceDonutInstance = useRef<any>(null);
 
   useEffect(() => {
-    fetch('/api/visitors')
+    fetch('/api/redis')
       .then(async (r) => {
         const d = await r.json();
         if (!r.ok) throw new Error(d.error || `HTTP ${r.status}`);
