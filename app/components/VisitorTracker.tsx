@@ -35,7 +35,7 @@ export function VisitorTracker() {
     setShowPicker(false);
     localStorage.setItem(VISITED_KEY, '1');
     try {
-      await fetch('/api/visitors', {
+      await fetch('/api/redis', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
