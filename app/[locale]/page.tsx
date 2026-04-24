@@ -2,8 +2,8 @@
 import Image from "next/image";
 import HeroSec from "./../components/HeroNavigator";
 import F_prducts from "./../components/FeaturedProducts";
-import Slide from "./../components/slide";
-
+import Popular from "./../components/Popular";
+import Map from "./../components/map";
 
 export default function Home() {
   return (
@@ -24,8 +24,8 @@ export default function Home() {
       {/* 🔹 Content */}
       <main className="relative z-10 flex flex-col">
         <HeroSec />
-        <F_prducts />
-        <Slide />
+        <Popular />
+        <Map />
       </main>
 
     </div>

@@ -60,9 +60,7 @@ export default async function LocaleLayout({
           <VisitorTracker />
           <div className="min-h-screen flex flex-col">
             <Navigation />
-            <main className="container mx-auto pt-24 px-4 flex-1">
               {children}
-            </main>
             <Footer />
           </div>
         </NextIntlClientProvider>
