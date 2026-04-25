@@ -4,6 +4,7 @@ import HeroSec from "./../components/HeroNavigator";
 import F_prducts from "./../components/FeaturedProducts";
 import Popular from "./../components/Popular";
 import Map from "./../components/map";
+import Event from "./../components/event";
 
 export default function Home() {
   return (
@@ -25,6 +26,7 @@ export default function Home() {
       <main className="relative z-10 flex flex-col">
         <HeroSec />
         <Popular />
+        <Event />
         <Map />
       </main>
 
