@@ -9,7 +9,7 @@ export const products = [
     nameCN: "兰纳纸伞钥匙扣",
     nameTH: "พวงกุญแจร่มล้านนา",
     price: 150,
-    image: "/Products/1.jpg",
+    image: "/Products/11.png",
     tag: "star",
     icon: "☂️",
     description: "A charming souvenir keychain featuring a traditional Chiang Mai Lanna umbrella design. Includes a scannable CMTC QR code.",

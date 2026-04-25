@@ -80,28 +80,29 @@ export default function Navigation() {
         layout
         animate={isMobile ? {
             // --- MOBILE STYLE (Clear Glass Island) ---
-            y: 10,
-            width: '95%',
-            borderRadius: 24,
-            // จุดที่แก้: ปรับให้โปร่งใส 100% ไม่มีสีเจือปน
-            backgroundColor: 'transparent',
-            // ยังคงความเบลอเพื่อให้ดูเป็น Layer กระจก
-            backdropFilter: 'blur(20px)',
-            // เงาและขอบสำคัญมาก เพื่อให้เห็นขอบเขตของกระจกใส
-            boxShadow: (isMenuOpen || isScrolled) ? '0 8px 32px 0 rgba(0, 0, 0, 0.2)' : '0 2px 10px 0 rgba(0,0,0,0.05)',
-            height: isMenuOpen ? 'auto' : '64px',
-            border: (isScrolled || isMenuOpen) ? '1px solid rgba(255,255,255,0.2)' : '1px solid rgba(255,255,255,0.1)'
+           y: 10,
+          width: '95%',
+          borderRadius: 24,
+          // ตอนไม่ขยับให้ใส (0) พอเลื่อนให้ขุ่นขึ้นมานิดเดียว (0.3)
+          backgroundColor: isScrolled ? 'rgba(0, 0, 0, 0.3)' : 'rgba(0, 0, 0, 0)', 
+          // เพิ่ม Blur ให้ดูแพงตอนเลื่อน
+          backdropFilter: isScrolled ? 'blur(15px)' : 'blur(0px)',
+          boxShadow: isScrolled ? '0 4px 20px rgba(0, 0, 0, 0.1)' : 'none',
+          height: isMenuOpen ? 'auto' : '64px',
+          // เส้นขอบบางๆ แบบกระจก
+          border: isScrolled ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(255, 255, 255, 0)'
         } : {
             // --- DESKTOP STYLE ---
             y: isScrolled ? 16 : 0,
-            width: isScrolled ? '70%' : '75%',
-            borderRadius: isScrolled ? 16 : 0,
-            // จุดที่แก้: Desktop ตอน Scroll ก็โปร่งใส 100%
-            backgroundColor: 'transparent',
-            backdropFilter: isScrolled ? 'blur(20px)' : 'blur(0px)',
-            boxShadow: isScrolled ? '0 8px 32px 0 rgba(0, 0, 0, 0.1)' : 'none',
+            width: isScrolled ? '75%' : '75%', 
+            borderRadius: isScrolled ? 20 : 0,
+            // ตอนอยู่บนสุดให้ใสเคลียร์ (0) พอเลื่อนให้เข้มขึ้นจางๆ (0.2)
+            backgroundColor: isScrolled ? 'rgba(0, 0, 0, 0.2)' : 'rgba(0, 0, 0, 0)', 
+            // Blur จะทำงานเฉพาะตอนเลื่อนเท่านั้น
+            backdropFilter: isScrolled ? 'blur(12px)' : 'blur(0px)',
+            boxShadow: isScrolled ? '0 10px 30px rgba(0, 0, 0, 0.05)' : 'none',
             height: '64px',
-            border: isScrolled ? '1px solid rgba(255,255,255,0.1)' : 'none'
+            border: isScrolled ? '1px solid rgba(255, 255, 255, 0.08)' : 'none'
         }}
         transition={{ duration: 0.4, type: "spring", stiffness: 200, damping: 25 }}
         className={`fixed z-50 left-0 right-0 mx-auto flex flex-col ${kanit.className} overflow-hidden md:overflow-visible`}
