@@ -5,7 +5,7 @@ import Footer from "../components/footer";
 import { NextIntlClientProvider } from "next-intl";
 import { notFound } from "next/navigation";
 import { VisitorTracker } from "../components/VisitorTracker";
-import "../globals.css";
+import '../globals.css';
 
 export function generateStaticParams() {
   return [{ locale: "en" }, { locale: "zh" }, { locale: "th" }];
