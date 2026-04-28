@@ -8,18 +8,31 @@
     "openMenu": "打开菜单"
   },
   "District": {
-    "chom-thong": "宗通",
-    "chiang-dao": "清道",
-    "chai-prakan": "猜巴干",
-    "doi-saket": "堆沙革",
-    "fang": "芳县",
-    "hang-dong": "杭东",
     "mueang-chiang-mai": "清迈府治县",
-    "mae-taeng": "湄登",
-    "mae-rim": "湄林",
-    "mae-on": "湄安",
-    "mae-ai": "湄艾",
-    "san-kamphaeng": "讪甘烹"
+    "chom-thong": "宗通县",
+    "mae-chaem": "美湛县",
+    "chiang-dao": "清道县",
+    "doi-saket": "堆沙革县",
+    "mae-taeng": "美登县",
+    "mae-rim": "美林县",
+    "samoeng": "沙蒙县",
+    "fang": "芳县",
+    "mae-ai": "美艾县",
+    "phrao": "抛县",
+    "san-pa-tong": "讪巴东县",
+    "san-kamphaeng": "讪甘烹县",
+    "san-sai": "讪赛县",
+    "hang-dong": "杭东县",
+    "hot": "霍特县",
+    "doi-tao": "堆道县",
+    "omkoi": "翁内县",
+    "saraphi": "沙拉披县",
+    "wiang-haeng": "永恒县",
+    "chai-prakan": "猜巴干县",
+    "mae-wang": "美旺县",
+    "mae-on": "美翁县",
+    "doi-lo": "堆罗县",
+    "kanlayaniwatthana": "葛拉雅尼瓦塔娜县"
   },
   "MapUI": { 
     "quick_select": "快速选择", 
@@ -76,5 +89,28 @@
     "mobile": "手机",
     "desktop": "电脑",
     "tablet": "平板"
+  },
+  "Hero": {
+    "logoAlt": "畅游清迈，心旷神怡",
+    "titleLine1": "在清迈放飞您的心灵",
+    "titleLine2": "在这里，自然与生活方式并肩同行",
+    "exploreBtn": "旅游地图"
+  },
+  "Popular": {
+    "title": "清迈热门打卡地",
+    "description": "体验兰纳文化的魅力，沉浸在大自然中，探索传统与现代生活方式的完美融合。",
+    "explore": "探索地点"
+  },
+  "Events": {
+    "viewDetails": "查看活动详情"
+  },
+  "Map": {
+    "logoAlt": "清迈之旅，满心欢喜",
+    "headline": "开启欢乐旅程\n感受清迈的独特魅力",
+    "description": "远离喧嚣，发现隐藏的魅力。漫步古城探访历史悠久的寺庙，在宁曼路品味精品咖啡，再登上素贴山呼吸清新空气。体验宁静的慢生活，无论哪个季节，清迈都欢迎您的到来。",
+    "cta": "探索清迈地图",
+    "altView": "清迈山脉美景",
+    "altCafe": "清迈咖啡馆",
+    "altTemple": "清迈古城寺庙"
   }
 }

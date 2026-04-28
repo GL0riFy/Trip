@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import HeroSec from "./../components/HeroNavigator";
-import F_prducts from "./../components/FeaturedProducts";
+import Season from "./../components/Season";
 import Popular from "./../components/Popular";
 import Map from "./../components/map";
 import Event from "./../components/event";
@@ -19,7 +19,7 @@ export default function Home() {
           className="object-cover object-center opacity-70"
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-t from-black via-black/60 to-transparent" />
       </div>
 
       {/* 🔹 Content */}
@@ -27,6 +27,7 @@ export default function Home() {
         <HeroSec />
         <Popular />
         <Event />
+        <Season />
         <Map />
       </main>
 

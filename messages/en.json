@@ -9,18 +9,31 @@
   },
 
   "District": {
-    "chom-thong": "Chom Thong",
-    "chiang-dao": "Chiang Dao",
-    "chai-prakan": "Chai Prakan",
-    "doi-saket": "Doi Saket",
-    "fang": "Fang",
-    "hang-dong": "Hang Dong",
     "mueang-chiang-mai": "Mueang Chiang Mai",
+    "chom-thong": "Chom Thong",
+    "mae-chaem": "Mae Chaem",
+    "chiang-dao": "Chiang Dao",
+    "doi-saket": "Doi Saket",
     "mae-taeng": "Mae Taeng",
     "mae-rim": "Mae Rim",
-    "mae-on": "Mae On",
+    "samoeng": "Samoeng",
+    "fang": "Fang",
     "mae-ai": "Mae Ai",
-    "san-kamphaeng": "San Kamphaeng"
+    "phrao": "Phrao",
+    "san-pa-tong": "San Pa Tong",
+    "san-kamphaeng": "San Kamphaeng",
+    "san-sai": "San Sai",
+    "hang-dong": "Hang Dong",
+    "hot": "Hot",
+    "doi-tao": "Doi Tao",
+    "omkoi": "Omkoi",
+    "saraphi": "Saraphi",
+    "wiang-haeng": "Wiang Haeng",
+    "chai-prakan": "Chai Prakan",
+    "mae-wang": "Mae Wang",
+    "mae-on": "Mae On",
+    "doi-lo": "Doi Lo",
+    "kanlayaniwatthana": "Galyani Vadhana"
   },
 
   "MapUI": {
@@ -79,5 +92,28 @@
     "mobile": "Mobile",
     "desktop": "Desktop",
     "tablet": "Tablet"
+  },
+  "Hero": {
+    "logoAlt": "Visit Chiang Mai, Happy Mind, Happy Life",
+    "titleLine1": "Let your heart wander in Chiang Mai",
+    "titleLine2": "Where nature and lifestyle walk side by side",
+    "exploreBtn": "Tourist Map"
+  },
+  "Popular": {
+    "title": "Popular Check-ins in Chiang Mai",
+    "description": "Experience the charm of Lanna culture, immerse yourself in nature, and discover a perfect blend of traditional and modern lifestyles.",
+    "explore": "Explore Place"
+  },
+  "Events": {
+    "viewDetails": "VIEW EVENT DETAILS"
+  },
+  "Map": {
+    "logoAlt": "Travel Chiang Mai, Pure Joy",
+    "headline": "Experience the Joy\nDiscover the Heart of Chiang Mai",
+    "description": "Escape the hustle and bustle to discover hidden charms. Stroll through ancient temples in the old city, sip craft coffee in Nimman, and breathe the fresh air atop Doi Suthep. Experience the tranquility and slow-life atmosphere that welcomes you in every season.",
+    "cta": "Explore Chiang Mai map",
+    "altView": "Chiang Mai Mountain View",
+    "altCafe": "Chiang Mai Cafe",
+    "altTemple": "Old City Temple"
   }
 }

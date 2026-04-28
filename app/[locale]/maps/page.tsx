@@ -1,178 +1,218 @@
-'use client'
-import { useState } from 'react'
-import { motion, AnimatePresence, Variants } from 'framer-motion'
-import Link from 'next/link'
-import Image from 'next/image'
-import { useLocale, useTranslations } from 'next-intl'
-import { districts } from '@/src/data/chiangmai-districts'
+"use client";
 
-// --- Animation Variants ---
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.05
-    }
-  }
+import React, { useEffect, useRef, useState } from 'react';
+import maplibregl from 'maplibre-gl';
+import 'maplibre-gl/dist/maplibre-gl.css';
+import { useTranslations, useLocale } from 'next-intl';
+import { useRouter } from 'next/navigation';
+import * as turf from '@turf/turf';
+import { AnimatePresence, motion } from 'framer-motion';
+
+// ฟังก์ชันสำหรับโหลด SVG
+function loadSvgImage(map: maplibregl.Map, id: string, url: string, size: number): Promise<void> {
+    return new Promise((resolve, reject) => {
+        const dpi = window.devicePixelRatio || 1;
+        const img = new Image(size * dpi, size * dpi);
+        img.onload = () => {
+            if (!map.hasImage(id)) {
+                map.addImage(id, img, { pixelRatio: dpi });
+            }
+            resolve();
+        };
+        img.onerror = reject;
+        img.src = url;
+    });
 }
 
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { 
-    opacity: 1, 
-    y: 0,
-    transition: { type: "spring", stiffness: 300, damping: 24 }
-  }
-}
+const DECORATIONS = [
+    { id: 'light1', url: '/Maps/light1-2.svg', lng: 96.70, lat: 19.90, size: 280, iconSize: 1.0 },
+    { id: 'light2', url: '/Maps/light2-2.svg', lng: 100.60, lat: 19.95, size: 280, iconSize: 1.0 },
+    { id: 'light3', url: '/Maps/light3-1.svg', lng: 97.20, lat: 19.95, size: 250, iconSize: 0.85 },
+    { id: 'light4', url: '/Maps/light4-1.svg', lng: 100.00, lat: 19.95, size: 250, iconSize: 0.85 },
+    { id: 'tempel', url: '/Maps/tempel.svg',   lng: 97.02, lat: 17.50, size: 330, iconSize: 1.1 },
+    { id: 'JD',     url: '/Maps/JD.svg',       lng: 100.60, lat: 17.70, size: 300, iconSize: 1.1 },
+];
 
+export default function MapsPage() {
+    const t = useTranslations('District');
+    const locale = useLocale();
+    const router = useRouter();
+    const mapContainer = useRef<HTMLDivElement>(null);
+    const map = useRef<maplibregl.Map | null>(null);
 
-export default function ChiangMaiMap() {
-  const t = useTranslations('District') 
-  const tUI = useTranslations('MapUI') 
-  const locale = useLocale()
+    const [hoveredInfo, setHoveredInfo] = useState<{ id: string; x: number; y: number } | null>(null);
+    const [selectedDistrict, setSelectedDistrict] = useState<{ id: string; name: string; slug: string } | null>(null);
 
-  const [active, setActive] = useState<string | null>(null)
-  const activeDistrict = districts.find(d => d.id === active)
+    const nameToSlug = (name: string) => {
+        const mapping: { [key: string]: string } = {
+            'เมืองเชียงใหม่': 'mueang-chiang-mai', 'จอมทอง': 'chom-thong', 'แม่แจ่ม': 'mae-chaem',
+            'เชียงดาว': 'chiang-dao', 'ดอยสะเก็ด': 'doi-saket', 'แม่แตง': 'mae-taeng',
+            'แม่ริม': 'mae-rim', 'สะเมิง': 'samoeng', 'ฝาง': 'fang', 'แม่อาย': 'mae-ai',
+            'พร้าว': 'phrao', 'สันป่าตอง': 'san-pa-tong', 'สันกำแพง': 'san-kamphaeng',
+            'สันทราย': 'san-sai', 'หางดง': 'hang-dong', 'ฮอด': 'hot', 'ดอยเต่า': 'doi-tao',
+            'อมก๋อย': 'omkoi', 'สารภี': 'saraphi', 'เวียงแหง': 'wiang-haeng',
+            'ไชยปราการ': 'chai-prakan', 'แม่วาง': 'mae-wang', 'แม่ออน': 'mae-on',
+            'ดอยหล่อ': 'doi-lo', 'กัลยาณิวัฒนา': 'kanlayaniwatthana'
+        };
+        return mapping[name] || name;
+    };
 
-  const toggleDistrict = (id: string) => {
-    setActive(prev => prev === id ? null : id)
-  }
+    useEffect(() => {
+        if (map.current || !mapContainer.current) return;
 
-  return (
-    <div className="w-full flex flex-col items-center py-6 md:py-10">
-      
-      <div className="relative w-full max-w-2xl px-4">
+        map.current = new maplibregl.Map({
+            container: mapContainer.current,
+            style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
+            bounds: [[97.8, 17.2], [99.6, 20.2]], // ขอบเขตเชียงใหม่
+            fitBoundsOptions: { padding: 40 },
+            dragRotate: false,        // ห้ามหมุนแผนที่ด้วยเมาส์ขวา
+            touchZoomRotate: false,   // ห้ามหมุนแผนที่ด้วยนิ้ว
+            maxBounds: [[96.0, 16.0], [101.5, 21.5]], // ห้ามเลื่อนออกนอกภาคเหนือ
+        });
 
-        {/* ================= MAP SECTION ================= */}
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5 }}
-          className="relative w-full aspect-[4/5] md:aspect-square"
-        >
-          <Image
-            src="/Maps/CNX3.png"
-            alt="Chiang Mai Map"
-            fill
-            className="object-contain drop-shadow-xl rounded-2xl"
-            priority
-          />
+        map.current.on('load', async () => {
+            if (!map.current) return;
 
-          {/* Pin Dots */}
-          {districts.map((d, i) => (
-            <motion.button
-              key={d.id}
-              onClick={() => toggleDistrict(d.id)}
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.3 + (i * 0.05), type: "spring" }}
-              
-              className="absolute -translate-x-1/2 -translate-y-1/2 group z-10"
-              style={{ left: `${d.center.x}%`, top: `${d.center.y}%` }}
-            >
-              <span className={`absolute inline-flex h-full w-full rounded-full opacity-75 animate-ping 
-                ${active === d.id ? 'bg-orange-400 duration-1000' : 'bg-red-400 duration-[2s]'}
-              `}></span>
-              
-              <span className={`relative inline-flex rounded-full border-2 border-white shadow-md transition-all duration-300
-                ${active === d.id ? 'bg-orange-600 w-8 h-8 scale-110 z-20' : 'bg-red-500 w-5 h-5 md:w-6 md:h-6 hover:scale-125'}
-              `}></span>
-            </motion.button>
-          ))}
+            // --- ล็อกการซูมออก (Min Zoom) ให้เท่ากับค่าเริ่มต้น ---
+            const initialZoom = map.current.getZoom();
+            map.current.setMinZoom(initialZoom);
 
-          {/* Tooltip Popup */}
-          <AnimatePresence>
-            {activeDistrict && (
-              <motion.div
-                key={activeDistrict.id}
-                initial={{ opacity: 0, y: 10, scale: 0.8 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 5, scale: 0.8 }}
-                transition={{ type: "spring", stiffness: 350, damping: 25 }}
-                className="absolute z-30 pointer-events-none"
-                style={{
-                  left: `${activeDistrict.center.x}%`,
-                  top: `${activeDistrict.center.y}%`
-                }}
-              >
-                <div className="relative -translate-x-1/2 -translate-y-full -mt-3 md:-mt-3">
-                  <Link 
-                    href={`/${locale}/travel/${activeDistrict.id}`}
-                    className="group pointer-events-auto flex items-center gap-3 bg-gray-900 text-white pl-4 pr-3 py-3 rounded-xl shadow-2xl border border-gray-700 hover:bg-black transition-all cursor-pointer"
-                  >
-                    <div>
-                      <span className="block text-xs text-orange-400 font-bold tracking-widest uppercase mb-0.5">
-                        {tUI('district_label')}
-                      </span>
-                      <span className="block text-lg font-bold leading-none whitespace-nowrap">
-                        {t(activeDistrict.id)}
-                      </span>
-                    </div>
-                    <motion.div 
-                      whileHover={{ x: 3 }}
-                      className="bg-orange-500 rounded-lg p-1.5 group-hover:bg-orange-400 transition-colors"
+            // 1. Source เชียงใหม่
+            map.current.addSource('chiangmai-districts', {
+                type: 'geojson',
+                data: '/Maps/Chiang_mai_Geo.geojson',
+                generateId: true 
+            });
+
+            // 2. Layer สี
+            map.current.addLayer({
+                id: 'districts-fill',
+                type: 'fill',
+                source: 'chiangmai-districts',
+                paint: {
+                    'fill-color': [
+                        'match', ['get', 'adm2_name1'],
+                        'เมืองเชียงใหม่', '#81B29A', 'จอมทอง', '#F2CC8F', 'แม่แจ่ม', '#E07A5F',
+                        'เชียงดาว', '#3D405B', 'ดอยสะเก็ด', '#F4F1DE', 'แม่แตง', '#A8DADC',
+                        'แม่ริม', '#457B9D', 'สะเมิง', '#F28482', 'ฝาง', '#84A59D',
+                        'แม่อาย', '#F6BD60', 'พร้าว', '#90DBF4', 'สันป่าตอง', '#B5838D',
+                        'สันกำแพง', '#6D597A', 'สันทราย', '#355070', 'หางดง', '#E5989B',
+                        'ฮอด', '#B56576', 'ดอยเต่า', '#6C757D', 'อมก๋อย', '#2A9D8F',
+                        'สารภี', '#E9C46A', 'เวียงแหง', '#264653', 'ไชยปราการ', '#FFB703',
+                        'แม่วาง', '#8ECAE6', 'แม่ออน', '#219EBC', 'ดอยหล่อ', '#023047',
+                        'กัลยาณิวัฒนา', '#BC4749', '#E5E5E5'
+                    ] as any,
+                    'fill-opacity': ['case', ['boolean', ['feature-state', 'hover'], false], 0.9, 0.7]
+                }
+            });
+
+            // 3. เส้นขอบ
+            map.current.addLayer({
+                id: 'districts-borders',
+                type: 'line',
+                source: 'chiangmai-districts',
+                paint: { 'line-color': '#FFFFFF', 'line-width': 1.5 }
+            });
+
+            // 4. SVG Decorations
+            await Promise.all(DECORATIONS.map(d => loadSvgImage(map.current!, d.id, d.url, d.size)));
+            map.current.addSource('decorations', {
+                type: 'geojson',
+                data: {
+                    type: 'FeatureCollection',
+                    features: DECORATIONS.map(d => ({
+                        type: 'Feature',
+                        geometry: { type: 'Point', coordinates: [d.lng, d.lat] },
+                        properties: { icon: d.id, iconSize: d.iconSize },
+                    })),
+                },
+            });
+            map.current.addLayer({
+                id: 'decorations-layer',
+                type: 'symbol',
+                source: 'decorations',
+                layout: {
+                    'icon-image': ['get', 'icon'],
+                    'icon-size': ['get', 'iconSize'],
+                    'icon-allow-overlap': true,
+                    'icon-ignore-placement': true,
+                },
+            });
+
+            // 5. Events
+            let hoveredId: any = null;
+            map.current.on('mousemove', 'districts-fill', (e: any) => {
+                if (e.features.length > 0) {
+                    const feature = e.features[0];
+                    const slug = nameToSlug(feature.properties.adm2_name1);
+                    setHoveredInfo({ id: slug, x: e.point.x, y: e.point.y });
+                    if (hoveredId !== null) map.current?.setFeatureState({ source: 'chiangmai-districts', id: hoveredId }, { hover: false });
+                    hoveredId = feature.id;
+                    map.current?.setFeatureState({ source: 'chiangmai-districts', id: hoveredId }, { hover: true });
+                    map.current!.getCanvas().style.cursor = 'pointer';
+                }
+            });
+
+            map.current.on('mouseleave', 'districts-fill', () => {
+                setHoveredInfo(null);
+                if (hoveredId !== null) map.current?.setFeatureState({ source: 'chiangmai-districts', id: hoveredId }, { hover: false });
+                map.current!.getCanvas().style.cursor = '';
+            });
+
+            map.current.on('click', 'districts-fill', (e: any) => {
+                const feature = e.features[0];
+                const slug = nameToSlug(feature.properties.adm2_name1);
+                const bbox = turf.bbox(feature);
+                map.current?.fitBounds(bbox as any, { padding: 80, duration: 1000 });
+                setSelectedDistrict({ id: slug, name: feature.properties.adm2_name1, slug: slug });
+            });
+        });
+    }, []);
+
+    return (
+        <div className="relative w-full h-[calc(100vh-80px)] mt-20 flex justify-center p-5 font-kanit">
+            <div className="relative w-full max-w-6xl h-full rounded-[40px] overflow-hidden shadow-2xl border border-white/20 bg-white/50">
+                <div ref={mapContainer} className="w-full h-full" />
+
+                {/* Tooltip */}
+                {hoveredInfo && !selectedDistrict && (
+                    <div 
+                        className="absolute z-10 bg-black/80 backdrop-blur-md text-white px-5 py-2 rounded-full text-sm pointer-events-none border border-white/20 shadow-2xl"
+                        style={{ left: hoveredInfo.x, top: hoveredInfo.y - 50, transform: 'translateX(-50%)' }}
                     >
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4 text-white">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                      </svg>
-                    </motion.div>
-                  </Link>
-                  
-                  <div className="absolute left-1/2 -bottom-2 -translate-x-1/2 w-0 h-0 border-l-8 border-l-transparent border-r-8 border-r-transparent border-t-8 border-t-gray-900"></div>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </motion.div>
+                        {t(hoveredInfo.id)}
+                    </div>
+                )}
 
-        {/* ================= LIST CONTROL SECTION ================= */}
-        <motion.div 
-          className="mt-8"
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-50px" }}
-        >
-          <motion.h3 
-            variants={itemVariants}
-            className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-3 ml-1"
-          >
-             {tUI('quick_select')}
-          </motion.h3>
-          
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3">
-            {districts.map((d) => (
-              <motion.button
-                key={d.id}
-                variants={itemVariants}
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => toggleDistrict(d.id)}
-                className={`
-                  relative px-4 py-3 rounded-lg text-left text-sm font-medium transition-colors duration-200 border
-                  ${active === d.id 
-                    ? 'bg-orange-500 text-white border-orange-500 shadow-lg shadow-orange-200 z-10' 
-                    : 'bg-white text-gray-600 border-gray-100 hover:border-orange-200 hover:bg-orange-50'
-                  }
-                `}
-              >
-                <div className="flex items-center justify-between">
-                  <span>{t(d.id)}</span>
-                  {active === d.id && (
-                    <motion.span 
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      className="w-2 h-2 rounded-full bg-white"
-                    />
-                  )}
-                </div>
-              </motion.button>
-            ))}
-          </div>
-        </motion.div>
-
-      </div>
-    </div>
-  )
+                {/* District Modal */}
+                <AnimatePresence>
+                    {selectedDistrict && (
+                        <motion.div 
+                            initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }}
+                            className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                        >
+                            <div className="pointer-events-auto bg-white/95 backdrop-blur-3xl p-8 rounded-[40px] shadow-2xl border border-white flex flex-col items-center gap-6 max-w-xs w-full">
+                                <div className="text-center">
+                                    <span className="text-zinc-400 text-[10px] uppercase tracking-widest font-bold">{locale === 'th' ? 'ข้อมูลพื้นที่' : 'District Info'}</span>
+                                    <h2 className="text-3xl font-bold text-black mt-1">{t(selectedDistrict.id)}</h2>
+                                </div>
+                                <div className="flex flex-col w-full gap-2">
+                                    <button
+                                        onClick={() => router.push(`/${locale}/travel/${selectedDistrict.slug}`)}
+                                        className="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-2xl font-bold text-lg transition-all shadow-lg flex items-center justify-center gap-2 group"
+                                    >
+                                        {locale === 'th' ? 'เข้าชมสถานที่' : locale === 'zh' ? '进入区域' : 'Visit'}
+                                        <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+                                    </button>
+                                    <button onClick={() => setSelectedDistrict(null)} className="w-full text-zinc-400 py-2 text-sm hover:text-zinc-600 transition-colors font-medium">
+                                        {locale === 'th' ? 'ยกเลิก' : 'Cancel'}
+                                    </button>
+                                </div>
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </div>
+        </div>
+    );
 }

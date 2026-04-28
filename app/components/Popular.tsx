@@ -1,8 +1,6 @@
 'use client';
 
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useLocale } from 'next-intl';
+import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Prompt } from 'next/font/google';
@@ -13,182 +11,134 @@ const promptFont = Prompt({
   display: 'swap',
 });
 
-const MOCK_PLACES = [
+const featuredPlace = {
+  id: 'featured',
+  date: 'วันที่ 26 / 4 / 2569',
+  title: 'สถานที่ท่องเที่ยวยอดฮิต',
+  desc: 'สถานที่ท่องเที่ยว ในภาคเหนือ ที่มีผู้คนไปอย่างไม่ขาดสาย สายธรรมชาติและวัฒนธรรมต้องไม่พลาด',
+  image: '/Popular/doi-suthep1.jpg',
+  link: '/popular/featured'
+};
+
+const popularCategories = [
   {
     id: 1,
-    name: "ดอยสุเทพ",
-    image: "/Popular/doi-suthep.jpg",
-    href: "/popular/doi-suthep",
+    title: 'ร้านอาหารยอดฮิต',
+    desc: 'สถานที่ท่องเที่ยว ในภาคเหนือ ที่มีผู้คนไปอย่างไม่ขาดสาย สาย...',
+    image: '/Popular/food.jpg',
+    link: '/popular/food'
   },
   {
     id: 2,
-    name: "ประตูท่าแพ",
-    image: "/Popular/tha-phae.jpg",
-    href: "/popular/tha-phae",
+    title: 'ที่พักที่เป็นที่นิยม',
+    desc: 'สถานที่ท่องเที่ยว ในภาคเหนือ ที่มีผู้คนไปอย่างไม่ขาดสาย สาย...',
+    image: '/Popular/hotel.webp',
+    link: '/popular/hotel'
   },
   {
     id: 3,
-    name: "ม่อนแจ่ม",
-    image: "/Popular/mon-jam.jpg",
-    href: "/popular/mon-jam",
-  },
-  {
-    id: 4,
-    name: "ดอยอินทนนท์",
-    image: "/Popular/doi-inthanon.jpg",
-    href: "/popular/doi-inthanon",
-  },
+    title: 'สินค้า OTOP ของแต่ละชุมชน',
+    desc: 'สถานที่ท่องเที่ยว ในภาคเหนือ ที่มีผู้คนไปอย่างไม่ขาดสาย สาย...',
+    image: '/Popular/otop.jpg',
+    link: '/popular/otop'
+  }
 ];
 
+const fadeUpVariant = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.0, 0.0, 0.2, 1.0] as const } }
+};
+
 export default function Popular() {
-  const locale = useLocale();
-  
-  const [items, setItems] = useState(MOCK_PLACES);
-
-  const handleNext = () => {
-    setItems((prev) => {
-      const newArray = [...prev];
-      const firstItem = newArray.shift();
-      if (firstItem) newArray.push(firstItem);
-      return newArray;
-    });
-  };
-
-  const handleSelect = (selectedId) => {
-    setItems((prev) => {
-      const selectedIndex = prev.findIndex((item) => item.id === selectedId);
-      const before = prev.slice(0, selectedIndex);
-      const after = prev.slice(selectedIndex);
-      return [...after, ...before];
-    });
-  };
-
-  const activePlace = items[0];
-  const thumbnailPlaces = items.slice(1);
-
   return (
-    <section className={`w-full min-h-screen flex flex-col ${promptFont.className}`}>
-      
-      {/* --- ส่วนบน: ข้อความ --- */}
-      {/* ปรับ px และ text-size ให้พอดีกับจอมือถือมากขึ้น */}
-      <div className="w-full pt-16 pb-10 md:pt-20 md:pb-16 px-4 md:px-6 flex flex-col justify-center items-center text-center relative z-10 bg-[#F8F9FA]">
-        <motion.h2 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 mb-4 md:mb-6 tracking-tight"
-        >
-          จุดเช็คอินยอดฮิต เชียงใหม่
-        </motion.h2>
-        <motion.p 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="text-base sm:text-lg md:text-xl text-slate-600 max-w-[90%] md:max-w-3xl leading-relaxed font-light"
-        >
-          สัมผัสมนต์เสน่ห์แห่งวัฒนธรรมล้านนา ดื่มด่ำธรรมชาติ 
-          และวิถีชีวิตที่ผสมผสานความดั้งเดิมและความทันสมัยไว้อย่างลงตัว
-        </motion.p>
-      </div>
+    <section
+      className={`w-full relative z-30 -mt-16 md:-mt-24 bg-white overflow-visible pb-10 ${promptFont.className}`}
+    >
+      <div className="w-full px-4 sm:px-6 lg:px-10">
 
-      {/* --- ส่วนล่าง: Slider (กางเต็มจอ) --- */}
-      <div className="flex-1 w-full relative z-20">
-        <div className="relative w-full h-[75vh] md:h-[80vh] overflow-hidden bg-slate-900">
-          
-          <AnimatePresence mode="popLayout">
-            <motion.div
-              key={activePlace.id}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.8, ease: [0.25, 1, 0.5, 1] }}
-              className="absolute inset-0 w-full h-full"
-            >
+        <div className="flex flex-col lg:flex-row gap-4 md:gap-6 items-stretch -mt-10 md:-mt-16">
+
+          {/* ===== ซ้าย: Featured Card ===== */}
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={fadeUpVariant}
+            className="lg:w-7/12 bg-gray-200 rounded-4xl p-4 md:p-5 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.10)] border border-gray-100 flex flex-col group hover:shadow-[0_15px_50px_-10px_rgba(0,0,0,0.14)] transition-shadow duration-300"
+          >
+            {/* รูปใหญ่ — min-h-[500px] ตามที่กำหนด ไม่แตะ */}
+            <div className="relative w-full flex-1 min-h-[500px] rounded-3xl overflow-hidden mb-5">
               <Image
-                src={activePlace.image}
-                alt={activePlace.name}
+                src={featuredPlace.image}
+                alt={featuredPlace.title}
                 fill
-                priority
-                className="object-cover object-[center_60%] md:object-[center_75%]"
-                sizes="100vw"
+                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                sizes="(max-width: 1024px) 100vw, 60vw"
               />
-            </motion.div>
-          </AnimatePresence>
-
-          {/* ปรับ Gradient: ในมือถือให้ความมืดดันขึ้นไปสูงกว่าปกติ เพื่อให้ข้อความอ่านง่าย */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 md:via-black/30 to-transparent pointer-events-none" />
-
-          {/* ข้อมูลด้านซ้าย (ชื่อสถานที่ + ปุ่ม Explore) */}
-          {/* มือถือ: ดันขึ้นไปอยู่เหนือ Thumbnail (bottom-[230px]), คอม: อยู่ซ้ายล่างปกติ */}
-          <div className="absolute bottom-[230px] left-4 right-4 sm:bottom-[280px] sm:left-6 md:bottom-20 md:left-16 flex flex-col text-white z-10 pointer-events-auto">
-            <motion.h3 
-              key={`title-${activePlace.id}`}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-bold mb-4 md:mb-6 drop-shadow-[0_5px_15px_rgba(0,0,0,0.8)] line-clamp-2"
-            >
-              {activePlace.name}
-            </motion.h3>
-            
-            <div className="flex items-center gap-3 md:gap-4">
-              <Link 
-                href={activePlace.href} 
-                locale={locale}
-                className="group flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-white/10 backdrop-blur-md text-white border-2 border-white/50 rounded-full hover:bg-white hover:text-black transition-all duration-300 shadow-[0_0_20px_rgba(255,255,255,0.2)]"
-              >
-                <span className="transform group-hover:translate-x-1 transition-transform">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="md:w-[28px] md:h-[28px]">
-                    <path d="M5 12h14M12 5l7 7-7 7"/>
-                  </svg>
-                </span>
-              </Link>
-              <span className="text-xs sm:text-sm md:text-base font-bold tracking-[0.2em] uppercase drop-shadow-lg text-white">
-                Explore Place
-              </span>
             </div>
-          </div>
 
-          {/* แกลลอรี Thumbnail ด้านขวา */}
-          {/* มือถือ: ชิดซ้ายและขวา ทะลุขอบขวาได้ (overflow-x-auto) เลื่อนได้แบบไม่โดนตัด */}
-          <div className="absolute bottom-6 left-4 right-0 sm:left-6 md:bottom-20 md:right-16 md:left-auto flex gap-3 md:gap-4 overflow-x-auto md:overflow-visible pb-4 md:pb-0 pr-4 md:pr-0 z-10 pointer-events-auto snap-x snap-mandatory [&::-webkit-scrollbar]:hidden">
-            <AnimatePresence mode="popLayout">
-              {thumbnailPlaces.map((place) => (
-                <motion.div
-                  key={place.id}
-                  layout
-                  initial={{ opacity: 0, x: 50 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, scale: 0.8 }}
-                  transition={{ duration: 0.5, type: "spring", stiffness: 200, damping: 20 }}
-                  onClick={() => handleSelect(place.id)}
-                  // ปรับขนาดการ์ดในมือถือให้เตี้ยลง จะได้ไม่บังเนื้อหา (h-[180px])
-                  className="relative snap-start shrink-0 w-[140px] h-[180px] sm:w-[160px] sm:h-[220px] md:w-[200px] md:h-[280px] rounded-2xl overflow-hidden cursor-pointer shadow-[0_15px_30px_rgba(0,0,0,0.6)] md:shadow-[0_15px_40px_rgba(0,0,0,0.6)] border-2 border-white/40 hover:border-white hover:shadow-[0_15px_40px_rgba(255,255,255,0.2)] group bg-slate-800 transition-all duration-300"
+            <div className="shrink-0 px-2 pb-2">
+              <span className="text-xs sm:text-sm text-gray-400 font-medium tracking-wide mb-2 block">
+                {featuredPlace.date}
+              </span>
+              <h3 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-3 tracking-tight">
+                {featuredPlace.title}
+              </h3>
+              <p className="text-gray-500 text-sm sm:text-base leading-relaxed mb-5 line-clamp-2">
+                {featuredPlace.desc}
+              </p>
+              <Link
+                href={featuredPlace.link}
+                className="inline-flex items-center text-[#3b82f6] hover:text-[#2563eb] font-semibold text-sm sm:text-base transition-colors group/link"
+              >
+                เพิ่มเติม
+                <svg
+                  className="w-4 h-4 ml-1 transform group-hover/link:translate-x-1 transition-transform"
+                  fill="none" viewBox="0 0 24 24" stroke="currentColor"
                 >
-                  <Image 
-                    src={place.image} 
-                    alt={place.name} 
-                    fill
-                    sizes="(max-width: 768px) 140px, 200px"
-                    className="object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex items-end p-4 md:p-5">
-                    <p className="text-white text-sm sm:text-base md:text-xl font-bold truncate drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
-                      {place.name}
-                    </p>
-                  </div>
-                </motion.div>
-              ))}
-            </AnimatePresence>
-            
-            {/* ปุ่ม Next Arrow */}
-            <button 
-              onClick={handleNext}
-              className="snap-start shrink-0 w-[50px] sm:w-[60px] md:w-[70px] h-[180px] sm:h-[220px] md:h-[280px] flex items-center justify-center bg-black/40 hover:bg-white backdrop-blur-md rounded-2xl text-white hover:text-black transition-all duration-300 border-2 border-white/40 hover:border-white group shadow-[0_15px_40px_rgba(0,0,0,0.6)]"
-            >
-               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="transform group-hover:translate-x-1 transition-transform md:w-[32px] md:h-[32px]">
-                  <path d="M9 18l6-6-6-6"/>
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>
-            </button>
+              </Link>
+            </div>
+          </motion.div>
+
+          {/* ===== ขวา: 3 การ์ด ===== */}
+          <div className="lg:w-5/12 flex flex-col gap-3 md:gap-4">
+            {popularCategories.map((item, index) => (
+              <motion.div
+                key={item.id}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-100px" }}
+                variants={{
+                  hidden: { opacity: 0, x: 30 },
+                  visible: { opacity: 1, x: 0, transition: { duration: 0.5, delay: index * 0.15 } }
+                }}
+                className="group flex-1 flex items-center gap-4 bg-gray-100 rounded-3xl p-3 sm:p-4 shadow-[0_8px_30px_-10px_rgba(0,0,0,0.08)] border border-gray-100 hover:shadow-[0_12px_40px_-10px_rgba(0,0,0,0.12)] transition-all duration-300 cursor-pointer"
+              >
+                {/* Thumbnail สี่เหลี่ยมจัตุรัส — แก้แค่นี้จุดเดียว */}
+                <div className="relative aspect-square w-[160px] sm:w-[200px] shrink-0 rounded-2xl overflow-hidden bg-gray-200">
+                  <Image
+                    src={item.image}
+                    alt={item.title}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-110 rounded-2xl"
+                    sizes="(max-width: 640px) 160px, 200px"
+                  />
+                </div>
+
+                {/* ข้อมูล */}
+                <div className="flex flex-col justify-center flex-1 min-w-0">
+                  <h4 className="text-base sm:text-lg font-bold text-gray-800 mb-1 group-hover:text-blue-600 transition-colors line-clamp-1">
+                    {item.title}
+                  </h4>
+                  <p className="text-xs sm:text-sm text-gray-500 line-clamp-3 leading-relaxed mb-2">
+                    {item.desc}
+                  </p>
+                  <div className="w-10 h-[2px] bg-gray-200 group-hover:bg-blue-400 transition-colors" />
+                </div>
+              </motion.div>
+            ))}
           </div>
 
         </div>
