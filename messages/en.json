@@ -47,7 +47,17 @@
     "ESSENTIAL_TOOLS": "Essential tools you should know (Map, SOS, Money)"
   },
 
-  "essentials": {
+ "essentials": {
+    "Hero": {
+      "title": "Travel Chiang Mai",
+      "subtitle": "Confidently & Safely",
+      "desc": "Your all-in-one guide for emergencies, exchange rates, and essential apps for tourists."
+    },
+    "Services": {
+      "heading": "Core Services",
+      "subheading": "Everything you need to explore Chiang Mai with peace of mind.",
+      "viewDetails": "View Details"
+    },
     "emergency": {
       "title": "EMERGENCY",
       "subtitle": "HELPLINES & SAFETY",
@@ -56,15 +66,34 @@
     "currency": {
       "title": "CURRENCY",
       "subtitle": "EXCHANGE & RATES",
-      "desc": "Find best rates at Super Rich & Local Banks."
+      "desc": "Find the best rates at Super Rich & Local Banks."
     },
     "apps": {
       "title": "ESSENTIAL APPS",
       "subtitle": "FOR TRAVELERS",
-      "desc": "Grab, Google Maps, Translation tools."
+      "desc": "Grab, Google Maps, and translation tools."
+    },
+    "Weather": {
+      "status": "Chiang Mai - Hot",
+      "feelsLike": "Mostly cloudy - Feels like 39°C",
+      "humidity": "Humidity",
+      "wind": "Wind",
+      "uv": "UV Index",
+      "visibility": "Visibility"
+    },
+    "Tips": {
+      "heading": "Know Before You Go • Safer Travel",
+      "items": {
+        "tip1": { "title": "Stay Hydrated", "desc": "The weather is hot and humid. Drink at least 2-3 liters of water daily, especially in summer." },
+        "tip2": { "title": "Smog Warning", "desc": "Feb-Apr is smog season. Carry an N95 mask and check the AQI daily." },
+        "tip3": { "title": "Use Ride-Hailing Apps", "desc": "Grab is safer than hailing random rides. It offers clear pricing and GPS tracking." },
+        "tip4": { "title": "Currency Exchange", "desc": "SuperRich at the moat offers the best rates—often 2-5% better than at the airport." },
+        "tip5": { "title": "Temple Etiquette", "desc": "Dress modestly. Cover your shoulders and knees. Sarongs are usually available for rent at entrances." },
+        "tip6": { "title": "Travel Insurance", "desc": "Always purchase travel insurance with adequate medical coverage before your trip." }
+      }
     }
   },
-
+  
   "Travel": {
     "title": "Travel Districts",
     "subtitle": "Select a district to open its trip data.",
