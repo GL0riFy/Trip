@@ -57,6 +57,27 @@ const scaleIn: Variants = {
   visible: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } },
 };
 
+// ─── NEW: Hero & Filter Entry Animations ──────────────────────────────────
+const heroContainer: Variants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.15, delayChildren: 0.1 } },
+};
+
+const heroItem: Variants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] } },
+};
+
+const heroImageFade: Variants = {
+  hidden: { opacity: 0, scale: 1.05 },
+  visible: { opacity: 1, scale: 1, transition: { duration: 1.2, ease: [0.22, 1, 0.36, 1] } },
+};
+
+const filterFade: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, delay: 0.5, ease: [0.22, 1, 0.36, 1] } },
+};
+
 export default function RefactoredProductShowcase() {
   const locale = useLocale();
 
@@ -116,7 +137,6 @@ export default function RefactoredProductShowcase() {
     ? mapSearchText.startsWith("http") ? mapSearchText : `http://googleusercontent.com/maps.google.com/?q=${encodeURIComponent(mapSearchText)}`
     : "#";
 
-  // ดึงสินค้าแนะนำตัวแรกมาใช้แสดงบน Hero
   const featuredProduct = productsWithVerifiedLocations[0];
 
   return (
@@ -269,7 +289,7 @@ export default function RefactoredProductShowcase() {
           border: 1px solid rgba(255,255,255,0.8);
           box-shadow: var(--shadow-lg);
           display: flex; justify-content: space-between; align-items: center;
-          animation: floatUp 0.8s cubic-bezier(0.22,1,0.36,1) 0.4s both;
+          animation: floatUp 0.8s cubic-bezier(0.22,1,0.36,1) 0.8s both;
           cursor: pointer;
           transition: transform 0.2s;
         }
@@ -587,55 +607,54 @@ export default function RefactoredProductShowcase() {
         }
         @media (max-width: 640px) {
           .hero {
-    /* ปรับให้ความสูงยืดตามเนื้อหา ไม่ต้องบังคับเต็มจอ 100vh ตลอดเวลา */
-    min-height: auto; 
-  }
+            min-height: auto; 
+          }
 
-  .hero-left { 
-    /* --- จุดสำคัญที่สุด --- */
-    /* เปลี่ยนจาก 56px เป็น 140px เพื่อดันเนื้อหาลงมาจาก Navbar */
-    padding: 140px 24px 60px 24px !important; 
-    
-    display: flex;
-    flex-direction: column;
-    /* เปลี่ยนจาก center เป็น flex-start เพื่อให้คุมระยะจากด้านบนได้แม่นยำ */
-    justify-content: flex-start; 
-  }
+          .hero-left { 
+            padding: 140px 24px 60px 24px !important; 
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start; 
+          }
 
-  .hero-headline {
-    /* ลดขนาดหัวข้อลงนิดหน่อยบนมือถือ จะได้ไม่เบียดกันจนเกินไป */
-    font-size: 38px; 
-    margin-top: 12px;
-    line-height: 1.2;
-  }
+          .hero-headline {
+            font-size: 38px; 
+            margin-top: 12px;
+            line-height: 1.2;
+          }
 
-  .hero-eyebrow {
-    /* เว้นช่องว่างให้หัวข้อ OTOP นิดนึง */
-    margin-bottom: 10px;
-  }
+          .hero-eyebrow {
+            margin-bottom: 10px;
+          }
 
-  .hero-body {
-    margin-bottom: 32px;
-    font-size: 14px;
-    color: rgba(247,243,238,0.7); /* ปรับสีให้ชัดขึ้นนิดนึงบนพื้นหลังเข้ม */
-  }
+          .hero-body {
+            margin-bottom: 32px;
+            font-size: 14px;
+            color: rgba(247,243,238,0.7); 
+          }
 
-  .modal-actions { 
-    grid-template-columns: 1fr; 
-  }
-}
+          .modal-actions { 
+            grid-template-columns: 1fr; 
+          }
+        }
       `}</style>
 
       <div className="page-root">
         
         {/* ─── HERO ─────────────────────────────────────────────────────────── */}
         <section className="hero">
-          <div className="hero-left">
-            <div className="hero-eyebrow">
+          <motion.div 
+            className="hero-left"
+            variants={heroContainer}
+            initial="hidden"
+            animate="visible"
+          >
+            <motion.div variants={heroItem} className="hero-eyebrow">
               <span className="hero-eyebrow-line"></span>
               {tri(locale, "Local OTOP Market", "本地 OTOP 市场", "ตลาด OTOP ท้องถิ่น")}
-            </div>
-            <h1 className="hero-headline">
+            </motion.div>
+            
+            <motion.h1 variants={heroItem} className="hero-headline">
               {locale === "th" ? (
                 <>สินค้า<em>คุณภาพ</em><br/>จากชุมชน</>
               ) : locale === "zh" ? (
@@ -643,23 +662,26 @@ export default function RefactoredProductShowcase() {
               ) : (
                 <>Find <em>Local</em><br/>OTOP Products</>
               )}
-            </h1>
-            <p className="hero-body">
+            </motion.h1>
+            
+            <motion.p variants={heroItem} className="hero-body">
               {tri(locale,
                 "Browse by district and connect directly with local sellers — call or navigate in one tap.",
                 "按地区浏览商品，一键联系卖家或打开导航。",
                 "เลือกซื้อสินค้า OTOP แท้จากผู้ผลิตท้องถิ่นโดยตรง ติดต่อร้านค้า โทรหา หรือเปิดแผนที่ได้ในคลิกเดียว"
               )}
-            </p>
-            <div className="hero-cta-group">
+            </motion.p>
+            
+            <motion.div variants={heroItem} className="hero-cta-group">
               <a href="#products" className="btn-primary">
                 {tri(locale, "Browse Products", "浏览全部", "ดูสินค้าทั้งหมด")}
                 <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M17 8l4 4-4 4M21 12H3"/>
                 </svg>
               </a>
-            </div>
-            <div className="hero-stats">
+            </motion.div>
+            
+            <motion.div variants={heroItem} className="hero-stats">
               <div>
                 <span className="hero-stat-num">{productsWithVerifiedLocations.length}+</span>
                 <span className="hero-stat-label">{tri(locale, "Products", "商品", "สินค้า")}</span>
@@ -672,9 +694,15 @@ export default function RefactoredProductShowcase() {
                 <span className="hero-stat-num">100%</span>
                 <span className="hero-stat-label">{tri(locale, "Authentic", "正品", "ของแท้")}</span>
               </div>
-            </div>
-          </div>
-          <div className="hero-right">
+            </motion.div>
+          </motion.div>
+
+          <motion.div 
+            className="hero-right"
+            variants={heroImageFade}
+            initial="hidden"
+            animate="visible"
+          >
             {featuredProduct && (
               <>
                 <Image
@@ -705,16 +733,21 @@ export default function RefactoredProductShowcase() {
                 </div>
               </>
             )}
-          </div>
+          </motion.div>
         </section>
 
         {/* ─── FILTER + PRODUCTS ────────────────────────────────────────────── */}
         <section id="products">
-          <div className="filter-section">
+          <motion.div 
+            className="filter-section"
+            variants={filterFade}
+            initial="hidden"
+            animate="visible"
+          >
             <div>
               <h2 className="filter-heading">
                 {tri(locale, "All OTOP", "全部 OTOP", "รายการสินค้า")}
-  <span> {tri(locale, "Products", "商品", "OTOP ทั้งหมด")}</span>
+                <span> {tri(locale, "Products", "商品", "OTOP ทั้งหมด")}</span>
               </h2>
               <p style={{ fontSize: "13px", color: "var(--ink-soft)", marginTop: "6px" }}>
                 {tri(locale, `Showing ${filteredProducts.length} items`, `显示 ${filteredProducts.length} 件商品`, `แสดง ${filteredProducts.length} รายการ`)}
@@ -751,7 +784,7 @@ export default function RefactoredProductShowcase() {
                 </select>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           <div className="products-section">
             <motion.div
@@ -783,7 +816,6 @@ export default function RefactoredProductShowcase() {
                   </div>
                   
                   <div className="card-body">
-                    {/* Placeholder category since the original TSX data model didn't explicitly have category */}
                     <div className="card-category">OTOP</div> 
                     <h3 className="card-name">{displayName(product)}</h3>
                     <p className="card-name-sub body-serif">{secondaryName(product)}</p>

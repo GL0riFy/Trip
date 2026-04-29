@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import maplibregl from 'maplibre-gl';
+import 'maplibre-gl/dist/maplibre-gl.css'; // 🚨 สำคัญมาก: ช่วยให้ระบบสัมผัสและซูมบนมือถือทำงานได้สมบูรณ์
 import type { ExpressionSpecification } from '@maplibre/maplibre-gl-style-spec';
 import { useTranslations, useLocale } from 'next-intl';
 import { useRouter } from 'next/navigation';
@@ -60,24 +61,28 @@ export default function MapsPage() {
     useEffect(() => {
         if (map.current || !mapContainer.current) return;
 
+        // 📱 เช็คว่าเป็นมือถือหรือไม่
+        const isMobile = window.innerWidth <= 768;
+
+        // 🔧 ปรับ Padding: มือถือเว้นซ้าย-ขวาน้อยลง แผนที่จะได้ไม่โดนบีบจนแบน
+        const mapPadding = isMobile 
+            ? { top: 120, bottom: 40, left: 15, right: 15 } 
+            : { top: 120, bottom: 120, left: 120, right: 120 };
+
+        // 🔧 ปรับขนาดรูปตกแต่ง: มือถือย่อลงเหลือ 50%
+        const iconScale = isMobile ? 0.5 : 1.0;
+
         map.current = new maplibregl.Map({
             container: mapContainer.current,
             style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
-            
-            // 1. ขยายลองจิจูด (ซ้าย-ขวา) และละติจูด (บน-ล่าง) ให้กว้างขึ้นอีกนิด
-            // จากเดิม 95.8 -> 95.2 และ 101.5 -> 102.1
             bounds: [[95.2, 16.2], [102.1, 21.1]], 
-            
-            // 2. เพิ่ม Padding เพื่อผลักรูปภาพจากขอบจอเข้ามาตรงกลางมากขึ้น
-            // การซูมออกจะสัมพันธ์กับค่านี้ ยิ่งเลขเยอะ แผนที่จะยิ่งดูซูมออก
-            fitBoundsOptions: { padding: 120 }, 
-            
+            fitBoundsOptions: { padding: mapPadding }, 
             dragRotate: false,
-            touchZoomRotate: false,
-            
-            // 3. ขยายขอบเขตการลากให้กว้างตามเพื่อไม่ให้แผนที่เด้งกลับเร็วเกินไป
             maxBounds: [[94.5, 15.0], [103.0, 22.5]], 
         });
+
+        // 👆 สั่งให้ใช้ 2 นิ้วซูมได้ปกติ แต่ป้องกันการหมุนแผนที่
+        map.current.touchZoomRotate.disableRotation();
 
         map.current.on('load', async () => {
             if (!map.current) return;
@@ -139,7 +144,8 @@ export default function MapsPage() {
                 source: 'decorations',
                 layout: {
                     'icon-image': ['get', 'icon'],
-                    'icon-size': ['get', 'iconSize'],
+                    // 📏 นำขนาดตั้งต้นมาคูณกับสัดส่วนที่ปรับตามขนาดจอ
+                    'icon-size': ['*', ['get', 'iconSize'], iconScale],
                     'icon-allow-overlap': true,
                     'icon-ignore-placement': true,
                 },
@@ -177,14 +183,19 @@ export default function MapsPage() {
                 if (!feature) return;
                 const slug = nameToSlug(feature.properties.adm2_name1);
                 const [minLng, minLat, maxLng, maxLat] = turf.bbox(feature) as [number, number, number, number];
-                map.current?.fitBounds([[minLng, minLat], [maxLng, maxLat]], { padding: 80, duration: 1000 });
+                
+                // ปรับ Padding เวลากดซูมเข้าอำเภอให้พอดีกับมือถือ
+                const clickPadding = window.innerWidth <= 768 ? 40 : 80;
+                map.current?.fitBounds([[minLng, minLat], [maxLng, maxLat]], { padding: clickPadding, duration: 1000 });
+                
                 setSelectedDistrict({ id: slug, name: feature.properties.adm2_name1, slug });
             });
         });
     }, []);
 
     return (
-        <div className="relative w-full h-[calc(100vh-80px)] font-kanit">
+        // 🚨 สำคัญที่สุด: ใส่ overflow-hidden ตรงนี้ เพื่อกันแผนที่ทะลุจนเกิดแถบเลื่อนแนวนอน ซึ่งทำให้ Navbar โดนตัดขอบ
+        <div className="relative w-full h-[calc(100vh-80px)] font-kanit overflow-hidden bg-slate-50">
             <div ref={mapContainer} className="absolute inset-0 w-full h-full" />
 
             {hoveredInfo && !selectedDistrict && (
@@ -200,17 +211,18 @@ export default function MapsPage() {
                 {selectedDistrict && (
                     <motion.div 
                         initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }}
-                        className="absolute inset-0 flex items-center justify-center pointer-events-none z-20"
+                        // ใส่ padding p-4 ป้องกันป๊อปอัปชิดขอบจอมือถือเกินไป
+                        className="absolute inset-0 flex items-center justify-center pointer-events-none z-20 p-4"
                     >
-                        <div className="pointer-events-auto bg-white/95 backdrop-blur-3xl p-8 rounded-[40px] shadow-2xl border border-white flex flex-col items-center gap-6 max-w-xs w-full">
+                        <div className="pointer-events-auto bg-white/95 backdrop-blur-3xl p-6 sm:p-8 rounded-[30px] sm:rounded-[40px] shadow-2xl border border-white flex flex-col items-center gap-4 sm:gap-6 max-w-xs w-full">
                             <div className="text-center">
                                 <span className="text-zinc-400 text-[10px] uppercase tracking-widest font-bold">{locale === 'th' ? 'ข้อมูลพื้นที่' : 'District Info'}</span>
-                                <h2 className="text-3xl font-bold text-black mt-1">{t(selectedDistrict.id)}</h2>
+                                <h2 className="text-2xl sm:text-3xl font-bold text-black mt-1">{t(selectedDistrict.id)}</h2>
                             </div>
                             <div className="flex flex-col w-full gap-2">
                                 <button
                                     onClick={() => router.push(`/${locale}/travel/${selectedDistrict.slug}`)}
-                                    className="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-2xl font-bold text-lg transition-all shadow-lg flex items-center justify-center gap-2 group"
+                                    className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 sm:py-4 rounded-2xl font-bold text-base sm:text-lg transition-all shadow-lg flex items-center justify-center gap-2 group"
                                 >
                                     {locale === 'th' ? 'เข้าชมสถานที่' : locale === 'zh' ? '进入区域' : 'Visit'}
                                     <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
