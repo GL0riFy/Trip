@@ -52,7 +52,7 @@ export default function Map() {
         >
           <motion.div variants={fadeUpVariants} className="-mb-20 -ml-3 md:-ml-5">
             <Image 
-              src="/logo/Ching-Mai-bottom.png" 
+              src="/Logo/Ching-Mai-bottom.png" 
               alt={t('logoAlt')} 
               width={500} 
               height={500}
