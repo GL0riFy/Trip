@@ -59,7 +59,7 @@ export default function HeroSec() {
             className="mb-0"
           >
             <Image
-              src="/logo/Ching-Mai-white.png"
+              src="/Logo/Ching-Mai-white.png"
               alt={t('logoAlt')}
               width={220}
               height={220}
