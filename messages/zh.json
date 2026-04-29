@@ -7,6 +7,19 @@
     "dashboard": "数据",
     "openMenu": "打开菜单"
   },
+
+  "Footer": {
+    "description": "开启清迈之旅，体验自然、文化与美景，让您的每一步都充满惊喜。",
+    "menuTitle": "快速链接",
+    "menuPlaces": "清迈景点",
+    "menuEvents": "活动",
+    "menuMaps": "清迈地图",
+    "contactTitle": "联系我们",
+    "copyright": "清迈技术学院。版权所有。",
+    "visits": "访客量:",
+    "chat": "在线聊天"
+  },
+  
   "District": {
     "mueang-chiang-mai": "清迈府治县",
     "chom-thong": "宗通县",
@@ -129,6 +142,9 @@
     "explore": "探索地点"
   },
   "Events": {
+    "titlePrefix": "活动打卡",
+    "titleHighlight": "在清迈",
+    "description": "无论您是信徒、艺术爱好者还是探险家，我们都为您汇集了不容错过的清迈节日与活动，让您的清迈之旅更具意义。",
     "viewDetails": "查看活动详情"
   },
   "Map": {
@@ -139,5 +155,10 @@
     "altView": "清迈山脉美景",
     "altCafe": "清迈咖啡馆",
     "altTemple": "清迈古城寺庙"
+  },
+  "Seasons": {
+    "title": "季节性旅游指南",
+    "description": "天气和最佳旅行时间指南。准备好您的服装，无论是冬季看云海还是雨季欣赏梯田。",
+    "more": "了解更多 ->"
   }
 }

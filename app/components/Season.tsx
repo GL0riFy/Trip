@@ -1,9 +1,16 @@
 'use client';
 
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Prompt } from 'next/font/google';
+
+// 1. ประกาศ Font (แก้ Error: Cannot find name 'promptFont')
+const promptFont = Prompt({
+  subsets: ['thai', 'latin'],
+  weight: ['300', '400', '500', '600', '700'],
+  display: 'swap',
+});
 
 export type Locale = 'th' | 'en' | 'zh';
 
@@ -17,7 +24,7 @@ export interface SeasonData {
   desc: LocalizedString;
 }
 
-// ข้อมูลเหมือนเดิมครับ
+// 2. ประกาศข้อมูล Data (แก้ Error: Cannot find name 'SEASONS_DATA')
 export const SEASONS_DATA: SeasonData[] = [
   {
     id: 'summer',
@@ -42,35 +49,28 @@ export const SEASONS_DATA: SeasonData[] = [
   }
 ];
 
-const promptFont = Prompt({
-  subsets: ['thai', 'latin'],
-  weight: ['300', '400', '500', '600', '700'],
-  display: 'swap',
-});
-
 export default function SeasonLayout() {
   const currentLocale = useLocale() as Locale;
+  const t = useTranslations('Seasons');
 
   return (
-    // ปรับ px ให้มีขอบซ้ายขวานิดหน่อย แต่ถ้าอยากให้ชิดขอบจอเป๊ะๆ ให้ลบ px-4 md:px-8 xl:px-12 ออกได้เลยครับ
     <section className={`bg-[#0F172A] text-white py-16 px-4 md:px-8 xl:px-12 ${promptFont.className}`}>
-      {/* 👇 ลบ max-w ออกแล้วใส่ w-full เพื่อให้ขยายเต็มจอ 👇 */}
       <div className="w-full mx-auto">
         
         {/* Header Section */}
         <div className="mb-10 text-left">
           <h2 className="text-3xl md:text-[40px] font-bold mb-4 text-white">
-            เตรียมตัวเที่ยวตามฤดูกาล
+            {t('title')}
           </h2>
           <p className="text-slate-300 text-sm md:text-base max-w-2xl leading-relaxed">
-            คู่มือเช็คสภาพอากาศและช่วงเวลาที่ดีที่สุด เตรียมเสื้อผ้าให้เป๊ะ ไม่ว่าจะหน้า
-            หนาวดูหมอก หรือหน้าฝนชมนาขั้นบันได
+            {t('description')}
           </p>
         </div>
 
-        {/* Cards Grid Section - เพิ่ม gap-8 ให้มีช่องว่างระหว่างการ์ดสวยขึ้นเมื่อจอใหญ่ */}
+        {/* Cards Grid Section */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 w-full">
-          {SEASONS_DATA.map((season) => (
+          {/* 3. ระบุ Type ให้ season (แก้ Error: Parameter 'season' implicitly has an 'any' type) */}
+          {SEASONS_DATA.map((season: SeasonData) => (
             <Link href={season.href} key={season.id} className="group flex flex-col h-full w-full">
               
               <div className="bg-[#1E293B] rounded-[20px] overflow-hidden flex flex-col h-full w-full hover:-translate-y-1 transition-transform duration-300">
@@ -98,7 +98,7 @@ export default function SeasonLayout() {
 
                   <div className="mt-auto text-right w-full">
                     <span className="text-sm md:text-base font-medium text-slate-300 group-hover:text-white transition-colors">
-                      เพิ่มเติม -&gt;
+                      {t('more')}
                     </span>
                   </div>
                 </div>

@@ -4,7 +4,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Prompt } from 'next/font/google';
-import { EVENTS_DATA, type EventData, type Locale } from '@/src/data/events/events';
+import { EVENTS_DATA, type Locale } from '@/src/data/events/events';
 
 const promptFont = Prompt({
   subsets: ['thai', 'latin'],
@@ -13,7 +13,7 @@ const promptFont = Prompt({
 });
 
 export default function TimelineLayout() {
-  const t = useTranslations('Events');
+  const t = useTranslations('Events'); // ดึงจาก namespace 'Events' ในไฟล์ json
   const currentLocale = useLocale() as Locale; 
 
   return (
@@ -23,17 +23,15 @@ export default function TimelineLayout() {
         {/* Header Section */}
         <div className="mb-5">
           <h2 className="text-3xl md:text-4xl font-extrabold mb-3">
-            เช็คอินกิจกรรม <span className="text-blue-500 text-7xl font-itim">ในเจียงใหม่</span>
+            {t('titlePrefix')} <span className="text-blue-500 text-7xl font-itim">{t('titleHighlight')}</span>
           </h2>
           <p className="text-gray-600 text-sm md:text-base max-w-2xl leading-relaxed">
-            ไม่ว่าคุณจะเป็นสายบุญ สายอาร์ต หรือสายลุย เรามัดรวมทุกเทศกาลและกิจกรรม
-            ห้ามพลาดมาให้คุณแล้วที่นี่ เพื่อให้ทุกวันที่เชียงใหม่ของคุณมีความหมายกว่าเดิม
+            {t('description')}
           </p>
         </div>
 
         {/* Timeline List Section */}
         <div className="flex flex-col">
-          {/* เส้นกั้นสีเทาด้านบนสุด */}
           <div className="flex flex-row gap-6 md:gap-8 my-6">
             <div className="grow h-2.5 bg-gray-100 rounded-full" />
             <div className="w-full md:w-[280px] shrink-0 hidden md:block" />
@@ -41,8 +39,7 @@ export default function TimelineLayout() {
 
           {EVENTS_DATA.map((event) => (
             <div key={event.id}>
-              <Link href={event.href} className="group block">
-                {/* Event Row */}
+              <Link href={`/${currentLocale}${event.href}`} className="group block">
                 <div className="flex flex-col md:flex-row gap-6 md:gap-8 items-center py-2">
                   
                   {/* 1. Date Block */}
@@ -73,14 +70,13 @@ export default function TimelineLayout() {
                       fill
                       sizes="(max-width: 768px) 100vw, 280px"
                       className="object-cover group-hover:scale-105 transition-transform duration-300"
-                      priority={event.id === '01'} // เพิ่ม priority สำหรับรูปแรก
+                      priority={event.id === '01'}
                     />
                   </div>
                   
                 </div>
               </Link>
 
-              {/* เส้นกั้นสีเทาระหว่าง Event */}
               <div className="flex flex-row gap-6 md:gap-8 my-6">
                 <div className="grow h-2.5 bg-gray-100 rounded-full" />
                 <div className="w-full md:w-[280px] shrink-0 hidden md:block" />

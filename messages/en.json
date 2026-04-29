@@ -8,6 +8,18 @@
     "openMenu": "Open menu"
   },
 
+  "Footer": {
+    "description": "Experience Chiang Mai: immerse yourself in nature, culture, and amazing routes that will make you fall in love with every step.",
+    "menuTitle": "Quick Links",
+    "menuPlaces": "Chiang Mai Places",
+    "menuEvents": "Events",
+    "menuMaps": "Chiang Mai Maps",
+    "contactTitle": "Contact Us",
+    "copyright": "Chiang Mai Technical College. All rights reserved.",
+    "visits": "Visits:",
+    "chat": "Chat with us"
+  },
+  
   "District": {
     "mueang-chiang-mai": "Mueang Chiang Mai",
     "chom-thong": "Chom Thong",
@@ -134,6 +146,9 @@
     "explore": "Explore Place"
   },
   "Events": {
+    "titlePrefix": "Check-in Activities",
+    "titleHighlight": "in Chiang Mai",
+    "description": "Whether you're a spiritual seeker, an art lover, or an adventurer, we've gathered all the must-visit festivals and events for you right here to make your days in Chiang Mai more meaningful.",
     "viewDetails": "VIEW EVENT DETAILS"
   },
   "Map": {
@@ -144,5 +159,10 @@
     "altView": "Chiang Mai Mountain View",
     "altCafe": "Chiang Mai Cafe",
     "altTemple": "Old City Temple"
+  },
+  "Seasons": {
+    "title": "Seasonal Travel Guide",
+    "description": "Your guide to weather and the best times to visit. Get your outfits ready, whether it's for the winter mist or the rainy season's rice terraces.",
+    "more": "Read More ->"
   }
 }
