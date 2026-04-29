@@ -64,9 +64,9 @@ export default function Navigation() {
 
   if (!isClient) return null
 
-  // แก้จุดตาย: บน Desktop จะโชว์พื้นหลังดำแค่ตอน Scrolled เท่านั้น 
-  // แม้จะเปิด Dropdown ภาษา พื้นหลัง Navbar หลักก็ยังต้องใสอยู่ (ยกเว้นตอน Scrolled)
-  const showNavbarBg = isScrolled || (isMobile && isMenuOpen);
+  // --- ส่วนที่แก้ไข: เช็คว่าอยู่หน้าแผนที่หรือไม่ เพื่อให้ Navbar ขุ่นตลอดเวลาในหน้านี้ ---
+  const isMapPage = pathname.includes('/maps');
+  const showNavbarBg = isScrolled || (isMobile && isMenuOpen) || isMapPage;
 
   return (
     <motion.nav
@@ -80,7 +80,9 @@ export default function Navigation() {
     >
       <div 
         className={`relative w-full transition-all duration-300 
-          ${showNavbarBg ? 'bg-black/30 backdrop-blur-xl border border-white/10 shadow-xl' : 'bg-transparent border-transparent'}
+          ${showNavbarBg 
+            ? 'bg-black/30 backdrop-blur-xl border border-white/10 shadow-xl' 
+            : 'bg-transparent border-transparent'}
           rounded-[26px]`}
       >
         <div className="relative w-full px-6 h-16 flex items-center justify-between">
