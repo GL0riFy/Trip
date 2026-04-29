@@ -1,207 +1,108 @@
-import { 
-    ShieldAlert, 
-    Ambulance, 
-    Flame, 
-    Globe, 
-    LifeBuoy, 
-    CarFront,
-    Siren,
-    Bed,
-    Car,
-    Map
-  } from "lucide-react"
-import { ReactNode } from "react"
+import { ShieldAlert, Ambulance, Flame, Waves, Siren, CarFront, Globe, Phone } from "lucide-react";
+import { ReactNode } from "react";
 
-  export interface EmergencyContact {
-    id: number
-    title: string
-    titleCn: string
-    number: string
-    icon: ReactNode
-    color: string
-    shadow: string
-    gradient: string
-  }
-  
-  // --- 1. Emergency Data ---
-  export const emergencyContacts: EmergencyContact[] = [
+export type Locale = 'th' | 'en' | 'zh';
+type LocalizedString = Record<Locale, string>;
+
+// --- Interface ---
+export interface EmergencyItem {
+  id: string;
+  title: LocalizedString;
+  desc: LocalizedString;
+  number: string;
+  icon?: ReactNode;
+  color: string;
+  serviceHours?: LocalizedString;
+  serviceDays?: LocalizedString;
+  fee?: LocalizedString;
+}
+
+export interface EmergencyCategory {
+  categoryTitle: LocalizedString;
+  items: EmergencyItem[];
+}
+
+// --- Page Static Text (หัวข้อต่างๆ ในหน้า) ---
+export const PAGE_UI = {
+  subtitle: { th: "เชียงใหม่ · บริการฉุกเฉิน", en: "Chiang Mai · Emergency Services", zh: "清迈 · 紧急服务" },
+  titleMain: { th: "เบอร์", en: "Emergency", zh: "紧急" },
+  titleSub: { th: "ฉุกเฉิน", en: "Numbers", zh: "热线" },
+  statusBadge: { th: "พร้อมให้บริการ", en: "Ready to serve", zh: "随时待命" },
+  policeHeroTitle: { th: "ตำรวจ—แจ้งเหตุเหตุด่วนเหตุร้าย", en: "Police — Emergency Call", zh: "警察 — 紧急报案" },
+  policeHeroDesc: { th: "กดโทรได้เลย • ฟรีทุกเครือข่าย • 24 ชั่วโมง", en: "Call now • Toll-free • 24/7 Service", zh: "即刻拨打 • 所有网络免费 • 24小时服务" },
+
+  // คำแปลใหม่สำหรับ Modal
+  modalHint: { th: "แตะปุ่มด้านล่างเพื่อโทรทันที", en: "Tap the button below to call now", zh: "点击下方按钮立即拨打" },
+  modalHours: { th: "เวลาให้บริการ", en: "Service Hours", zh: "服务时间" },
+  modalDays: { th: "วันให้บริการ", en: "Service Days", zh: "服务天数" },
+  modalFee: { th: "ค่าโทร", en: "Call Fee", zh: "通话费用" },
+  modalNumber: { th: "หมายเลข", en: "Number", zh: "号码" },
+  btnCall: { th: "โทรเลย", en: "Call Now", zh: "立即拨打" },
+  btnClose: { th: "ปิด", en: "Close", zh: "关闭" }
+};
+
+// --- Contacts Data ---
+export const EMERGENCY_SECTIONS: EmergencyCategory[] = [
+  {
+    categoryTitle: { th: "การแพทย์ฉุกเฉิน", en: "Medical Emergency", zh: "医疗急救" },
+    items: [
       {
-        id: 1,
-        title: "Police",
-        titleCn: "警察 (报警)", 
-        number: "191",
-        icon: <ShieldAlert size={32} />,
-        color: "bg-slate-600",
-        shadow: "shadow-slate-500/40",
-        gradient: "from-slate-500 to-gray-700"
-      },
-      {
-        id: 2,
-        title: "Ambulance",
-        titleCn: "救护车 (急救)",
+        id: "1669",
+        title: { th: "รถพยาบาล / กู้ชีพ", en: "Ambulance / Rescue", zh: "救护车 / 急救" },
+        desc: { th: "อุบัติเหตุ • เจ็บป่วยฉุกเฉิน • หัวใจ", en: "Accident • Emergency • Heart Attack", zh: "事故 • 紧急疾病 • 心脏病" },
         number: "1669",
-        icon: <Ambulance size={32} />,
-        color: "bg-rose-500",
-        shadow: "shadow-rose-500/40",
-        gradient: "from-rose-400 to-pink-600"
+        icon: <Ambulance className="w-8 h-8 text-red-500" />,
+        color: "text-red-500",
+        serviceHours: { th: "ตลอด 24 ชั่วโมง", en: "24 Hours", zh: "24 小时" },
+        serviceDays: { th: "ทุกวัน", en: "Everyday", zh: "每天" },
+        fee: { th: "ฟรี", en: "Free", zh: "免费" }
       },
       {
-        id: 3,
-        title: "Tourism Police",
-        titleCn: "旅游警察",
-        number: "1155",
-        icon: <Siren size={32} />,
-        color: "bg-amber-500",
-        shadow: "shadow-amber-500/40",
-        gradient: "from-amber-400 to-yellow-600"
-      },
-      {
-        id: 4,
-        title: "Highway Police",
-        titleCn: "公路警察",
-        number: "1193",
-        icon: <CarFront size={32} />,
-        color: "bg-orange-500",
-        shadow: "shadow-orange-500/40",
-        gradient: "from-orange-400 to-red-500"
-      },
-      {
-        id: 5,
-        title: "Fire Department",
-        titleCn: "消防部門",
+        id: "199",
+        title: { th: "ดับเพลิง", en: "Fire Department", zh: "消防部门" },
+        desc: { th: "เพลิงไหม้ • ระเบิด • สารเคมี", en: "Fire • Explosion • Chemical Leak", zh: "火灾 • 爆炸 • 化学泄漏" },
         number: "199",
-        icon: <Flame size={32} />,
-        color: "bg-red-600",
-        shadow: "shadow-red-600/40",
-        gradient: "from-red-500 to-red-800"
+        icon: <Flame className="w-8 h-8 text-orange-600" />,
+        color: "text-red-500"
       },
       {
-        id: 6,
-        title: "TAT Contact Center",
-        titleCn: "泰国旅游局",
-        number: "053 248 604",
-        icon: <Globe size={32} />,
-        color: "bg-sky-500",
-        shadow: "shadow-sky-500/40",
-        gradient: "from-sky-400 to-blue-500"
-      },
-      {
-        id: 7,
-        title: "Water Emergency",
-        titleCn: "水上救援",
+        id: "1199",
+        title: { th: "กู้ภัยทางน้ำ", en: "Water Emergency", zh: "水上救援" },
+        desc: { th: "จมน้ำ • อุทกภัย • ท่อประปาแตก", en: "Drowning • Flood • Pipe Burst", zh: "溺水 • 洪水 • 管道爆裂" },
         number: "1199",
-        icon: <LifeBuoy size={32} />,
-        color: "bg-cyan-500",
-        shadow: "shadow-cyan-500/40",
-        gradient: "from-cyan-400 to-teal-500"
+        icon: <Waves className="w-8 h-8 text-blue-500" />,
+        color: "text-green-500"
       }
-  ]
-
-  export interface App {
-    name: string
-    nameCn?: string
-    desc: string
-    descCn: string
-    logo: string
-    tag?: string
-    tagCn?: string
+    ]
+  },
+  {
+    categoryTitle: { th: "บริการนักท่องเที่ยวและทั่วไป", en: "Tourist & General Services", zh: "游客与一般服务" },
+    items: [
+      {
+        id: "1155",
+        title: { th: "ตำรวจท่องเที่ยว", en: "Tourist Police", zh: "旅游警察" },
+        desc: { th: "ดูแลความปลอดภัยนักท่องเที่ยว", en: "Security for tourists", zh: "保障游客安全" },
+        number: "1155",
+        color: "text-blue-500"
+      },
+      {
+        id: "1193",
+        title: { th: "ตำรวจทางหลวง", en: "Highway Police", zh: "公路警察" },
+        desc: { th: "อุบัติเหตุบนทางหลวงทั่วประเทศ", en: "Highway accidents nationwide", zh: "全国公路事故" },
+        number: "1193",
+        color: "text-indigo-600"
+      },
+      {
+        id: "053248604",
+        title: { th: "ททท. เชียงใหม่", en: "TAT Chiang Mai", zh: "泰国旅游局 (清迈)" },
+        desc: { th: "ข้อมูลท่องเที่ยว ร้องเรียน ขอความช่วยเหลือ", en: "Tourism Information Center", zh: "清迈旅游信息中心" },
+        number: "053 248 604",
+        icon: <Globe className="w-8 h-8 text-emerald-600" />,
+        color: "text-emerald-600",
+        serviceHours: { th: "08:30-16:30", en: "08:30-16:30", zh: "08:30-16:30" },
+        serviceDays: { th: "จันทร์-ศุกร์", en: "Mon-Fri", zh: "周一至周五" },
+        fee: { th: "ฟรี", en: "Free", zh: "免费" }
+      }
+    ]
   }
-
-  export interface AppCategory {
-    title: string
-    titleCn: string
-    icon: ReactNode
-    apps: App[]
-  }
-
-  export const appCategories: AppCategory[] = [
-    {
-      title: "Ride Hailing",
-      titleCn: "网约车服务",
-      icon: <Car className="text-emerald-400" />,
-      apps: [
-        {
-          name: "Grab",
-          desc: "The #1 App for taxi & food delivery.",
-          descCn: "排名第一的出租车和外卖应用",
-          logo: "/apps/grab.png",
-          tag: "Recommended",
-          tagCn: "推荐"
-        },
-        {
-          name: "Bolt",
-          desc: "Often cheaper than Grab for rides.",
-          descCn: "通常比 Grab 更便宜",
-          logo: "/apps/bolt.png",
-        },
-        {
-          name: "Maxim",
-          desc: "Budget friendly, popular in local areas.",
-          descCn: "价格亲民，在当地很受欢迎",
-          logo: "/apps/maxim.png",
-        },
-        {
-          name: "MuvMi",
-          desc: "Eco-friendly electric Tuk-Tuk sharing.",
-          descCn: "环保电动嘟嘟车拼车服务",
-          logo: "/apps/muvmi.png",
-        }
-      ]
-    },
-    {
-      title: "Accommodation",
-      titleCn: "住宿预订",
-      icon: <Bed className="text-blue-400" />,
-      apps: [
-        {
-          name: "Agoda",
-          desc: "Best rates for hotels in Thailand.",
-          descCn: "泰国酒店的最优价格",
-          logo: "/apps/agoda.png",
-          tag: "Best Rates",
-          tagCn: "最优价格"
-        },
-        {
-          name: "Booking.com",
-          desc: "Wide range of hotels and hostels.",
-          descCn: "各类酒店和旅舍的选择",
-          logo: "/apps/booking.png",
-        },
-        {
-          name: "Airbnb",
-          desc: "Great for long stays and condos.",
-          descCn: "适合长期住宿和公寓",
-          logo: "/apps/airbnb.png",
-        }
-      ]
-    },
-    {
-      title: "Navigation & Food",
-      titleCn: "导航与美食",
-      icon: <Map className="text-orange-400" />,
-      apps: [
-        {
-          name: "Google Maps",
-          nameCn: "谷歌地图", // เพิ่ม nameCn กรณีชื่อแอพเปลี่ยน
-          desc: "Essential for navigation anywhere.",
-          descCn: "任何地方导航必备",
-          logo: "/apps/gmaps.png",
-          tag: "Essential",
-          tagCn: "必备"
-        },
-        {
-          name: "Wongnai",
-          desc: "Thai version of Yelp. Find best local food.",
-          descCn: "泰国版的大众点评，寻找当地美食",
-          logo: "/apps/wongnai.png",
-        },
-        {
-          name: "Google Translate",
-          nameCn: "谷歌翻译",
-          desc: "Translate Thai text & voice easily.",
-          descCn: "轻松翻译泰语文本和语音",
-          logo: "/apps/translate.png", 
-        }
-      ]
-    }
-  ]
+];
