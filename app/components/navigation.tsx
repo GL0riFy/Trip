@@ -39,9 +39,17 @@ export default function Navigation() {
     { key: 'dashboard', href: `/${locale}/dashboard` }
   ]
 
+  console.log('--- Render Navigation ---');
+  console.log('isScrolled state:', isScrolled);
+  console.log('isMobile state:', isMobile);
+
   useEffect(() => {
     setIsClient(true)
-    const handleResize = () => setIsMobile(window.innerWidth <= 910)
+    const handleResize = () => {
+      const mobileCheck = window.innerWidth <= 910;
+      console.log('Window resized. Width:', window.innerWidth, 'isMobile:', mobileCheck);
+      setIsMobile(mobileCheck);
+    }
     handleResize()
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
@@ -49,7 +57,10 @@ export default function Navigation() {
 
   useEffect(() => {
     if (!isClient) return
-    const onScroll = () => setIsScrolled(window.scrollY > 20)
+    const onScroll = () => {
+      console.log('Scrolling... window.scrollY:', window.scrollY);
+      setIsScrolled(window.scrollY > 20)
+    }
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
@@ -64,26 +75,36 @@ export default function Navigation() {
 
   if (!isClient) return null
 
-  // --- ส่วนที่แก้ไข: เช็คว่าอยู่หน้าแผนที่หรือไม่ เพื่อให้ Navbar ขุ่นตลอดเวลาในหน้านี้ ---
-  const isMapPage = pathname.includes('/maps');
-  const showNavbarBg = isScrolled || (isMobile && isMenuOpen) || isMapPage;
+  // กำหนดหน้าพิเศษที่ต้องการให้ Navbar ลอยอยู่เสมอ
+  const specialPages = ['/maps', '/emergency', '/currency', '/apps']
+  const isSpecialPage = specialPages.some((page) => pathname.includes(page))
+  
+  // 📌 เพิ่มตัวแปร isFloating เพื่อเช็คว่า Navbar ควรจะอยู่ในสถานะ "ลอย" หรือไม่
+  const isFloating = isScrolled || isSpecialPage
+  
+  // ใช้ isFloating แทน isScrolled เพื่อกำหนดพื้นหลัง
+  const showNavbarBg = isFloating || (isMobile && isMenuOpen)
 
   return (
     <motion.nav
       initial={false}
       animate={{
-        y: isMobile ? 15 : (isScrolled ? 16 : 10),
-        width: isMobile ? '92%' : (isScrolled ? '85%' : '90%'),
+        // 📌 เปลี่ยนมาใช้ isFloating ควบคุมแกน y และความกว้าง
+        y: isFloating ? (isMobile ? 15 : 20) : 0,
+        width: isFloating ? (isMobile ? '92%' : '85%') : '100%',
       }}
       transition={{ duration: 0.4, type: "spring", stiffness: 200, damping: 25 }}
-      className={`fixed z-50 left-0 right-0 mx-auto flex flex-col ${kanit.className}`}
+      className={`fixed top-0 z-50 left-0 right-0 mx-auto flex flex-col ${kanit.className}`}
     >
       <div 
         className={`relative w-full transition-all duration-300 
           ${showNavbarBg 
             ? 'bg-black/30 backdrop-blur-xl border border-white/10 shadow-xl' 
-            : 'bg-transparent border-transparent'}
-          rounded-[26px]`}
+            : 'bg-transparent border-transparent'
+          }
+          /* 📌 เปลี่ยนมาใช้ isFloating เพื่อควบคุมความโค้งของขอบ */
+          ${isFloating ? 'rounded-[26px]' : 'rounded-none'}
+        `}
       >
         <div className="relative w-full px-6 h-16 flex items-center justify-between">
           {/* LOGO */}

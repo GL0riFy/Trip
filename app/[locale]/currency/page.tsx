@@ -81,7 +81,7 @@ export default function CurrencyExchangePage() {
   }
 
   return (
-    <section className={`bg-white min-h-screen py-12 px-6 md:px-12 text-slate-800 ${promptFont.className}`}>
+   <section className={`bg-white min-h-screen pt-32 pb-12 px-6 md:px-12 text-slate-800 ${promptFont.className}`}>
       <div className="max-w-6xl mx-auto">
         
         {/* --- Header --- */}

@@ -67,19 +67,20 @@ export default function EmergencyLayout() {
   }, [selectedItem]);
 
   return (
-    <section className={`bg-slate-50 min-h-screen py-12 px-6 md:px-12 text-slate-800 ${promptFont.className}`}>
+    <section className={`bg-slate-50 min-h-screen pt-28 pb-12 px-4 md:px-12 overflow-x-hidden text-slate-800 ${promptFont.className}`}>
       <div className="max-w-3xl mx-auto">
         
         {/* --- Header Section --- */}
-        <div className="flex justify-between items-start mb-8">
+        <div className="flex flex-col md:flex-row justify-between items-start gap-4 mb-8">
           <div>
             <p className="text-slate-400 text-sm mb-1">{PAGE_UI.subtitle[locale]}</p>
+            {/* ปรับขนาดฟอนต์มือถือเป็น text-5xl และจอใหญ่เป็น md:text-6xl */}
             <h1 className="text-6xl font-bold leading-tight tracking-tight">
               {PAGE_UI.titleMain[locale]} <br /> {PAGE_UI.titleSub[locale]}
             </h1>
           </div>
           
-          <div className="flex items-center gap-2 bg-red-50 px-3 py-1.5 rounded-full">
+          <div className="flex items-center gap-2 bg-red-50 px-3 py-1.5 rounded-full w-fit shrink-0 mt-2 md:mt-0">
             <span className="relative flex h-2.5 w-2.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
