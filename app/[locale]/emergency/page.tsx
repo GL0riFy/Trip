@@ -3,13 +3,13 @@
 import React, { useState, useEffect } from 'react';
 import { useLocale } from 'next-intl';
 import { Prompt } from 'next/font/google';
-import { 
-  ArrowRight, 
-  Phone, 
-  MapPin, 
-  MessageSquareText, 
-  SignalZero, 
-  Timer 
+import {
+  ArrowRight,
+  Phone,
+  MapPin,
+  MessageSquareText,
+  SignalZero,
+  Timer
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Locale, PAGE_UI, EMERGENCY_SECTIONS, EmergencyItem } from '@/src/data/essentials';
@@ -46,10 +46,10 @@ const TIPS_DATA = {
     }
   ],
   noteLabel: { th: "หมายเหตุ :", en: "Note :", zh: "注意 :" },
-  noteText: { 
-    th: "ทุกหมายเลขฉุกเฉินโทรฟรีทุกเครือข่ายในประเทศไทย ไม่ต้องกดรหัสพื้นที่ ยกเว้น ททท. เชียงใหม่ (053 248 604) ซึ่งให้บริการเฉพาะวันทำการ", 
-    en: "All emergency numbers are toll-free across all networks in Thailand with no area code needed, except TAT Chiang Mai (053 248 604) which operates on business days.", 
-    zh: "泰国境内所有紧急号码均可免费跨网拨打，无需加拨区号。清迈旅游局 (053 248 604) 除外，仅在工作日提供服务。" 
+  noteText: {
+    th: "ทุกหมายเลขฉุกเฉินโทรฟรีทุกเครือข่ายในประเทศไทย ไม่ต้องกดรหัสพื้นที่ ยกเว้น ททท. เชียงใหม่ (053 248 604) ซึ่งให้บริการเฉพาะวันทำการ",
+    en: "All emergency numbers are toll-free across all networks in Thailand with no area code needed, except TAT Chiang Mai (053 248 604) which operates on business days.",
+    zh: "泰国境内所有紧急号码均可免费跨网拨打，无需加拨区号。清迈旅游局 (053 248 604) 除外，仅在工作日提供服务。"
   }
 };
 
@@ -69,7 +69,7 @@ export default function EmergencyLayout() {
   return (
     <section className={`bg-slate-50 min-h-screen pt-28 pb-12 px-4 md:px-12 overflow-x-hidden text-slate-800 ${promptFont.className}`}>
       <div className="max-w-3xl mx-auto">
-        
+
         {/* --- Header Section --- */}
         <div className="flex flex-col md:flex-row justify-between items-start gap-4 mb-8">
           <div>
@@ -79,7 +79,7 @@ export default function EmergencyLayout() {
               {PAGE_UI.titleMain[locale]} <br /> {PAGE_UI.titleSub[locale]}
             </h1>
           </div>
-          
+
           <div className="flex items-center gap-2 bg-red-50 px-3 py-1.5 rounded-full w-fit shrink-0 mt-2 md:mt-0">
             <span className="relative flex h-2.5 w-2.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
@@ -90,7 +90,16 @@ export default function EmergencyLayout() {
         </div>
 
         {/* --- Hero Card: 191 --- */}
-        <a href="tel:191" className="group block mb-12">
+        <button
+          onClick={() => openModal({
+            id: 191,
+            number: '191',
+            title: PAGE_UI.policeHeroTitle,
+            desc: PAGE_UI.policeHeroDesc,
+            color: 'text-red-600'
+          } as unknown as EmergencyItem)} // <--- แก้ตรงนี้ เติม unknown as เข้าไป
+          className="group block mb-12 w-full text-left"
+        >
           <div className="relative overflow-hidden bg-linear-to-r from-red-600 to-red-800 rounded-[30px] p-8 text-white flex items-center justify-between shadow-xl shadow-red-200/50 transition-transform active:scale-95">
             <div className="flex items-center gap-6">
               <span className="text-7xl font-black">191</span>
@@ -101,13 +110,13 @@ export default function EmergencyLayout() {
             </div>
             <ArrowRight className="w-10 h-10 group-hover:translate-x-2 transition-transform opacity-80" />
           </div>
-        </a>
+        </button>
 
         {/* --- Render Sections --- */}
         <div className="bg-white rounded-[32px] p-4 sm:p-8 shadow-sm border border-slate-100">
           {EMERGENCY_SECTIONS.map((section, idx) => (
             <div key={idx} className={idx !== EMERGENCY_SECTIONS.length - 1 ? "mb-10" : ""}>
-              
+
               {/* Divider Line */}
               <div className="flex items-center gap-4 mb-6">
                 <div className="h-px grow bg-slate-100"></div>
@@ -120,8 +129,8 @@ export default function EmergencyLayout() {
               {/* List Items */}
               <div className="space-y-2">
                 {section.items.map((item) => (
-                  <button 
-                    key={item.id} 
+                  <button
+                    key={item.id}
                     onClick={() => openModal(item)}
                     className="w-full flex items-center justify-between group p-4 rounded-2xl hover:bg-slate-50 transition-all text-left"
                   >
@@ -172,7 +181,7 @@ export default function EmergencyLayout() {
             {/* กล่องหมายเหตุ */}
             <div className="mt-8 bg-amber-50/80 border-l-4 border-amber-400 p-5 rounded-r-2xl">
               <p className="text-sm text-amber-900 leading-relaxed">
-                <strong className="font-bold text-amber-700">{TIPS_DATA.noteLabel[locale]} </strong> 
+                <strong className="font-bold text-amber-700">{TIPS_DATA.noteLabel[locale]} </strong>
                 {TIPS_DATA.noteText[locale]}
               </p>
             </div>
@@ -186,20 +195,20 @@ export default function EmergencyLayout() {
       {/* ========================================= */}
       <AnimatePresence>
         {selectedItem && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-slate-900/40 backdrop-blur-sm p-0 sm:p-4"
-            onClick={closeModal} 
+            onClick={closeModal}
           >
-            <motion.div 
+            <motion.div
               initial={{ y: "100%" }}
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
               className="bg-white w-full max-w-lg rounded-t-[32px] sm:rounded-[32px] p-8 pb-10 sm:pb-8 shadow-2xl"
-              onClick={(e) => e.stopPropagation()} 
+              onClick={(e) => e.stopPropagation()}
             >
               {/* ขีดลากด้านบน (UI มือถือ) */}
               <div className="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-8 sm:hidden"></div>
@@ -245,15 +254,15 @@ export default function EmergencyLayout() {
 
               {/* ปุ่มกด Action */}
               <div className="space-y-3 mt-auto">
-                <a 
-                  href={`tel:${selectedItem.number.replace(/\s/g, '')}`} 
+                <a
+                  href={`tel:${selectedItem.number.replace(/\s/g, '')}`}
                   className="flex w-full items-center justify-center gap-2 rounded-2xl bg-teal-700 py-4 font-bold text-white transition hover:bg-teal-800 active:scale-95 shadow-lg shadow-teal-700/20"
                 >
                   <Phone className="h-5 w-5 fill-current" />
                   {PAGE_UI.btnCall[locale]}
                 </a>
-                <button 
-                  onClick={closeModal} 
+                <button
+                  onClick={closeModal}
                   className="flex w-full items-center justify-center rounded-2xl border-2 border-slate-100 py-4 font-bold text-slate-600 transition hover:bg-slate-50 active:scale-95"
                 >
                   {PAGE_UI.btnClose[locale]}

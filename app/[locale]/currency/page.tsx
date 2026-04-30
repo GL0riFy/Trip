@@ -3,8 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import { Prompt } from 'next/font/google';
 import { useParams } from 'next/navigation';
-import { ArrowLeftRight, Loader2, Trophy, Landmark, CreditCard, AlertTriangle, Smartphone, Info } from 'lucide-react';
-import { t, BASE_CURRENCY_LIST, type Locale, type Currency } from '@/src/data/essentials'; // เปลี่ยน path ให้ตรงกับโปรเจกต์คุณ
+import { ArrowLeftRight, Loader2, Trophy, Landmark, CreditCard, AlertTriangle, Smartphone, Info, MapPin } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { t, BASE_CURRENCY_LIST, type Locale, type Currency } from '@/src/data/essentials';
 
 const promptFont = Prompt({ subsets: ['latin', 'thai'], weight: ['300', '400', '500', '600', '700'] });
 
@@ -16,20 +17,101 @@ const tipIcons = [
   <AlertTriangle key="icon4" className="w-6 h-6 text-orange-500" />
 ];
 
+// --- ข้อมูลผู้ให้บริการแลกเงิน (อัปเดตลิงก์ Google Maps ของจริง) ---
+const PROVIDERS_DATA = [
+  {
+    id: 'sr_changklan',
+    name: { th: 'SuperRich Chiang Mai', en: 'SuperRich Chiang Mai', zh: '清迈超级富豪 (SuperRich)' },
+    location: { th: 'ถนนลอยเคราะห์ - ย่านไนท์บาซาร์', en: 'Loi Kroh Rd - Near Night Bazaar', zh: 'Loi Kroh路 - 近长康夜市' },
+    tag: { th: 'เรทดีที่สุด', en: 'Best Rate', zh: '最优汇率' },
+    tagColor: 'bg-yellow-100 text-yellow-700',
+    color: '#10B981',
+    rateDiff: +0.02,
+    hours: '08:30 - 17:30',
+    days: { th: 'จันทร์ - เสาร์', en: 'Mon - Sat', zh: '周一至周六' },
+    note: { th: 'ต้องใช้พาสปอร์ตตัวจริง', en: 'Original passport required', zh: '需要原件护照' },
+    // ใช้ Search API ของ Google Maps เพื่อความชัวร์ ไม่พังแน่นอน
+    mapUrl: 'https://www.google.com/maps/search/?api=1&query=Super+Rich+Chiang+mai+(Loi+Kroh)' 
+  },
+  {
+    id: 'sr_green',
+    name: { th: 'SuperRich (สีเขียว)', en: 'SuperRich (Green)', zh: 'SuperRich (绿色)' },
+    location: { th: 'เซ็นทรัลเฟสติวัล ชั้น 4', en: 'Central Festival 4th Floor', zh: '尚泰清迈购物中心 4楼' },
+    tag: { th: 'เรทดีที่สุด', en: 'Best Rate', zh: '最优汇率' },
+    tagColor: 'bg-blue-100 text-blue-700',
+    color: '#3B82F6',
+    rateDiff: -0.01,
+    hours: '11:00 - 20:00',
+    days: { th: 'ทุกวัน', en: 'Everyday', zh: '每天' },
+    note: { th: 'ต้องใช้พาสปอร์ตตัวจริง', en: 'Original passport required', zh: '需要原件护照' },
+    mapUrl: 'https://www.google.com/maps/search/?api=1&query=SuperRich+Central+Festival+Chiang+Mai'
+  },
+  {
+    id: 'thaphae',
+    name: { th: 'ย่านประตูท่าแพ', en: 'Tha Phae Area', zh: '塔佩门区域' },
+    location: { th: 'มีร้านแลกเงินหลายร้านเรียงติดกัน', en: 'Multiple exchange booths available', zh: '附近有多个兑换亭' },
+    tag: { th: 'สะดวก', en: 'Convenient', zh: '方便' },
+    tagColor: 'bg-orange-100 text-orange-700',
+    color: '#F59E0B',
+    rateDiff: -0.40,
+    hours: '09:00 - 21:00',
+    days: { th: 'ทุกวัน', en: 'Everyday', zh: '每天' },
+    note: { th: 'เรทอาจไม่ดีเท่า SuperRich แต่หาง่าย', en: 'Rates lower than SuperRich but easy to find', zh: '汇率不如SuperRich，但很容易找到' },
+    mapUrl: 'https://www.google.com/maps/search/?api=1&query=Currency+Exchange+Tha+Phae+Gate'
+  },
+  {
+    id: 'banks',
+    name: { th: 'ธนาคารทั่วไป', en: 'General Banks', zh: '各大银行' },
+    location: { th: 'สาขาทั่วเชียงใหม่ และในสนามบิน', en: 'Branches across Chiang Mai & Airport', zh: '清迈各地分行及机场' },
+    tag: { th: 'ธนาคาร', en: 'Bank', zh: '银行' },
+    tagColor: 'bg-emerald-100 text-emerald-700',
+    color: '#059669',
+    rateDiff: -0.90,
+    hours: '11:00 - 19:00 (ในห้าง)',
+    days: { th: 'ทุกวัน (สาขาในห้าง)', en: 'Everyday (Mall branches)', zh: '每天 (商场分行)' },
+    note: { th: 'เรทซื้อ-ขายต่างกันมาก (Spread กว้าง)', en: 'High spread between buy & sell rates', zh: '买卖汇率差价较大' },
+    mapUrl: 'https://www.google.com/maps/search/?api=1&query=Bank+Chiang+Mai'
+  },
+  {
+    id: 'maya',
+    name: { th: 'ย่าน MAYA & นิมมาน', en: 'MAYA & Nimman', zh: '玛雅购物中心 & 宁曼路' },
+    location: { th: 'MAYA ชั้น B1 หรือริมถนนนิมมาน', en: 'MAYA B1 Floor or Nimman Rd', zh: '玛雅 B1层 或 宁曼路' },
+    tag: { th: 'สะดวก', en: 'Convenient', zh: '方便' },
+    tagColor: 'bg-orange-100 text-orange-700',
+    color: '#F59E0B',
+    rateDiff: -0.60,
+    hours: '11:00 - 20:00',
+    days: { th: 'ทุกวัน', en: 'Everyday', zh: '每天' },
+    note: { th: 'สะดวกสำหรับผู้ที่พักย่านนิมมาน', en: 'Very convenient if staying in Nimman', zh: '住宁曼路附近非常方便' },
+    mapUrl: 'https://www.google.com/maps/search/?api=1&query=Currency+Exchange+MAYA+Chiang+Mai'
+  },
+  {
+    id: 'wise',
+    name: { th: 'Wise / Revolut', en: 'Wise / Revolut', zh: 'Wise / Revolut' },
+    location: { th: 'โอนเงินออนไลน์ / บัตรเดบิต', en: 'Online Transfer / Debit Card', zh: '在线转账 / 借记卡' },
+    tag: { th: 'ออนไลน์', en: 'Online', zh: '线上' },
+    tagColor: 'bg-cyan-100 text-cyan-700',
+    color: '#0891B2',
+    rateDiff: -0.20,
+    hours: '24 ชั่วโมง',
+    days: { th: 'ทุกวัน', en: 'Everyday', zh: '每天' },
+    note: { th: 'กด ATM ไทยมีค่าธรรมเนียม 220 บาท/ครั้ง', en: 'Thai ATMs charge 220 THB fee per withdrawal', zh: '泰国ATM机每次取款收取220泰铢手续费' },
+    mapUrl: '' // ไม่มีแผนที่สำหรับ Online
+  }
+];
+
 export default function CurrencyExchangePage() {
-  
   const params = useParams();
   const locale = (params?.locale as Locale) || 'th';
-  // 1. เก็บแค่ข้อมูล "เรทเงินดิบๆ" ที่ดึงมาจาก API เท่านั้น
+  
   const [exchangeRates, setExchangeRates] = useState<Record<string, number> | null>(null);
   const [loading, setLoading] = useState(true);
-  
   const [amount, setAmount] = useState<number | string>(100);
-  
-  // 2. เก็บแค่ "รหัสสกุลเงิน" ที่ถูกเลือก แทนการเก็บ Object ทั้งก้อน
   const [selectedCurrencyCode, setSelectedCurrencyCode] = useState<string>(BASE_CURRENCY_LIST[0].code);
+  
+  // State สำหรับควบคุม Modal ผู้ให้บริการ
+  const [selectedProvider, setSelectedProvider] = useState<any>(null);
 
-  // ดึงข้อมูล API แค่ครั้งเดียวตอนโหลดหน้า
   useEffect(() => {
     const fetchRates = async () => {
       try {
@@ -47,11 +129,16 @@ export default function CurrencyExchangePage() {
     fetchRates();
   }, []);
 
-  // 3. Derived State: ประกอบข้อมูลเรทเงินเข้ากับ "คำแปลตามภาษา" สดๆ ทุกครั้งที่ Render
+  // ป้องกันการ Scroll หลังฉากเมื่อเปิด Modal
+  useEffect(() => {
+    if (selectedProvider) document.body.style.overflow = 'hidden';
+    else document.body.style.overflow = 'unset';
+    return () => { document.body.style.overflow = 'unset'; };
+  }, [selectedProvider]);
+
   const displayList: Currency[] = BASE_CURRENCY_LIST.map(base => {
     const rate = exchangeRates ? exchangeRates[base.code] : null;
     const exchangeRate = rate ? 1 / rate : undefined;
-    
     return {
       ...base,
       name: t.currencies[base.code as keyof typeof t.currencies].name[locale],
@@ -62,7 +149,6 @@ export default function CurrencyExchangePage() {
     };
   });
 
-  // 4. ค้นหา Currency Object ตัวเต็มจากรหัสที่เลือกไว้
   const selectedCurrency = displayList.find(c => c.code === selectedCurrencyCode) || displayList[0];
 
   const calculateReceive = () => {
@@ -81,7 +167,7 @@ export default function CurrencyExchangePage() {
   }
 
   return (
-   <section className={`bg-white min-h-screen pt-32 pb-12 px-6 md:px-12 text-slate-800 ${promptFont.className}`}>
+    <section className={`bg-white min-h-screen pt-32 pb-12 px-6 md:px-12 text-slate-800 ${promptFont.className}`}>
       <div className="max-w-6xl mx-auto">
         
         {/* --- Header --- */}
@@ -185,7 +271,7 @@ export default function CurrencyExchangePage() {
                     {currency.sell?.toFixed(2)}
                   </span>
                   <button 
-                    onClick={() => setSelectedCurrencyCode(currency.code)} // เปลี่ยนมาเซฟแค่รหัส String
+                    onClick={() => setSelectedCurrencyCode(currency.code)}
                     className={`hidden md:block px-4 py-1.5 rounded-full text-xs font-bold transition-all ${
                       selectedCurrency.code === currency.code 
                       ? 'bg-slate-800 text-white shadow-md' 
@@ -208,24 +294,30 @@ export default function CurrencyExchangePage() {
           </div>
 
           <div className="space-y-3">
-            {t.providers.map((provider, idx) => (
-              <div key={idx} className="flex items-center justify-between p-4 bg-white border border-slate-100 rounded-xl hover:shadow-sm transition-shadow">
+            {PROVIDERS_DATA.map((provider) => (
+              <div 
+                key={provider.id} 
+                onClick={() => setSelectedProvider(provider)}
+                className="flex items-center justify-between p-4 bg-white border border-slate-100 rounded-xl hover:shadow-md hover:border-slate-300 transition-all cursor-pointer group"
+              >
                 <div className="flex items-center gap-4">
-                  <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: provider.color }}></div>
+                  <div className="w-2.5 h-2.5 rounded-full shadow-sm" style={{ backgroundColor: provider.color }}></div>
                   <div>
-                    <h4 className="font-bold text-slate-800 text-sm md:text-base">{provider.name[locale]}</h4>
+                    <h4 className="font-bold text-slate-800 text-sm md:text-base group-hover:text-blue-600 transition-colors">
+                      {provider.name[locale]}
+                    </h4>
                     <p className="text-slate-400 text-[10px] md:text-xs">{provider.location[locale]}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
-                  <span className={`hidden md:block px-2 py-0.5 rounded text-[10px] font-bold ${provider.tagColor}`}>
+                  <span className={`hidden md:block px-3 py-1 rounded-full text-[10px] font-bold ${provider.tagColor}`}>
                     {provider.tag[locale]}
                   </span>
                   <div className="text-right">
-                    <div className="font-bold text-slate-800">
+                    <div className="font-bold text-slate-800 text-lg">
                       {(Number(selectedCurrency.rate || 0) + provider.rateDiff).toFixed(2)}
                     </div>
-                    <div className="text-[10px] text-slate-400">{t.unitRate[locale]}/{selectedCurrency.code}</div>
+                    <div className="text-[10px] text-slate-400 font-medium">THB/{selectedCurrency.code}</div>
                   </div>
                 </div>
               </div>
@@ -273,6 +365,103 @@ export default function CurrencyExchangePage() {
           </div>
         </div>
       </div>
+
+      {/* ========================================= */}
+      {/* MODAL PROVIDER (Framer Motion) */}
+      {/* ========================================= */}
+      <AnimatePresence>
+        {selectedProvider && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-slate-900/60 backdrop-blur-sm p-0 sm:p-4"
+            onClick={() => setSelectedProvider(null)} 
+          >
+            <motion.div 
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="bg-white w-full max-w-lg rounded-t-[32px] sm:rounded-[32px] p-8 pb-10 sm:pb-8 shadow-2xl relative flex flex-col max-h-[90vh]"
+              onClick={(e) => e.stopPropagation()} 
+            >
+              {/* ขีดลากด้านบน (UI มือถือ) */}
+              <div className="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-6 sm:hidden shrink-0"></div>
+
+              <div className="overflow-y-auto pr-2 pb-4">
+                {/* ส่วนหัว ชื่อและสถานที่ */}
+                <div className="mb-6">
+                  <h2 className="text-2xl font-bold text-slate-900 mb-1 leading-tight">
+                    {selectedProvider.name[locale]}
+                  </h2>
+                  <p className="text-slate-500 text-sm flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full inline-block" style={{ backgroundColor: selectedProvider.color }}></span>
+                    {selectedProvider.location[locale]}
+                  </p>
+                </div>
+
+                <hr className="border-slate-100 mb-6" />
+
+                {/* ตัวเลขเรทราคาขนาดใหญ่ */}
+                <div className="mb-8">
+                  <h3 className="text-[4rem] leading-none font-bold text-slate-800 tracking-tight">
+                    {(Number(selectedCurrency.rate || 0) + selectedProvider.rateDiff).toFixed(2)}
+                  </h3>
+                  <p className="text-slate-400 text-sm mt-2 font-medium">
+                    1 {selectedCurrency.code} = {(Number(selectedCurrency.rate || 0) + selectedProvider.rateDiff).toFixed(2)} {locale === 'en' ? 'THB' : locale === 'zh' ? '泰铢' : 'บาท'} {locale === 'en' ? '(Approx.)' : locale === 'zh' ? '(大约)' : '(โดยประมาณ)'}
+                  </p>
+                </div>
+
+                {/* ข้อมูลรายละเอียด */}
+                <div className="space-y-4 mb-8 text-sm">
+                  <div className="flex justify-between items-start border-b border-slate-50 pb-3">
+                    <span className="text-slate-500 whitespace-nowrap mr-4">{locale === 'en' ? 'Service Hours' : locale === 'zh' ? '营业时间' : 'เวลาทำการ'}</span>
+                    <span className="font-bold text-slate-800 text-right">{selectedProvider.hours}</span>
+                  </div>
+                  <div className="flex justify-between items-start border-b border-slate-50 pb-3">
+                    <span className="text-slate-500 whitespace-nowrap mr-4">{locale === 'en' ? 'Service Days' : locale === 'zh' ? '营业日期' : 'วันทำการ'}</span>
+                    <span className="font-bold text-slate-800 text-right">{selectedProvider.days[locale]}</span>
+                  </div>
+                  <div className="flex justify-between items-start border-b border-slate-50 pb-3">
+                    <span className="text-slate-500 whitespace-nowrap mr-4">{locale === 'en' ? 'Note' : locale === 'zh' ? '备注' : 'หมายเหตุ'}</span>
+                    <span className="font-bold text-red-600 text-right">{selectedProvider.note[locale]}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* ปุ่ม Action */}
+              <div className="space-y-3 mt-auto pt-4 shrink-0 bg-white">
+                {selectedProvider.mapUrl ? (
+                  <a 
+                    href={selectedProvider.mapUrl} 
+                    target="_blank" 
+                    rel="noreferrer"
+                    className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[#1D1D1D] py-4 font-bold text-white transition-transform hover:bg-black active:scale-[0.98] shadow-lg shadow-black/10"
+                  >
+                    <MapPin className="h-5 w-5" />
+                    {locale === 'en' ? 'Open in Google Maps' : locale === 'zh' ? '在地图中打开' : 'เปิดในแผนที่'}
+                  </a>
+                ) : (
+                  <div className="flex w-full items-center justify-center gap-2 rounded-2xl bg-slate-100 py-4 font-bold text-slate-400 cursor-not-allowed">
+                    <Smartphone className="h-5 w-5" />
+                    {locale === 'en' ? 'Online Service Only' : locale === 'zh' ? '仅限在线服务' : 'บริการผ่านช่องทางออนไลน์'}
+                  </div>
+                )}
+                
+                <button 
+                  onClick={() => setSelectedProvider(null)} 
+                  className="flex w-full items-center justify-center rounded-2xl border-2 border-slate-100 py-4 font-bold text-slate-600 transition-colors hover:bg-slate-50 active:scale-[0.98]"
+                >
+                  {locale === 'en' ? 'Close' : locale === 'zh' ? '关闭' : 'ปิด'}
+                </button>
+              </div>
+
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
     </section>
   );
 }
