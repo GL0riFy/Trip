@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useTranslations } from 'next-intl';
+import React, { useEffect, useState } from 'react';
+import { useLocale, useTranslations } from 'next-intl';
+import { ESSENTIAL_APPS, type Locale } from '@/src/data/essentials';
 
 // --- Base Data Structure (ข้อมูลที่ไม่ต้องแปลภาษา) ---
 const BASE_CATEGORIES = [
@@ -13,44 +14,41 @@ const BASE_CATEGORIES = [
   { id: 'comm', icon: '📱', count: 4, color: 'text-teal-500', bgColor: 'bg-teal-100' }
 ];
 
-const BASE_APPS = [
-  { id: 'grab', category: 'transport', name: 'Grab', featured: true, icon: '🟢', rating: '4.8' },
-  { id: 'bolt', category: 'transport', name: 'Bolt', featured: false, icon: '⚡', rating: '4.6' },
-  { id: 'maxim', category: 'transport', name: 'Maxim', featured: false, icon: '🔵', rating: '4.4' },
-  { id: 'muvmi', category: 'transport', name: 'MuvMi', featured: false, icon: '🛵', rating: '4.3' },
-  { id: '12go', category: 'transport', name: '12Go Asia', featured: false, icon: '🚂', rating: '4.5' },
-  
-  { id: 'agoda', category: 'hotel', name: 'Agoda', featured: true, icon: '🔴', rating: '4.8' },
-  { id: 'booking', category: 'hotel', name: 'Booking.com', featured: false, icon: '🔵', rating: '4.7' },
-  { id: 'airbnb', category: 'hotel', name: 'Airbnb', featured: false, icon: '🏠', rating: '4.8' },
-  { id: 'hostelworld', category: 'hotel', name: 'Hostelworld', featured: false, icon: '🛖', rating: '4.4' },
-  
-  { id: 'gmaps', category: 'food', name: 'Google Maps', featured: true, icon: '📍', rating: '4.8' },
-  { id: 'wongnai', category: 'food', name: 'Wongnai', featured: false, icon: '🍜', rating: '4.5' },
-  { id: 'foodpanda', category: 'food', name: 'foodpanda', featured: false, icon: '🐼', rating: '4.4' },
-  { id: 'gtranslate', category: 'food', name: 'Google Translate', featured: false, icon: '🌐', rating: '4.6' },
-  { id: 'tripadvisor', category: 'food', name: 'TripAdvisor', featured: false, icon: '✈️', rating: '4.5' },
-  
-  { id: 'wise', category: 'money', name: 'Wise', featured: true, icon: '💚', rating: '4.8' },
-  { id: 'xecurrency', category: 'money', name: 'XE Currency', featured: false, icon: '📊', rating: '4.7' },
-  { id: 'kplus', category: 'money', name: 'K PLUS', featured: false, icon: '🟩', rating: '4.6' },
-  { id: 'splitwise', category: 'money', name: 'Splitwise', featured: false, icon: '🧮', rating: '4.7' },
-  
-  { id: 'bumrungrad', category: 'health', name: 'Hospital Apps', featured: true, icon: '🏥', rating: '4.7' },
-  { id: 'mapsme', category: 'health', name: 'maps.me', featured: false, icon: '🗺️', rating: '4.5' },
-  { id: 'isos', category: 'health', name: 'iSOS / AXA', featured: false, icon: '🛡️', rating: '4.3' },
-  
-  { id: 'line', category: 'comm', name: 'LINE', featured: true, icon: '💬', rating: '4.8' },
-  { id: 'whatsapp', category: 'comm', name: 'WhatsApp', featured: false, icon: '📗', rating: '4.7' },
-  { id: 'airalo', category: 'comm', name: 'Airalo (eSIM)', featured: false, icon: '📡', rating: '4.6' },
-  { id: 'protonvpn', category: 'comm', name: 'ProtonVPN', featured: false, icon: '🔒', rating: '4.6' }
-];
-
 export default function TravelGuide() {
   const t = useTranslations('TravelApps'); // เรียกใช้ next-intl สำหรับหมวด TravelApps
+  const locale = useLocale() as Locale;
 
   const [activeSection, setActiveSection] = useState('transport');
   const [selectedApp, setSelectedApp] = useState<any>(null); // State สำหรับ Modal
+
+  useEffect(() => {
+    const sectionIds = BASE_CATEGORIES.map((cat) => cat.id);
+    const sections = sectionIds
+      .map((id) => document.getElementById(id))
+      .filter((section): section is HTMLElement => section !== null);
+
+    const updateActiveSectionByScroll = () => {
+      const offset = 140;
+      let currentSection = sectionIds[0];
+
+      for (const section of sections) {
+        const { top, bottom } = section.getBoundingClientRect();
+        if (top <= offset && bottom >= offset) {
+          currentSection = section.id;
+          break;
+        }
+      }
+
+      setActiveSection(currentSection);
+    };
+
+    updateActiveSectionByScroll();
+    window.addEventListener('scroll', updateActiveSectionByScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener('scroll', updateActiveSectionByScroll);
+    };
+  }, []);
 
   // ประกอบข้อมูลเข้ากับคำแปลภาษา
   const categories = BASE_CATEGORIES.map(cat => ({
@@ -60,10 +58,10 @@ export default function TravelGuide() {
     note: t(`Categories.${cat.id}.note`),
   }));
 
-  const appsData = BASE_APPS.map(app => ({
+  const appsData = ESSENTIAL_APPS.map(app => ({
     ...app,
-    desc: t(`Apps.${app.id}.desc`),
-    tags: t.raw(`Apps.${app.id}.tags`), // ดึงค่า Array จาก JSON
+    desc: app.desc[locale],
+    tags: app.tags.map((tag) => tag[locale]),
   }));
 
   // Helper สำหรับแยกตัวหนังสือหนา/บางในแถบ Stats
@@ -75,6 +73,18 @@ export default function TravelGuide() {
         {text.substring(0, spaceIdx)}{' '}
         <span className="text-sm text-gray-500 font-normal">{text.substring(spaceIdx + 1)}</span>
       </>
+    );
+  };
+
+  const renderAppIcon = (app: { name: string; image: string }, sizeClass: string, fallbackTextClass: string) => {
+    if (app.image) {
+      return <img src={app.image} alt={`${app.name} logo`} className={`${sizeClass} object-contain`} />;
+    }
+
+    return (
+      <span className={`${fallbackTextClass} font-bold text-gray-500`}>
+        {app.name.slice(0, 2).toUpperCase()}
+      </span>
     );
   };
 
@@ -238,8 +248,8 @@ export default function TravelGuide() {
                     className="bg-white border border-gray-200 rounded-2xl p-6 mb-6 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all cursor-pointer flex flex-col md:flex-row gap-6 relative overflow-hidden"
                   >
                     <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-green-500"></div>
-                    <div className="w-16 h-16 rounded-2xl bg-gray-50 flex items-center justify-center text-3xl border border-gray-100 flex-shrink-0">
-                      {featuredApp.icon}
+                    <div className="w-16 h-16 rounded-2xl bg-white flex items-center justify-center text-3xl border border-gray-100 flex-shrink-0">
+                      {renderAppIcon(featuredApp, 'w-10 h-10', 'text-lg')}
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center justify-between mb-2">
@@ -266,8 +276,8 @@ export default function TravelGuide() {
                       className="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-gray-300 hover:-translate-y-1 transition-all cursor-pointer flex flex-col h-full"
                     >
                       <div className="flex items-start justify-between mb-4">
-                        <div className="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center text-2xl border border-gray-100 transition-transform hover:scale-110">
-                          {app.icon}
+                        <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center text-2xl border border-gray-100 transition-transform hover:scale-110">
+                          {renderAppIcon(app, 'w-8 h-8', 'text-sm')}
                         </div>
                         <span className="text-xs text-gray-400 font-medium">★ {app.rating}</span>
                       </div>
@@ -301,7 +311,7 @@ export default function TravelGuide() {
             {/* Modal Header */}
             <div className="bg-gray-50 p-8 text-center border-b border-gray-100 relative">
               <div className="w-24 h-24 mx-auto rounded-3xl bg-white flex items-center justify-center text-5xl border border-gray-200 shadow-sm mb-4">
-                {selectedApp.icon}
+                {renderAppIcon(selectedApp, 'w-14 h-14', 'text-xl')}
               </div>
               <h2 className="text-2xl font-bold text-gray-900 mb-2">{selectedApp.name}</h2>
               <div className="flex items-center justify-center gap-2 mb-2">
@@ -328,8 +338,15 @@ export default function TravelGuide() {
               <div className="flex flex-col sm:flex-row gap-3">
                 {/* Apple App Store Button */}
                 <a 
-                  href="#" 
-                  className="flex-1 flex items-center justify-center gap-3 bg-black hover:bg-gray-900 text-white rounded-xl py-3 px-4 transition-transform hover:scale-105 active:scale-95"
+                  href={selectedApp.appStoreUrl || '#'}
+                  onClick={(e) => {
+                    if (!selectedApp.appStoreUrl) e.preventDefault();
+                  }}
+                  className={`flex-1 flex items-center justify-center gap-3 rounded-xl py-3 px-4 transition-transform ${
+                    selectedApp.appStoreUrl
+                      ? 'bg-black hover:bg-gray-900 text-white hover:scale-105 active:scale-95'
+                      : 'bg-gray-300 text-gray-500 cursor-not-allowed pointer-events-none'
+                  }`}
                   target="_blank" rel="noreferrer"
                 >
                   <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.15 2.95.92 3.78 2.29-2.21 1.38-1.87 4.7 1.04 5.91-.72 1.83-1.61 3.51-3.47 4.81zm-3.36-13.6c-.13-1.89 1.35-3.67 3.32-3.87.27 2.06-1.57 3.86-3.32 3.87z"/></svg>
@@ -341,8 +358,15 @@ export default function TravelGuide() {
 
                 {/* Google Play Button */}
                 <a 
-                  href="#" 
-                  className="flex-1 flex items-center justify-center gap-3 bg-white border border-gray-300 hover:bg-gray-50 text-gray-900 rounded-xl py-3 px-4 transition-transform hover:scale-105 active:scale-95 shadow-sm"
+                  href={selectedApp.playStoreUrl || '#'}
+                  onClick={(e) => {
+                    if (!selectedApp.playStoreUrl) e.preventDefault();
+                  }}
+                  className={`flex-1 flex items-center justify-center gap-3 rounded-xl py-3 px-4 transition-transform shadow-sm ${
+                    selectedApp.playStoreUrl
+                      ? 'bg-white border border-gray-300 hover:bg-gray-50 text-gray-900 hover:scale-105 active:scale-95'
+                      : 'bg-gray-100 border border-gray-200 text-gray-400 cursor-not-allowed pointer-events-none'
+                  }`}
                   target="_blank" rel="noreferrer"
                 >
                   <svg className="w-6 h-6" viewBox="0 0 24 24"><path fill="#4caf50" d="M3.6 3.6c-.4.4-.6.9-.6 1.6v13.6c0 .7.2 1.2.6 1.6l.1.1 7.7-7.7v-.4L3.7 3.5l-.1.1z"/><path fill="#ffeb3b" d="M15.4 15.4l-4-4v-.4l4-4 .1.1 4.7 2.7c1.3.7 1.3 1.9 0 2.7l-4.7 2.7-.1.1z"/><path fill="#f44336" d="M3.7 3.5L11.4 11l4-4L6.4 2.1C5.1 1.4 4 2.1 3.7 3.5z"/><path fill="#2196f3" d="M3.7 20.5c.3 1.4 1.4 2.1 2.7 1.4l9-5.1-4-4-7.7 7.7z"/></svg>

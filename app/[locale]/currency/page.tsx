@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Prompt } from 'next/font/google';
 import { useParams } from 'next/navigation';
 import { ArrowLeftRight, Loader2, Trophy, Landmark, CreditCard, AlertTriangle, Smartphone, Info, MapPin } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { t, BASE_CURRENCY_LIST, type Locale, type Currency } from '@/src/data/essentials';
 
 const promptFont = Prompt({ subsets: ['latin', 'thai'], weight: ['300', '400', '500', '600', '700'] });
@@ -17,7 +17,7 @@ const tipIcons = [
   <AlertTriangle key="icon4" className="w-6 h-6 text-orange-500" />
 ];
 
-// --- ข้อมูลผู้ให้บริการแลกเงิน (อัปเดตลิงก์ Google Maps ของจริง) ---
+// --- ข้อมูลผู้ให้บริการแลกเงิน ---
 const PROVIDERS_DATA = [
   {
     id: 'sr_changklan',
@@ -30,7 +30,6 @@ const PROVIDERS_DATA = [
     hours: '08:30 - 17:30',
     days: { th: 'จันทร์ - เสาร์', en: 'Mon - Sat', zh: '周一至周六' },
     note: { th: 'ต้องใช้พาสปอร์ตตัวจริง', en: 'Original passport required', zh: '需要原件护照' },
-    // ใช้ Search API ของ Google Maps เพื่อความชัวร์ ไม่พังแน่นอน
     mapUrl: 'https://www.google.com/maps/search/?api=1&query=Super+Rich+Chiang+mai+(Loi+Kroh)' 
   },
   {
@@ -96,9 +95,23 @@ const PROVIDERS_DATA = [
     hours: '24 ชั่วโมง',
     days: { th: 'ทุกวัน', en: 'Everyday', zh: '每天' },
     note: { th: 'กด ATM ไทยมีค่าธรรมเนียม 220 บาท/ครั้ง', en: 'Thai ATMs charge 220 THB fee per withdrawal', zh: '泰国ATM机每次取款收取220泰铢手续费' },
-    mapUrl: '' // ไม่มีแผนที่สำหรับ Online
+    mapUrl: '' 
   }
 ];
+
+// --- Framer Motion Variants ---
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1 }
+  }
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 100 } }
+};
 
 export default function CurrencyExchangePage() {
   const params = useParams();
@@ -109,7 +122,6 @@ export default function CurrencyExchangePage() {
   const [amount, setAmount] = useState<number | string>(100);
   const [selectedCurrencyCode, setSelectedCurrencyCode] = useState<string>(BASE_CURRENCY_LIST[0].code);
   
-  // State สำหรับควบคุม Modal ผู้ให้บริการ
   const [selectedProvider, setSelectedProvider] = useState<any>(null);
 
   useEffect(() => {
@@ -129,7 +141,6 @@ export default function CurrencyExchangePage() {
     fetchRates();
   }, []);
 
-  // ป้องกันการ Scroll หลังฉากเมื่อเปิด Modal
   useEffect(() => {
     if (selectedProvider) document.body.style.overflow = 'hidden';
     else document.body.style.overflow = 'unset';
@@ -171,18 +182,28 @@ export default function CurrencyExchangePage() {
       <div className="max-w-6xl mx-auto">
         
         {/* --- Header --- */}
-        <div className="mb-8">
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="mb-8"
+        >
           <p className="text-slate-500 text-sm mb-2">{t.tagLocation[locale]}</p>
           <h1 className="text-4xl md:text-5xl font-bold text-[#0A2540] leading-tight tracking-tight mb-2">
             {t.title[locale]} <br />
             {t.title2[locale]}
           </h1>
-        </div>
+        </motion.div>
 
         <hr className="border-slate-100 border-2 mb-8 rounded-full" />
 
         {/* --- Calculator --- */}
-        <div className="bg-[#FAF7F2] rounded-2xl p-6 md:p-8 mb-10 border border-[#F0EBE1] shadow-sm">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="bg-[#FAF7F2] rounded-2xl p-6 md:p-8 mb-10 border border-[#F0EBE1] shadow-sm"
+        >
           <h2 className="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2">
             {t.calcTitle[locale]} {selectedCurrency.code}
             <img 
@@ -226,10 +247,15 @@ export default function CurrencyExchangePage() {
             </span>
             <span className="text-slate-400">{t.estRateLabel[locale]}</span>
           </div>
-        </div>
+        </motion.div>
 
         {/* --- Rate Table --- */}
-        <div>
+        <motion.div
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-50px" }}
+          variants={containerVariants}
+        >
           <div className="flex items-center gap-4 mb-4">
             <span className="text-slate-500 text-sm font-bold whitespace-nowrap">{t.tableTitle[locale]}</span>
             <div className="h-px grow bg-slate-200"></div>
@@ -243,8 +269,9 @@ export default function CurrencyExchangePage() {
 
           <div className="space-y-1">
             {displayList.map((currency, index) => (
-              <div 
-                key={index} 
+              <motion.div 
+                key={index}
+                variants={itemVariants}
                 className="grid grid-cols-12 gap-4 items-center px-2 py-4 border-b border-slate-100 hover:bg-slate-50 transition-colors"
               >
                 <div className="col-span-6 md:col-span-5 flex items-center gap-3">
@@ -281,13 +308,19 @@ export default function CurrencyExchangePage() {
                     {t.btnUse[locale]}
                   </button>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
-        </div>
+        </motion.div>
         
         {/* --- Exchange Providers Comparison --- */}
-        <div className="mt-12">
+        <motion.div 
+          className="mt-12"
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-50px" }}
+          variants={containerVariants}
+        >
           <div className="flex items-center gap-4 mb-6">
             <span className="text-slate-500 text-sm font-bold whitespace-nowrap">{t.compareTitle[locale]}</span>
             <div className="h-px grow bg-slate-200"></div>
@@ -295,8 +328,10 @@ export default function CurrencyExchangePage() {
 
           <div className="space-y-3">
             {PROVIDERS_DATA.map((provider) => (
-              <div 
-                key={provider.id} 
+              <motion.div 
+                key={provider.id}
+                variants={itemVariants}
+                whileHover={{ scale: 1.01, y: -2 }}
                 onClick={() => setSelectedProvider(provider)}
                 className="flex items-center justify-between p-4 bg-white border border-slate-100 rounded-xl hover:shadow-md hover:border-slate-300 transition-all cursor-pointer group"
               >
@@ -320,13 +355,19 @@ export default function CurrencyExchangePage() {
                     <div className="text-[10px] text-slate-400 font-medium">THB/{selectedCurrency.code}</div>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
-        </div>
+        </motion.div>
 
         {/* --- Information Cards Grid --- */}
-        <div className="mt-12 mb-12">
+        <motion.div 
+          className="mt-12 mb-12"
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-50px" }}
+          variants={containerVariants}
+        >
           <div className="flex items-center gap-4 mb-6">
             <span className="text-slate-500 text-sm font-bold whitespace-nowrap">{t.tipsTitle[locale]}</span>
             <div className="h-px grow bg-slate-200"></div>
@@ -334,7 +375,12 @@ export default function CurrencyExchangePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {t.tips.map((tip, index) => (
-              <div key={index} className="p-6 bg-slate-50 rounded-2xl border border-slate-100">
+              <motion.div 
+                key={index} 
+                variants={itemVariants}
+                whileHover={{ y: -4, boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.05)" }}
+                className="p-6 bg-slate-50 rounded-2xl border border-slate-100 transition-colors hover:bg-white"
+              >
                 <div className="bg-white w-10 h-10 rounded-lg shadow-sm flex items-center justify-center mb-4">
                   {tipIcons[index]}
                 </div>
@@ -343,13 +389,19 @@ export default function CurrencyExchangePage() {
                   className="text-xs text-slate-500 leading-relaxed" 
                   dangerouslySetInnerHTML={{ __html: tip.desc[locale].replace('**', '<strong>').replace('**', '</strong>') }} 
                 />
-              </div>
+              </motion.div>
             ))}
           </div>
-        </div>
+        </motion.div>
 
         {/* --- Disclaimer / Info --- */}
-        <div className="mt-10 pb-16 border-t border-slate-100 pt-8">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-20px" }}
+          transition={{ duration: 0.6 }}
+          className="mt-10 pb-16 border-t border-slate-100 pt-8"
+        >
           <div className="flex items-start gap-3 text-slate-400 bg-slate-50/50 p-5 rounded-2xl border border-slate-100">
             <Info className="w-5 h-5 shrink-0 mt-0.5 text-slate-300" />
             <div className="space-y-1">
@@ -363,7 +415,7 @@ export default function CurrencyExchangePage() {
               </p>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
 
       {/* ========================================= */}

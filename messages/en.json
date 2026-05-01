@@ -233,38 +233,6 @@
         "desc": "Messaging, Internet & eSIM",
         "note": "Thai people and local businesses primarily use LINE for communication."
       }
-    },
-    "Apps": {
-      "grab": { "desc": "The ultimate super app. Book taxis, motorbikes, order food, deliver parcels, and pay all in one place (covers all of Chiang Mai).", "tags": ["8 Countries", "Multiple Payments", "Food Delivery"] },
-      "bolt": { "desc": "Cheaper than Grab by 10–20% on average. Ideal for short routes within the city.", "tags": ["Budget-friendly", "Free"] },
-      "maxim": { "desc": "Offers the lowest rates for taxi and motorbike services. Very popular in Chiang Mai and rural provinces.", "tags": ["Lowest Price", "Free"] },
-      "muvmi": { "desc": "Electric Tuk-Tuks and motorbikes. Perfect for short distances and eco-friendly.", "tags": ["Eco-friendly", "Free"] },
-      "12go": { "desc": "Book trains, buses, and flights across provinces/countries. Reliable with instant ticket delivery.", "tags": ["International", "Free"] },
-      
-      "agoda": { "desc": "The strongest hotel booking platform in Asia with over 2M properties worldwide. Exceptionally good rates for Thailand.", "tags": ["Special Rates", "Earn Points", "Instant Booking"] },
-      "booking": { "desc": "The widest variety of accommodations, including hotels, resorts, and hostels. Offers free cancellation on select packages.", "tags": ["Popular", "Free"] },
-      "airbnb": { "desc": "Rent houses, villas, or private rooms. Great for families or friend groups.", "tags": ["Family-friendly", "Free"] },
-      "hostelworld": { "desc": "The #1 hostel booking app. Perfect for solo travelers or those on a strict budget.", "tags": ["Budget", "Free"] },
-      
-      "gmaps": { "desc": "The most accurate maps. Navigate offline (if downloaded) and see real-time traffic (crucial for mountain trips).", "tags": ["Offline Mode", "Live Traffic", "Reviews"] },
-      "wongnai": { "desc": "The largest hub for Thai restaurant reviews. Features menus, prices, and insights from locals.", "tags": ["Thai Only", "Free"] },
-      "foodpanda": { "desc": "Order food delivery straight to your accommodation within 30–45 mins. Frequent promotions available.", "tags": ["Delivery", "Free"] },
-      "gtranslate": { "desc": "Instant translation. Snap a photo of a menu or sign to translate it immediately.", "tags": ["Offline Mode", "Free"] },
-      "tripadvisor": { "desc": "Find attractions and restaurants based on reviews from travelers worldwide.", "tags": ["Trip Planner", "Free"] },
-      
-      "wise": { "desc": "International money transfers at the mid-market rate. 2 free global ATM withdrawals monthly. Debit card supports 40+ currencies.", "tags": ["Best Rates", "Free ATM", "40+ Currencies"] },
-      "xecurrency": { "desc": "Check real-time exchange rates. Works completely offline.", "tags": ["Offline", "Free"] },
-      "kplus": { "desc": "Kasikorn Bank app. Use it to scan PromptPay QR codes instantly and securely.", "tags": ["Thai Bank", "Free"] },
-      "splitwise": { "desc": "Easily split expenses with travel buddies. Automatically calculates debts.", "tags": ["Split Bills", "Free"] },
-      
-      "bumrungrad": { "desc": "Top private hospitals. Book appointments online, view results, and consult via video call. Multilingual doctors available.", "tags": ["Book Online", "Medical Results", "Telehealth"] },
-      "mapsme": { "desc": "100% offline maps. A great backup in case Google Maps loses signal in the mountains.", "tags": ["Offline", "Free"] },
-      "isos": { "desc": "Travel insurance app. Use for claims or requesting 24/7 emergency assistance.", "tags": ["Insurance", "Free"] },
-      
-      "line": { "desc": "The most used chat app in Thailand. Shops, hotels, and services in Chiang Mai rely on LINE for communication (Highly recommended).", "tags": ["Free Chat", "Order Food", "Payments"] },
-      "whatsapp": { "desc": "Free internet calls and chats. Best for keeping in touch with international friends.", "tags": ["Popular", "Free"] },
-      "airalo": { "desc": "Buy eSIMs online before your trip. Connect instantly without swapping physical SIMs.", "tags": ["eSIM", "Free"] },
-      "protonvpn": { "desc": "Free VPN to protect your personal data when using hotel or cafe Wi-Fi.", "tags": ["Security", "Free"] }
     }
   }
 }
