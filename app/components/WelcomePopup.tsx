@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image"; // 1. นำเข้า Next.js Image Component
 
 export default function WelcomePopup() {
   const [isOpen, setIsOpen] = useState(true);
@@ -16,14 +17,12 @@ export default function WelcomePopup() {
     <>
       <style dangerouslySetInnerHTML={{
         __html: `
-        /* 1. เอฟเฟกต์พื้นหลังค่อยๆ ปรากฏ */
         @keyframes fadeInBackdrop {
           0% { opacity: 0; }
           100% { opacity: 1; }
         }
         .animate-backdrop { animation: fadeInBackdrop 0.4s ease-out forwards; }
 
-        /* 2. เอฟเฟกต์ Popup เด้งขึ้นมาและขยายตัวนิดๆ (สมูทๆ) */
         @keyframes popupEnter {
           0% { opacity: 0; transform: scale(0.8) translateY(30px); }
           60% { opacity: 1; transform: scale(1.02) translateY(-5px); }
@@ -31,7 +30,6 @@ export default function WelcomePopup() {
         }
         .animate-popup { animation: popupEnter 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
 
-        /* 3. เอฟเฟกต์รูปภาพลอยขึ้นลง (ของเดิม) */
         @keyframes float {
           0% { transform: translateY(0px); }
           50% { transform: translateY(-12px); }
@@ -42,10 +40,7 @@ export default function WelcomePopup() {
         .animate-float-3 { animation: float 4s ease-in-out infinite 1.6s; }
       `}} />
 
-      {/* ใส่คลาส animate-backdrop ให้พื้นหลังดำ */}
       <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm px-4 animate-backdrop">
-
-        {/* ใส่คลาส animate-popup ให้ตัวกล่องขาว */}
         <div className="bg-white rounded-[32px] p-8 max-w-4xl w-full shadow-2xl relative max-h-[95vh] overflow-y-auto animate-popup">
 
           {/* ปุ่มไอคอนปิด */}
@@ -87,7 +82,15 @@ export default function WelcomePopup() {
                 className="flex justify-center animate-float-1 hover:scale-105 transition-transform duration-300 cursor-pointer"
               >
                 <div className="w-full aspect-square relative max-w-[180px] md:max-w-[250px] overflow-hidden rounded-2xl drop-shadow-md">
-                  <img src="/products/11.png" alt="ร่มเชียงใหม่" className="w-full h-full object-cover" />
+                  {/* 2. เปลี่ยนมาใช้ Image component พร้อมใส่ priority สำหรับ Preload */}
+                  <Image
+                    src="/Products/11.png"
+                    alt="ร่มเชียงใหม่"
+                    fill
+                    sizes="(max-width: 768px) 180px, 250px"
+                    priority
+                    className="object-cover"
+                  />
                 </div>
               </Link>
 
@@ -98,7 +101,14 @@ export default function WelcomePopup() {
                 className="flex justify-center animate-float-2 hover:scale-105 transition-transform duration-300 cursor-pointer"
               >
                 <div className="w-full aspect-square relative max-w-[180px] md:max-w-[250px] overflow-hidden rounded-2xl drop-shadow-md">
-                  <img src="/products/2.png" alt="เที่ยวเชียงใหม่ 2" className="w-full h-full object-cover" />
+                  <Image
+                    src="/Products/2.png"
+                    alt="เที่ยวเชียงใหม่ 2"
+                    fill
+                    sizes="(max-width: 768px) 180px, 250px"
+                    priority
+                    className="object-cover"
+                  />
                 </div>
               </Link>
 
@@ -109,7 +119,14 @@ export default function WelcomePopup() {
                 className="flex justify-center animate-float-3 hover:scale-105 transition-transform duration-300 cursor-pointer"
               >
                 <div className="w-full aspect-square relative max-w-[180px] md:max-w-[250px] overflow-hidden rounded-2xl drop-shadow-md">
-                  <img src="/products/3.png" alt="เที่ยวเชียงใหม่ 3" className="w-full h-full object-cover" />
+                  <Image
+                    src="/Products/3.png"
+                    alt="เที่ยวเชียงใหม่ 3"
+                    fill
+                    sizes="(max-width: 768px) 180px, 250px"
+                    priority
+                    className="object-cover"
+                  />
                 </div>
               </Link>
 
