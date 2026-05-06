@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"; // เพิ่ม useEffect
 import Link from "next/link";
+import Image from "next/image"; // 1. นำเข้า Next.js Image Component
 
 export default function WelcomePopup() {
   const [isOpen, setIsOpen] = useState(false); // เริ่มต้นเป็น false
@@ -51,7 +52,10 @@ export default function WelcomePopup() {
         .animate-float-3 { animation: float 4s ease-in-out infinite 1.6s; }
       `}} />
 
-      <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4 animate-backdrop">
+      {/* ใส่คลาส animate-backdrop ให้พื้นหลังดำ */}
+      <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm px-4 animate-backdrop">
+
+        {/* ใส่คลาส animate-popup ให้ตัวกล่องขาว */}
         <div className="bg-white rounded-[32px] p-8 max-w-4xl w-full shadow-2xl relative max-h-[95vh] overflow-y-auto animate-popup">
           
           <button
@@ -72,21 +76,43 @@ export default function WelcomePopup() {
               {/* รูปที่ 1 */}
               <Link href="/" onClick={handleClose} className="flex justify-center animate-float-1 hover:scale-105 transition-transform duration-300 cursor-pointer">
                 <div className="w-full aspect-square relative max-w-[180px] md:max-w-[250px] overflow-hidden rounded-2xl drop-shadow-md">
-                  <img src="/products/11.png" alt="ร่มเชียงใหม่" className="w-full h-full object-cover" />
+                  {/* 2. เปลี่ยนมาใช้ Image component พร้อมใส่ priority สำหรับ Preload */}
+                  <Image
+                    src="/Products/11.png"
+                    alt="ร่มเชียงใหม่"
+                    fill
+                    sizes="(max-width: 768px) 180px, 250px"
+                    priority
+                    className="object-cover"
+                  />
                 </div>
               </Link>
 
               {/* รูปที่ 2 */}
               <Link href="/" onClick={handleClose} className="flex justify-center animate-float-2 hover:scale-105 transition-transform duration-300 cursor-pointer">
                 <div className="w-full aspect-square relative max-w-[180px] md:max-w-[250px] overflow-hidden rounded-2xl drop-shadow-md">
-                  <img src="/products/2.png" alt="เที่ยวเชียงใหม่ 2" className="w-full h-full object-cover" />
+                  <Image
+                    src="/Products/2.png"
+                    alt="เที่ยวเชียงใหม่ 2"
+                    fill
+                    sizes="(max-width: 768px) 180px, 250px"
+                    priority
+                    className="object-cover"
+                  />
                 </div>
               </Link>
 
               {/* รูปที่ 3 */}
               <Link href="/" onClick={handleClose} className="flex justify-center animate-float-3 hover:scale-105 transition-transform duration-300 cursor-pointer">
                 <div className="w-full aspect-square relative max-w-[180px] md:max-w-[250px] overflow-hidden rounded-2xl drop-shadow-md">
-                  <img src="/products/3.png" alt="เที่ยวเชียงใหม่ 3" className="w-full h-full object-cover" />
+                  <Image
+                    src="/Products/3.png"
+                    alt="เที่ยวเชียงใหม่ 3"
+                    fill
+                    sizes="(max-width: 768px) 180px, 250px"
+                    priority
+                    className="object-cover"
+                  />
                 </div>
               </Link>
             </div>

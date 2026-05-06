@@ -39,15 +39,10 @@ export default function Navigation() {
     { key: 'dashboard', href: `/${locale}/dashboard` }
   ]
 
-  console.log('--- Render Navigation ---');
-  console.log('isScrolled state:', isScrolled);
-  console.log('isMobile state:', isMobile);
-
   useEffect(() => {
     setIsClient(true)
     const handleResize = () => {
       const mobileCheck = window.innerWidth <= 910;
-      console.log('Window resized. Width:', window.innerWidth, 'isMobile:', mobileCheck);
       setIsMobile(mobileCheck);
     }
     handleResize()
@@ -58,7 +53,6 @@ export default function Navigation() {
   useEffect(() => {
     if (!isClient) return
     const onScroll = () => {
-      console.log('Scrolling... window.scrollY:', window.scrollY);
       setIsScrolled(window.scrollY > 20)
     }
     onScroll()
@@ -75,43 +69,77 @@ export default function Navigation() {
 
   if (!isClient) return null
 
-  // กำหนดหน้าพิเศษที่ต้องการให้ Navbar ลอยอยู่เสมอ
   const specialPages = ['/maps', '/emergency', '/currency', '/apps']
   const isSpecialPage = specialPages.some((page) => pathname.includes(page))
-  
-  // 📌 เพิ่มตัวแปร isFloating เพื่อเช็คว่า Navbar ควรจะอยู่ในสถานะ "ลอย" หรือไม่
+
   const isFloating = isScrolled || isSpecialPage
-  
-  // ใช้ isFloating แทน isScrolled เพื่อกำหนดพื้นหลัง
   const showNavbarBg = isFloating || (isMobile && isMenuOpen)
 
   return (
     <motion.nav
       initial={false}
       animate={{
-        // 📌 เปลี่ยนมาใช้ isFloating ควบคุมแกน y และความกว้าง
         y: isFloating ? (isMobile ? 15 : 20) : 0,
         width: isFloating ? (isMobile ? '92%' : '85%') : '100%',
       }}
       transition={{ duration: 0.4, type: "spring", stiffness: 200, damping: 25 }}
       className={`fixed top-0 z-50 left-0 right-0 mx-auto flex flex-col ${kanit.className}`}
     >
-      <div 
+      <div
         className={`relative w-full transition-all duration-300 
-          ${showNavbarBg 
-            ? 'bg-black/30 backdrop-blur-xl border border-white/10 shadow-xl' 
+          ${showNavbarBg
+            ? 'bg-black/30 backdrop-blur-xl border border-white/10 shadow-xl'
             : 'bg-transparent border-transparent'
           }
-          /* 📌 เปลี่ยนมาใช้ isFloating เพื่อควบคุมความโค้งของขอบ */
           ${isFloating ? 'rounded-[26px]' : 'rounded-none'}
         `}
       >
         <div className="relative w-full px-6 h-16 flex items-center justify-between">
-          {/* LOGO */}
-          <div className="flex items-center shrink-0">
+
+          {/* 📌 LOGO & MOBILE LANGUAGE SELECTOR */}
+          <div className="flex items-center gap-4 shrink-0">
             <Link href={`/${locale}`} onClick={() => { setIsMenuOpen(false); setIsLangOpen(false); }}>
               <Image src="/Logo/Logo.png" alt="logo" width={85} height={85} className="object-contain" />
             </Link>
+
+            {/* ปุ่มเปลี่ยนภาษาสำหรับมือถือ (ขยายขนาดตามคำขอ) */}
+            <div className="relative min-[911px]:hidden">
+              <button
+                onClick={(e) => { e.stopPropagation(); setIsLangOpen(!isLangOpen); setIsMenuOpen(false); }}
+                className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/10 border border-white/20 text-white hover:bg-white/20 transition shadow-sm"
+              >
+                <img
+                  src={`https://flagcdn.com/w40/${LANGUAGES.find(l => l.code === locale)?.country}.png`}
+                  className="w-7 h-5 object-cover rounded-md"
+                  alt="flag"
+                />
+                <svg className={`w-5 h-5 transition-transform duration-300 ${isLangOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              <AnimatePresence>
+                {isLangOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                    className="absolute left-0 mt-3 w-44 rounded-2xl bg-black/95 backdrop-blur-2xl border border-white/20 shadow-2xl p-2 z-[60]"
+                  >
+                    {LANGUAGES.map(l => (
+                      <button
+                        key={l.code}
+                        onClick={() => switchLocale(l.code)}
+                        className={`flex items-center gap-4 w-full px-3 py-3 text-base rounded-xl transition ${locale === l.code ? 'bg-blue-600/50 text-white' : 'text-white/80 hover:bg-white/10 hover:text-white'}`}
+                      >
+                        <img src={`https://flagcdn.com/w40/${l.country}.png`} className="w-6 h-4 object-cover rounded-sm" alt={l.name} />
+                        <span className="font-medium">{l.name}</span>
+                      </button>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
 
           {/* DESKTOP MENU */}
@@ -142,7 +170,7 @@ export default function Navigation() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 10 }}
-                  className="absolute right-0 mt-4 w-40 rounded-2xl bg-black/80 backdrop-blur-2xl border border-white/20 shadow-2xl p-1.5 z-60"
+                  className="absolute right-0 mt-4 w-40 rounded-2xl bg-black/80 backdrop-blur-2xl border border-white/20 shadow-2xl p-1.5 z-[60]"
                 >
                   {LANGUAGES.map(l => (
                     <button
@@ -167,13 +195,13 @@ export default function Navigation() {
           </div>
         </div>
 
-        {/* MOBILE MENU CONTENT */}
+        {/* 📌 MOBILE MENU CONTENT */}
         <AnimatePresence>
           {isMenuOpen && (
-            <motion.div 
-              initial={{ opacity: 0, height: 0 }} 
-              animate={{ opacity: 1, height: 'auto' }} 
-              exit={{ opacity: 0, height: 0 }} 
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
               className="min-[911px]:hidden w-full border-t border-white/10 overflow-hidden"
             >
               <div className="flex flex-col px-6 pb-6 pt-2 space-y-1">
@@ -182,44 +210,6 @@ export default function Navigation() {
                     {t(link.key)}
                   </Link>
                 ))}
-                
-                {/* MOBILE LANGUAGE DROPDOWN */}
-                <div className="pt-4">
-                  <button 
-                    onClick={() => setIsLangOpen(!isLangOpen)}
-                    className="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white"
-                  >
-                    <div className="flex items-center gap-3">
-                      <img src={`https://flagcdn.com/w40/${LANGUAGES.find(l => l.code === locale)?.country}.png`} className="w-6 h-4 object-cover rounded-sm" alt="flag" />
-                      <span className="font-medium">{LANGUAGES.find(l => l.code === locale)?.name}</span>
-                    </div>
-                    <svg className={`w-5 h-5 transition-transform duration-300 ${isLangOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </button>
-
-                  <AnimatePresence>
-                    {isLangOpen && (
-                      <motion.div 
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
-                        className="mt-2 space-y-1"
-                      >
-                        {LANGUAGES.map(l => (
-                          <button
-                            key={l.code}
-                            onClick={() => switchLocale(l.code)}
-                            className={`flex items-center gap-4 w-full px-5 py-3 rounded-xl transition ${locale === l.code ? 'bg-blue-600/40 text-white' : 'text-white/60 hover:bg-white/5'}`}
-                          >
-                            <img src={`https://flagcdn.com/w40/${l.country}.png`} className="w-6 h-4 object-cover rounded-sm" alt={l.name} />
-                            <span>{l.name}</span>
-                          </button>
-                        ))}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
               </div>
             </motion.div>
           )}
