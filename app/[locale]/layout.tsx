@@ -6,6 +6,7 @@ import Footer from "../components/footer";
 import { NextIntlClientProvider } from "next-intl";
 import { notFound } from "next/navigation";
 import { VisitorTracker } from "../components/VisitorTracker";
+import WelcomePopup from "../components/WelcomePopup";
 import '../globals.css';
 
 export function generateStaticParams() {
@@ -23,7 +24,7 @@ const promptFont = Prompt({
 const itimFont = Itim({
   variable: "--font-itim-next",
   subsets: ["latin", "thai"],
-  weight: "400", 
+  weight: "400",
 });
 
 export const metadata: Metadata = {
@@ -60,9 +61,10 @@ export default async function LocaleLayout({
       >
         <NextIntlClientProvider locale={locale} messages={messages}>
           <VisitorTracker />
+          <WelcomePopup />
           <div className="min-h-screen flex flex-col">
             <Navigation />
-              {children}
+            {children}
             <Footer />
           </div>
         </NextIntlClientProvider>
