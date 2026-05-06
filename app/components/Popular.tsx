@@ -78,9 +78,9 @@ export default function Popular() {
   ];
 
   const categoryLinks = [
-    '/popular/food',
-    '/popular/hotel',
-    '/popular/otop'
+    '/food',
+    '/hotel',
+    '/otop'
   ];
 
   return (
@@ -136,37 +136,42 @@ export default function Popular() {
           {/* ===== ขวา: 3 การ์ด ===== */}
           <div className="lg:w-5/12 flex flex-col gap-3 md:gap-4">
             {lang.categories.map((item: any, index: number) => (
-              <motion.div
-                key={index}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-100px" }}
-                variants={{
-                  hidden: { opacity: 0, x: 30 },
-                  visible: { opacity: 1, x: 0, transition: { duration: 0.5, delay: index * 0.15 } }
-                }}
-                className="group flex-1 flex items-center gap-4 bg-gray-100 rounded-3xl p-3 sm:p-4 shadow-[0_8px_30px_-10px_rgba(0,0,0,0.08)] border border-gray-100 hover:shadow-[0_12px_40px_-10px_rgba(0,0,0,0.12)] transition-all duration-300 cursor-pointer"
+              // เพิ่ม Link หุ้มตรงนี้
+              <Link 
+                key={index} 
+                href={`/${locale}${categoryLinks[index]}`}
+                className="flex-1 flex"
               >
-                <div className="relative aspect-square w-[160px] sm:w-[200px] shrink-0 rounded-2xl overflow-hidden bg-gray-200">
-                  <Image
-                    src={categoryImages[index]}
-                    alt={item.title}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-110 rounded-2xl"
-                    sizes="(max-width: 640px) 160px, 200px"
-                  />
-                </div>
-
-                <div className="flex flex-col justify-center flex-1 min-w-0">
-                  <h4 className="text-base sm:text-lg font-bold text-gray-800 mb-1 group-hover:text-blue-600 transition-colors line-clamp-1">
-                    {item.title}
-                  </h4>
-                  <p className="text-xs sm:text-sm text-gray-500 line-clamp-3 leading-relaxed mb-2">
-                    {item.desc}
-                  </p>
-                  <div className="w-10 h-[2px] bg-gray-200 group-hover:bg-blue-400 transition-colors" />
-                </div>
-              </motion.div>
+                <motion.div
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, margin: "-100px" }}
+                  variants={{
+                    hidden: { opacity: 0, x: 30 },
+                    visible: { opacity: 1, x: 0, transition: { duration: 0.5, delay: index * 0.15 } }
+                  }}
+                  className="group w-full flex items-center gap-4 bg-gray-100 rounded-3xl p-3 sm:p-4 shadow-[0_8px_30px_-10px_rgba(0,0,0,0.08)] border border-gray-100 hover:shadow-[0_12px_40px_-10px_rgba(0,0,0,0.12)] transition-all duration-300 cursor-pointer"
+                >
+                  <div className="relative aspect-square w-[160px] sm:w-[200px] shrink-0 rounded-2xl overflow-hidden bg-gray-200">
+                    <Image
+                      src={categoryImages[index]}
+                      alt={item.title}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-110 rounded-2xl"
+                      sizes="(max-width: 640px) 160px, 200px"
+                    />
+                  </div>
+                  <div className="flex flex-col justify-center flex-1 min-w-0">
+                    <h4 className="text-base sm:text-lg font-bold text-gray-800 mb-1 group-hover:text-blue-600 transition-colors line-clamp-1">
+                      {item.title}
+                    </h4>
+                    <p className="text-xs sm:text-sm text-gray-500 line-clamp-3 leading-relaxed mb-2">
+                      {item.desc}
+                    </p>
+                    <div className="w-10 h-[2px] bg-gray-200 group-hover:bg-blue-400 transition-colors" />
+                  </div>
+                </motion.div>
+              </Link>
             ))}
           </div>
 
