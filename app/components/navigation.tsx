@@ -161,7 +161,7 @@ export default function Navigation() {
           </div>
 
           {/* DESKTOP MENU */}
-          <div className="hidden min-[911px]:flex absolute left-1/2 -translate-x-1/2 space-x-8">
+          <div className="hidden min-[911px]:flex absolute left-1/2 -translate-x-1/2 space-x-4 lg:space-x-8">
             {navigationLinks.map(link => (
               link.subItems ? (
                 <div key={link.key} className="relative">
@@ -169,8 +169,8 @@ export default function Navigation() {
                     onClick={(e) => { e.stopPropagation(); setIsDesktopProductsOpen(!isDesktopProductsOpen); setIsLangOpen(false); }}
                     className="text-white font-medium hover:text-blue-300 transition-colors text-sm uppercase tracking-widest drop-shadow-md cursor-pointer flex items-center gap-1 py-1"
                   >
-                    {t(link.key)}
-                    <svg className={`w-4 h-4 transition-transform duration-300 ${isDesktopProductsOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                    <span className="whitespace-nowrap">{t(link.key)}</span>
+                    <svg className={`w-4 h-4 transition-transform duration-300 flex-shrink-0 ${isDesktopProductsOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
                   </div>
                   {/* Dropdown Menu */}
                   <AnimatePresence>
@@ -193,7 +193,7 @@ export default function Navigation() {
                   </AnimatePresence>
                 </div>
               ) : (
-                <Link key={link.key} href={link.href} className="text-white font-medium hover:text-blue-300 transition-colors text-sm uppercase tracking-widest drop-shadow-md py-1">
+                <Link key={link.key} href={link.href} className="text-white font-medium hover:text-blue-300 transition-colors text-sm uppercase tracking-widest drop-shadow-md py-1 whitespace-nowrap">
                   {t(link.key)}
                 </Link>
               )
