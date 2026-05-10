@@ -8,7 +8,7 @@ import { products } from "@/src/data/products";
 import { verifiedDistrictLocationOverrides } from "@/src/data/verified-product-locations";
 
 type SortType = "default" | "price-asc" | "price-desc";
-type CategoryType = "all" | "food" | "product"; // เพิ่ม Type สำหรับหมวดหมู่
+type CategoryType = "all" | "food" | "product";
 type BaseProduct = (typeof products)[number];
 type Product = Omit<BaseProduct, "shopName" | "shopNameCN" | "shopNameTH" | "phone" | "address" | "addressCN" | "addressTH"> & {
   shopName?: string;
@@ -42,11 +42,9 @@ const productsWithVerifiedLocations: Product[] = products.map((product) => {
   return { ...product, ...override, phone: override.phone ?? product.phone };
 });
 
-// ฟังก์ชันแยกหมวดหมู่สินค้าอัตโนมัติ
 const getProductCategory = (p: Product): "food" | "product" => {
   const foodIcons = ["🧄", "🐝", "🌿", "🍯", "🍪", "🌶️", "☕", "🫚", "🍷", "🍹", "🍋", "🌴", "🍚", "🍲"];
   if (p.icon && foodIcons.includes(p.icon)) return "food";
-  // สำรองไว้เช็คจาก ID (เผื่อไม่ได้ใส่ไอคอน)
   const foodIds = [4, 5, 6, 7, 10, 20, 27, 30, 34, 35, 36, 37, 38];
   if (foodIds.includes(p.id)) return "food";
   return "product";
@@ -107,7 +105,7 @@ export default function RefactoredProductShowcase() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [sortType, setSortType] = useState<SortType>("default");
   const [selectedDistrict, setSelectedDistrict] = useState<string>("all");
-  const [selectedCategory, setSelectedCategory] = useState<CategoryType>("all"); // State สำหรับหมวดหมู่
+  const [selectedCategory, setSelectedCategory] = useState<CategoryType>("all");
 
   const closeContactPopup = () => setSelectedProduct(null);
 
@@ -122,21 +120,19 @@ export default function RefactoredProductShowcase() {
     return () => { document.body.style.overflow = ""; };
   }, [selectedProduct]);
 
-  // แก้ไขเอาการหาร / 100 ออก เพื่อให้ราคาแสดงผลตรงกับฐานข้อมูล
   const formatPrice = (price: number) =>
     new Intl.NumberFormat(locale === "en" ? "en-US" : locale === "th" ? "th-TH" : "zh-CN", {
       style: "currency",
       currency: "THB",
       minimumFractionDigits: 0,
-    }).format(price); 
+    }).format(price);
 
   const allDistricts = Array.from(
     new Set(productsWithVerifiedLocations.map((p) => p.district).filter((d): d is string => Boolean(d)))
   ).sort();
 
-  // กรองข้อมูลตามอำเภอและหมวดหมู่
   let filteredProducts = productsWithVerifiedLocations;
-  
+
   if (selectedCategory !== "all") {
     filteredProducts = filteredProducts.filter((p) => getProductCategory(p) === selectedCategory);
   }
@@ -360,6 +356,58 @@ export default function RefactoredProductShowcase() {
           flex: 1;
         }
 
+        /* ── CATEGORY BUTTONS (ปรับใหม่) ──────────────────────── */
+        .category-controls {
+          display: flex; gap: 12px; flex-wrap: wrap;
+          align-items: center;
+        }
+        
+        .cat-btn {
+          display: flex; align-items: center; gap: 8px;
+          padding: 10px 22px;
+          border-radius: 100px;
+          font-family: 'Inter', 'Prompt', sans-serif;
+          font-size: 14px;
+          font-weight: 600;
+          cursor: pointer;
+          border: 2px solid var(--border);
+          background: var(--white);
+          color: var(--ink-soft);
+          transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        
+        .cat-btn .cat-icon {
+          font-size: 18px; 
+          transition: transform 0.2s;
+        }
+
+        .cat-btn:hover {
+          border-color: var(--ink-soft);
+          color: var(--ink);
+        }
+        
+        .cat-btn:hover .cat-icon {
+          transform: scale(1.15); 
+        }
+
+        .cat-btn.active-all {
+          background: var(--ink);
+          border-color: var(--ink);
+          color: var(--white);
+        }
+        
+        .cat-btn.active-food {
+          background: var(--rust);
+          border-color: var(--rust);
+          color: var(--white);
+        }
+        
+        .cat-btn.active-product {
+          background: var(--gold);
+          border-color: var(--gold);
+          color: var(--white);
+        }
+
         .filter-controls {
           display: flex; gap: 12px; flex-wrap: wrap;
           align-items: center;
@@ -468,9 +516,13 @@ export default function RefactoredProductShowcase() {
 
         .card-category {
           font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
-          text-transform: uppercase; color: var(--rust);
+          text-transform: uppercase; 
           margin-bottom: 8px;
         }
+        /* เพิ่มสีให้หมวดหมู่ในการ์ดสอดคล้องกับปุ่ม Filter */
+        .card-category.cat-food { color: var(--rust); }
+        .card-category.cat-product { color: var(--gold); }
+
         .card-name {
           font-family: 'Inter', 'Prompt', sans-serif;
           font-size: 20px; font-weight: 700; color: var(--ink);
@@ -670,10 +722,10 @@ export default function RefactoredProductShowcase() {
       `}</style>
 
       <div className="page-root">
-        
+
         {/* ─── HERO ─────────────────────────────────────────────────────────── */}
         <section className="hero">
-          <motion.div 
+          <motion.div
             className="hero-left"
             variants={heroContainer}
             initial="hidden"
@@ -683,17 +735,17 @@ export default function RefactoredProductShowcase() {
               <span className="hero-eyebrow-line"></span>
               {tri(locale, "Local OTOP Market", "本地 OTOP 市场", "ตลาด OTOP ท้องถิ่น")}
             </motion.div>
-            
+
             <motion.h1 variants={heroItem} className="hero-headline">
               {locale === "th" ? (
-                <>สินค้า<em>คุณภาพ</em><br/>จากชุมชน</>
+                <>สินค้า<em>คุณภาพ</em><br />จากชุมชน</>
               ) : locale === "zh" ? (
-                <>探索<em>优质</em><br/>本地产品</>
+                <>探索<em>优质</em><br />本地产品</>
               ) : (
-                <>Find <em>Local</em><br/>OTOP Products</>
+                <>Find <em>Local</em><br />OTOP Products</>
               )}
             </motion.h1>
-            
+
             <motion.p variants={heroItem} className="hero-body">
               {tri(locale,
                 "Browse by district and connect directly with local sellers — call or navigate in one tap.",
@@ -701,16 +753,16 @@ export default function RefactoredProductShowcase() {
                 "เลือกซื้อสินค้า OTOP แท้จากผู้ผลิตท้องถิ่นโดยตรง ติดต่อร้านค้า โทรหา หรือเปิดแผนที่ได้ในคลิกเดียว"
               )}
             </motion.p>
-            
+
             <motion.div variants={heroItem} className="hero-cta-group">
               <a href="#products" className="btn-primary">
                 {tri(locale, "Browse Products", "浏览全部", "ดูสินค้าทั้งหมด")}
                 <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M17 8l4 4-4 4M21 12H3"/>
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M17 8l4 4-4 4M21 12H3" />
                 </svg>
               </a>
             </motion.div>
-            
+
             <motion.div variants={heroItem} className="hero-stats">
               <div>
                 <span className="hero-stat-num">{productsWithVerifiedLocations.length}+</span>
@@ -727,7 +779,7 @@ export default function RefactoredProductShowcase() {
             </motion.div>
           </motion.div>
 
-          <motion.div 
+          <motion.div
             className="hero-right"
             variants={heroImageFade}
             initial="hidden"
@@ -748,7 +800,7 @@ export default function RefactoredProductShowcase() {
                     <div className="hero-card-title">{displayName(featuredProduct)}</div>
                     <div className="hero-card-sub">
                       <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 21c-4-4.5-6-8-6-10.5a6 6 0 1112 0C18 13 16 16.5 12 21z"/>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 21c-4-4.5-6-8-6-10.5a6 6 0 1112 0C18 13 16 16.5 12 21z" />
                       </svg>
                       {displayDistrict(featuredProduct)}
                     </div>
@@ -768,7 +820,7 @@ export default function RefactoredProductShowcase() {
 
         {/* ─── FILTER + PRODUCTS ────────────────────────────────────────────── */}
         <section id="products">
-          <motion.div 
+          <motion.div
             className="filter-section"
             variants={filterFade}
             initial="hidden"
@@ -783,41 +835,44 @@ export default function RefactoredProductShowcase() {
                 {tri(locale, `Showing ${filteredProducts.length} items`, `显示 ${filteredProducts.length} 件商品`, `แสดง ${filteredProducts.length} รายการ`)}
               </p>
             </div>
-            
+
             <div className="filter-group">
               {/* Category Filter */}
-              <div className="filter-controls">
-                <button 
-                  className={`filter-pill ${selectedCategory === 'all' ? 'active' : ''}`}
+              <div className="category-controls">
+                <button
+                  className={`cat-btn ${selectedCategory === 'all' ? 'active-all' : ''}`}
                   onClick={() => setSelectedCategory('all')}
                 >
+                  <span className="cat-icon">✨</span>
                   {tri(locale, "All Categories", "所有类别", "หมวดหมู่ทั้งหมด")}
                 </button>
-                <button 
-                  className={`filter-pill ${selectedCategory === 'food' ? 'active' : ''}`}
+                <button
+                  className={`cat-btn ${selectedCategory === 'food' ? 'active-food' : ''}`}
                   onClick={() => setSelectedCategory('food')}
                 >
-                  {tri(locale, "Food & Beverages", "食品与饮料", "อาหารและเครื่องดื่ม")} 🍲
+                  <span className="cat-icon">🍲</span>
+                  {tri(locale, "Food & Beverages", "食品与饮料", "อาหารและเครื่องดื่ม")}
                 </button>
-                <button 
-                  className={`filter-pill ${selectedCategory === 'product' ? 'active' : ''}`}
+                <button
+                  className={`cat-btn ${selectedCategory === 'product' ? 'active-product' : ''}`}
                   onClick={() => setSelectedCategory('product')}
                 >
-                  {tri(locale, "Handicrafts & Souvenirs", "手工艺品与纪念品", "สินค้าและของที่ระลึก")} 🛍️
+                  <span className="cat-icon">🛍️</span>
+                  {tri(locale, "Handicrafts & Souvenirs", "手工艺品与纪念品", "สินค้าและของที่ระลึก")}
                 </button>
               </div>
 
               {/* District & Sort Filter */}
               <div className="filter-controls">
-                <button 
+                <button
                   className={`filter-pill ${selectedDistrict === 'all' ? 'active' : ''}`}
                   onClick={() => setSelectedDistrict('all')}
                 >
                   {tri(locale, "All Districts", "全部地区", "ทุกอำเภอ")}
                 </button>
-                
+
                 {allDistricts.map(d => (
-                  <button 
+                  <button
                     key={d}
                     className={`filter-pill ${selectedDistrict === d ? 'active' : ''}`}
                     onClick={() => setSelectedDistrict(d)}
@@ -869,24 +924,25 @@ export default function RefactoredProductShowcase() {
                       <span className="card-tag">{displayDistrict(product)}</span>
                     )}
                   </div>
-                  
+
                   <div className="card-body">
-                    <div className="card-category">
-                      {getProductCategory(product) === 'food' 
-                        ? tri(locale, 'Food & Drink', '食品', 'อาหารและเครื่องดื่ม') 
+                    {/* ปรับสี Card Category ให้สอดคล้องกับ Filter */}
+                    <div className={`card-category ${getProductCategory(product) === 'food' ? 'cat-food' : 'cat-product'}`}>
+                      {getProductCategory(product) === 'food'
+                        ? tri(locale, 'Food & Drink', '食品', 'อาหารและเครื่องดื่ม')
                         : tri(locale, 'Souvenir', '纪念品', 'สินค้าและของที่ระลึก')}
-                    </div> 
+                    </div>
                     <h3 className="card-name">{displayName(product)}</h3>
                     <p className="card-name-sub body-serif">{secondaryName(product)}</p>
                     <p className="card-desc body-serif">{displayDesc(product)}</p>
-                    
+
                     {product.mapRating && (
                       <div className="card-rating">
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="#B8930A"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="#B8930A"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
                         {product.mapRating.toFixed(1)}
                       </div>
                     )}
-                    
+
                     <div className="card-seller">
                       <div className="card-seller-label">{tri(locale, "Seller", "商家", "ร้านค้า")}</div>
                       <div className="card-seller-name">{displayShop(product)}</div>
@@ -894,7 +950,7 @@ export default function RefactoredProductShowcase() {
                         <div className="card-seller-phone">{product.phone}</div>
                       )}
                     </div>
-                    
+
                     <button
                       type="button"
                       className="card-btn"
@@ -965,7 +1021,7 @@ export default function RefactoredProductShowcase() {
                     </svg>
                   </button>
                 </div>
-                
+
                 <div className="modal-body">
                   <p className="modal-desc body-serif">
                     {displayDesc(selectedProduct)}
@@ -973,7 +1029,7 @@ export default function RefactoredProductShowcase() {
 
                   <div className="modal-info-box">
                     <div className="modal-shop-name">{displayShop(selectedProduct)}</div>
-                    
+
                     {(selectedProduct.address || selectedProduct.addressCN || selectedProduct.addressTH) && (
                       <div className="modal-info-row">
                         <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.75" viewBox="0 0 24 24">
@@ -983,14 +1039,14 @@ export default function RefactoredProductShowcase() {
                         <span>{displayAddr(selectedProduct)}</span>
                       </div>
                     )}
-                    
+
                     {selectedProduct.phone && (
                       <div className="modal-info-row">
                         <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.75" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8 19.79 19.79 0 01.98 2.18 2 2 0 012.96 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L7.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" />
                         </svg>
-                        <a 
-                          href={phoneHref} 
+                        <a
+                          href={phoneHref}
                           style={{ fontWeight: 600, color: "#1d4ed8", textDecoration: "none" }}
                           onMouseEnter={e => (e.currentTarget.style.textDecoration = "underline")}
                           onMouseLeave={e => (e.currentTarget.style.textDecoration = "none")}
