@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "postbuild": "next-sitemap"
   },
   "dependencies": {
     "@turf/turf": "^7.3.5",
@@ -19,8 +20,10 @@
     "maplibre-gl": "^5.24.0",
     "next": "16.1.0",
     "next-intl": "^4.6.1",
+    "next-sitemap": "^4.2.3",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "react-leaflet": "^5.0.0",
     "redis": "^5.11.0"
   },
   "devDependencies": {

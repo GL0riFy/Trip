@@ -5,7 +5,6 @@ import Navigation from "../components/navigation";
 import Footer from "../components/footer";
 import { NextIntlClientProvider } from "next-intl";
 import { notFound } from "next/navigation";
-import { VisitorTracker } from "../components/VisitorTracker";
 import WelcomePopup from "../components/WelcomePopup";
 import '../globals.css';
 
@@ -57,10 +56,9 @@ export default async function LocaleLayout({
         2. itimFont.variable จะฝังตัวแปร CSS ของฟอนต์ Itim ไว้ให้ Tailwind เรียกใช้ 
       */}
       <body
-        className={`${promptFont.className} ${itimFont.variable} antialiased bg-linear-to-t from-blue-400 to-orange-400 bg-fixed min-h-screen`}
+        className={`${promptFont.className} ${itimFont.variable} antialiased bg-fixed min-h-screen`}
       >
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <VisitorTracker />
           <WelcomePopup />
           <div className="min-h-screen flex flex-col">
             <Navigation />

@@ -78,8 +78,8 @@ export default function Popular() {
   ];
 
   const categoryLinks = [
-    '/food',
-    '/hotel',
+    '/restaurants',
+    '/hotels',
     '/otop'
   ];
 
