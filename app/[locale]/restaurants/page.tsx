@@ -143,7 +143,7 @@ export default function ChiangMaiTravelGuide() {
                                         transition={{ delay: index > 5 ? (index - 6) * 0.05 : 0 }} 
                                     >
                                         <Link 
-                                            href={`/${locale}/food/${rest.slug}`}
+                                            href={`/${locale}/restaurants/${rest.slug}`}
                                             className="bg-white h-full rounded-xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col sm:flex-row group cursor-pointer"
                                         >
                                             <div className="w-full sm:w-2/5 h-48 relative overflow-hidden shrink-0">
