@@ -90,7 +90,7 @@ export default function TravelGuide() {
 
   return (
     <div className="min-h-screen bg-[#F8F9FA] font-sans text-gray-800 pt-24">
-      
+
       {/* --- INLINE CSS FOR ANIMATIONS --- */}
       <style dangerouslySetInnerHTML={{
         __html: `
@@ -160,7 +160,7 @@ export default function TravelGuide() {
 
       {/* --- MAIN LAYOUT --- */}
       <div className="max-w-7xl mx-auto px-6 md:px-12 py-10 flex flex-col lg:flex-row gap-10">
-        
+
         {/* SIDEBAR */}
         <div className="lg:w-1/4 flex-shrink-0 animate-fade-up" style={{ animationDelay: '300ms' }}>
           <div className="sticky top-10">
@@ -168,19 +168,26 @@ export default function TravelGuide() {
             <ul className="space-y-1 mb-8">
               {categories.map((cat) => (
                 <li key={cat.id}>
-                  <a 
+                  <a
                     href={`#${cat.id}`}
                     onClick={() => setActiveSection(cat.id)}
-                    className={`flex items-center justify-between px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
-                      activeSection === cat.id 
-                      ? 'bg-orange-50 text-orange-600 border-l-4 border-orange-500' 
-                      : 'text-gray-600 hover:bg-gray-100 border-l-4 border-transparent'
-                    }`}
+                    className={`flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition-all ${activeSection === cat.id
+                        ? 'bg-white shadow-sm text-orange-600 ring-1 ring-black/5'
+                        : 'text-gray-600 hover:bg-gray-100'
+                      }`}
                   >
                     <span className="flex items-center gap-3">
-                      <span className={`w-2 h-2 rounded-full ${cat.bgColor.replace('bg-', 'bg-').replace('100', '500')}`}></span>
+                      {/* ส่วนที่เพิ่ม: ไอคอนพร้อมพื้นหลังวงกลม */}
+                      <span className={`w-8 h-8 rounded-full flex items-center justify-center text-base ${cat.bgColor}`}>
+                        {cat.icon}
+                      </span>
                       {cat.name}
                     </span>
+
+                    {/* แสดงจุดสีส้มเฉพาะเมนูที่ Active (เลียนแบบในรูป) */}
+                    {activeSection === cat.id && (
+                      <span className="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
+                    )}
                   </a>
                 </li>
               ))}
@@ -243,7 +250,7 @@ export default function TravelGuide() {
 
                 {/* Featured App */}
                 {featuredApp && (
-                  <div 
+                  <div
                     onClick={() => setSelectedApp(featuredApp)}
                     className="bg-white border border-gray-200 rounded-2xl p-6 mb-6 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all cursor-pointer flex flex-col md:flex-row gap-6 relative overflow-hidden"
                   >
@@ -270,8 +277,8 @@ export default function TravelGuide() {
                 {/* Grid Apps */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {standardApps.map(app => (
-                    <div 
-                      key={app.id} 
+                    <div
+                      key={app.id}
                       onClick={() => setSelectedApp(app)}
                       className="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-gray-300 hover:-translate-y-1 transition-all cursor-pointer flex flex-col h-full"
                     >
@@ -296,12 +303,12 @@ export default function TravelGuide() {
       {/* --- MODAL (POP-UP) --- */}
       {selectedApp && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity">
-          <div 
+          <div
             className="bg-white rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl relative animate-modal-pop"
-            onClick={(e) => e.stopPropagation()} 
+            onClick={(e) => e.stopPropagation()}
           >
             {/* Close button */}
-            <button 
+            <button
               onClick={() => setSelectedApp(null)}
               className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-full transition-colors z-10"
             >
@@ -337,19 +344,18 @@ export default function TravelGuide() {
               {/* Download Buttons */}
               <div className="flex flex-col sm:flex-row gap-3">
                 {/* Apple App Store Button */}
-                <a 
+                <a
                   href={selectedApp.appStoreUrl || '#'}
                   onClick={(e) => {
                     if (!selectedApp.appStoreUrl) e.preventDefault();
                   }}
-                  className={`flex-1 flex items-center justify-center gap-3 rounded-xl py-3 px-4 transition-transform ${
-                    selectedApp.appStoreUrl
+                  className={`flex-1 flex items-center justify-center gap-3 rounded-xl py-3 px-4 transition-transform ${selectedApp.appStoreUrl
                       ? 'bg-black hover:bg-gray-900 text-white hover:scale-105 active:scale-95'
                       : 'bg-gray-300 text-gray-500 cursor-not-allowed pointer-events-none'
-                  }`}
+                    }`}
                   target="_blank" rel="noreferrer"
                 >
-                  <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.15 2.95.92 3.78 2.29-2.21 1.38-1.87 4.7 1.04 5.91-.72 1.83-1.61 3.51-3.47 4.81zm-3.36-13.6c-.13-1.89 1.35-3.67 3.32-3.87.27 2.06-1.57 3.86-3.32 3.87z"/></svg>
+                  <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.15 2.95.92 3.78 2.29-2.21 1.38-1.87 4.7 1.04 5.91-.72 1.83-1.61 3.51-3.47 4.81zm-3.36-13.6c-.13-1.89 1.35-3.67 3.32-3.87.27 2.06-1.57 3.86-3.32 3.87z" /></svg>
                   <div className="text-left">
                     <div className="text-[10px] uppercase font-semibold text-gray-300 tracking-wider">{t('UI.downloadAppStore')}</div>
                     <div className="text-sm font-bold -mt-0.5">{t('UI.appStore')}</div>
@@ -357,19 +363,18 @@ export default function TravelGuide() {
                 </a>
 
                 {/* Google Play Button */}
-                <a 
+                <a
                   href={selectedApp.playStoreUrl || '#'}
                   onClick={(e) => {
                     if (!selectedApp.playStoreUrl) e.preventDefault();
                   }}
-                  className={`flex-1 flex items-center justify-center gap-3 rounded-xl py-3 px-4 transition-transform shadow-sm ${
-                    selectedApp.playStoreUrl
+                  className={`flex-1 flex items-center justify-center gap-3 rounded-xl py-3 px-4 transition-transform shadow-sm ${selectedApp.playStoreUrl
                       ? 'bg-white border border-gray-300 hover:bg-gray-50 text-gray-900 hover:scale-105 active:scale-95'
                       : 'bg-gray-100 border border-gray-200 text-gray-400 cursor-not-allowed pointer-events-none'
-                  }`}
+                    }`}
                   target="_blank" rel="noreferrer"
                 >
-                  <svg className="w-6 h-6" viewBox="0 0 24 24"><path fill="#4caf50" d="M3.6 3.6c-.4.4-.6.9-.6 1.6v13.6c0 .7.2 1.2.6 1.6l.1.1 7.7-7.7v-.4L3.7 3.5l-.1.1z"/><path fill="#ffeb3b" d="M15.4 15.4l-4-4v-.4l4-4 .1.1 4.7 2.7c1.3.7 1.3 1.9 0 2.7l-4.7 2.7-.1.1z"/><path fill="#f44336" d="M3.7 3.5L11.4 11l4-4L6.4 2.1C5.1 1.4 4 2.1 3.7 3.5z"/><path fill="#2196f3" d="M3.7 20.5c.3 1.4 1.4 2.1 2.7 1.4l9-5.1-4-4-7.7 7.7z"/></svg>
+                  <svg className="w-6 h-6" viewBox="0 0 24 24"><path fill="#4caf50" d="M3.6 3.6c-.4.4-.6.9-.6 1.6v13.6c0 .7.2 1.2.6 1.6l.1.1 7.7-7.7v-.4L3.7 3.5l-.1.1z" /><path fill="#ffeb3b" d="M15.4 15.4l-4-4v-.4l4-4 .1.1 4.7 2.7c1.3.7 1.3 1.9 0 2.7l-4.7 2.7-.1.1z" /><path fill="#f44336" d="M3.7 3.5L11.4 11l4-4L6.4 2.1C5.1 1.4 4 2.1 3.7 3.5z" /><path fill="#2196f3" d="M3.7 20.5c.3 1.4 1.4 2.1 2.7 1.4l9-5.1-4-4-7.7 7.7z" /></svg>
                   <div className="text-left">
                     <div className="text-[10px] uppercase font-semibold text-gray-500 tracking-wider">{t('UI.getGooglePlay')}</div>
                     <div className="text-sm font-bold -mt-0.5">{t('UI.googlePlay')}</div>
