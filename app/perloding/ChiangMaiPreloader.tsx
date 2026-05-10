@@ -208,12 +208,22 @@ function ProgressBar({ progress }: { progress: number }) {
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
-export default function ChiangMaiPreloader() {
-  const [stars] = useState<Star[]>(() => generateStars(70));
+interface PreloaderProps {
+  onComplete: () => void;
+}
+
+export default function ChiangMaiPreloader({ onComplete }: PreloaderProps) {
+  const [stars, setStars] = useState<Star[]>([]);
+  const [mounted, setMounted] = useState(false);
   const [lanterns, setLanterns] = useState<Lantern[]>([]);
   const [progress, setProgress] = useState(0);
   const lanternIdRef = useRef(0);
   const progressRef = useRef(0);
+
+  useEffect(() => {
+    setStars(generateStars(70));
+    setMounted(true);
+  }, []);
 
   // Spawn lanterns
   useEffect(() => {
@@ -247,20 +257,29 @@ export default function ChiangMaiPreloader() {
   }, []);
 
   // Progress animation
-  useEffect(() => {
+useEffect(() => {
     function tick() {
-      const step = rand(1, 5);
+      const step = rand(2, 6); // ปรับให้เร็วขึ้นนิดนึง
       progressRef.current = Math.min(100, progressRef.current + step);
       setProgress(progressRef.current);
+
       if (progressRef.current < 100) {
-        setTimeout(tick, rand(60, 140));
+        setTimeout(tick, rand(50, 120));
+      } else {
+        // --- ส่วนสุดท้าย: เมื่อโหลดเสร็จ ---
+        setTimeout(() => {
+          onComplete(); // สั่งให้หน้าหลักเริ่มแสดงผล
+        }, 800); 
       }
     }
     const timeout = setTimeout(tick, 400);
     return () => clearTimeout(timeout);
-  }, []);
+  }, [onComplete]);
+
+  if (!mounted) return <div className="min-h-screen bg-[#1a1008]" />;
 
   return (
+    <div className="fixed inset-0 z-[9999] overflow-hidden">
     <>
       {/* Global keyframes injected once */}
       <style>{`
@@ -389,5 +408,6 @@ export default function ChiangMaiPreloader() {
         </div>
       </div>
     </>
+    </div>
   );
 }

@@ -4,7 +4,11 @@ import React, { useState } from 'react';
 import { useParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
-import { hotelData } from '@/src/data/popular/hotel_data';
+import { 
+  MapPin
+} from 'lucide-react';
+import { HotelData } from '@/src/data/hotels';
+import ChiangMaiPreloader from '@/app/perloding/ChiangMaiPreloader';
 
 type Locale = 'th' | 'en' | 'zh';
 type Category = 'all' | 'city' | 'hotel' | 'nature' | 'riverside';
@@ -13,8 +17,12 @@ export default function HotelGuide() {
     const params = useParams();
     const locale = (params.locale as Locale) || 'en';
     const [activeTab, setActiveTab] = useState<Category>('all');
+    const [isReady, setIsReady] = useState(false);
 
-    // 1. แก้ไขตรงนี้: กำหนด Interface ให้ชัดเจนเพื่อป้องกัน undefined
+    // if (!isReady) {
+    //     return <ChiangMaiPreloader onComplete={() => setIsReady(true)} />;
+    // }
+
     interface UITranslation {
         heroTitle: string;
         heroCity: string;
@@ -52,18 +60,21 @@ export default function HotelGuide() {
     };
 
     // ดึงข้อมูลตาม locale ถ้าไม่มีให้ใช้ภาษาไทยเป็นหลัก
-    const ui = uiMap[locale] || uiMap.th;
+    const ui = uiMap[locale] || uiMap.en;
 
     const filteredHotels = activeTab === 'all' 
-        ? hotelData 
-        : hotelData.filter(h => h.type === activeTab);
+        ? HotelData 
+        : HotelData.filter(h => h.type === activeTab);
 
     return (
-        <div className="bg-[#fcfcfc] min-h-screen font-sans">
-            {/* ... ส่วน Hero เหมือนเดิม ... */}
+        <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }} 
+        transition={{ duration: 0.8 }}
+        className="bg-[#fcfcfc] min-h-screen font-sans">
             <div className="relative h-[65vh] w-full overflow-hidden bg-black">
                 <img 
-                    src="https://images.unsplash.com/photo-1596422846543-75c6fc18a5ce?auto=format&fit=crop&w=1920&q=80" 
+                    src="https://scontent.fcnx3-1.fna.fbcdn.net/v/t39.30808-6/688427252_1439644208202909_6026667520375930850_n.jpg?stp=cp6_dst-jpg_tt6&_nc_cat=107&ccb=1-7&_nc_sid=7b2446&_nc_ohc=1PEZSdNs3eMQ7kNvwE-GN5T&_nc_oc=AdoiaKCHe7bR4fLlk2XgUtf0r3DlPAZgrqEMkcEipB3hjVaenjlkns1Fs2azQS91wOFr5zfNdldRcJZh99iStTOk&_nc_zt=23&_nc_ht=scontent.fcnx3-1.fna&_nc_gid=6qYPVTjHmqJS4NtS_sqcGA&_nc_ss=7b2a8&oh=00_Af4RC9cQovJAMW0Fw8ex8SoOTahXf18DQ_kVycOPhl_tCw&oe=6A06055C" 
                     className="w-full h-full object-cover opacity-70"
                     alt="Hero"
                 />
@@ -121,7 +132,7 @@ export default function HotelGuide() {
                     className={`flex ${isLarge ? 'md:col-span-3' : 'md:col-span-3 lg:col-span-2'}`} 
                 >
                     <Link 
-                        href={`/${locale}/hotel/${hotel.slug}`} 
+                        href={`/${locale}/hotels/${hotel.slug}`} 
                         className="group flex flex-col w-full h-full bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-gray-100"
                     >
                         {/* 1. FIX ความสูงรูปภาพตรงนี้เลยครับ */}
@@ -131,9 +142,6 @@ export default function HotelGuide() {
                                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
                                 alt={hotel.locales[locale]?.name || hotel.locales['th'].name} 
                             />
-                            <div className="absolute top-4 left-4 bg-white px-3 py-1 rounded-full text-xs font-bold text-orange-600 shadow-sm">
-                                No. {hotel.id}
-                            </div>
                         </div>
 
                         {/* 2. ดันเนื้อหาให้เต็มพื้นที่การ์ด */}
@@ -149,7 +157,7 @@ export default function HotelGuide() {
                             {/* 3. mt-auto จะดันหมุดหมายและราคาไปติดขอบล่างสุดเสมอ */}
                             <div className="mt-auto pt-5 flex justify-between items-center text-xs font-medium text-gray-400">
                                 <span className="truncate mr-2 flex items-center gap-1">
-                                    <span className="text-pink-500 text-base">📍</span> 
+                                    <span className="text-pink-500 text-base"><MapPin /></span> 
                                     {hotel.locales[locale]?.location || hotel.locales['th'].location}
                                 </span>
                                 <span className="text-blue-600 font-bold shrink-0 text-sm">
@@ -165,6 +173,6 @@ export default function HotelGuide() {
 </motion.div>
                 </div>
             </div>
-        </div>
+        </motion.div>
     );
 }

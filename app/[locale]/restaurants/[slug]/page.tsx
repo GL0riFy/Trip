@@ -48,9 +48,9 @@ export default function RestaurantDetail() {
     const restaurant = restaurantData.find((r: Restaurant) => r.slug === slug);
 
     const uiMap = {
-        th: { label: "Recommended", back: "ย้อนกลับ", open: "เวลาเปิดทำการ", tel: "เบอร์โทรศัพท์", menu: "เมนูแนะนำ", map: "ดูแผนที่บน Google Maps" },
-        en: { label: "Recommended", back: "Back", open: "Opening Hours", tel: "Contact", menu: "Signature Dishes", map: "Open in Google Maps" },
-        zh: { label: "推荐餐厅", back: "返回", open: "营业时间", tel: "电话", menu: "推荐菜品", map: "在地图中打开" }
+        th: { label: "Recommended", open: "เวลาเปิดทำการ", tel: "เบอร์โทรศัพท์", menu: "เมนูแนะนำ" },
+        en: { label: "Recommended", open: "Opening Hours", tel: "Contact", menu: "Signature Dishes" },
+        zh: { label: "推荐餐厅", open: "营业时间", tel: "电话", menu: "推荐菜品" }
     };
     const ui = uiMap[locale];
 
@@ -59,9 +59,7 @@ export default function RestaurantDetail() {
     }
 
     const data = restaurant.locales[locale];
-
-    // ✅ Define position from restaurant data
-const position = restaurant.coords;
+    const position = restaurant.coords;
 
     return (
         <div className="bg-[#fafafa] min-h-screen font-sans pb-20 text-slate-900">
@@ -77,14 +75,6 @@ const position = restaurant.coords;
                     className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/60" />
-                <motion.button 
-                    whileHover={{ scale: 1.05, backgroundColor: "white" }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => router.back()}
-                    className="absolute top-6 left-6 bg-white/80 backdrop-blur-md p-3 rounded-2xl shadow-xl z-20 group transition-all"
-                >
-                    <ChevronLeft className="w-6 h-6 text-slate-800 group-hover:text-orange-500" />
-                </motion.button>
             </div>
 
             {/* 2. MAIN CONTENT */}
