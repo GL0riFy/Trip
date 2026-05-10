@@ -80,7 +80,7 @@ export default function Popular() {
   const categoryLinks = [
     '/restaurants',
     '/hotels',
-    '/otop'
+    '/products'
   ];
 
   return (
