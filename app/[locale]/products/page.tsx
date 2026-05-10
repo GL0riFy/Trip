@@ -8,6 +8,7 @@ import { products } from "@/src/data/products";
 import { verifiedDistrictLocationOverrides } from "@/src/data/verified-product-locations";
 
 type SortType = "default" | "price-asc" | "price-desc";
+type CategoryType = "all" | "food" | "product"; // เพิ่ม Type สำหรับหมวดหมู่
 type BaseProduct = (typeof products)[number];
 type Product = Omit<BaseProduct, "shopName" | "shopNameCN" | "shopNameTH" | "phone" | "address" | "addressCN" | "addressTH"> & {
   shopName?: string;
@@ -41,6 +42,16 @@ const productsWithVerifiedLocations: Product[] = products.map((product) => {
   return { ...product, ...override, phone: override.phone ?? product.phone };
 });
 
+// ฟังก์ชันแยกหมวดหมู่สินค้าอัตโนมัติ
+const getProductCategory = (p: Product): "food" | "product" => {
+  const foodIcons = ["🧄", "🐝", "🌿", "🍯", "🍪", "🌶️", "☕", "🫚", "🍷", "🍹", "🍋", "🌴", "🍚", "🍲"];
+  if (p.icon && foodIcons.includes(p.icon)) return "food";
+  // สำรองไว้เช็คจาก ID (เผื่อไม่ได้ใส่ไอคอน)
+  const foodIds = [4, 5, 6, 7, 10, 20, 27, 30, 34, 35, 36, 37, 38];
+  if (foodIds.includes(p.id)) return "food";
+  return "product";
+};
+
 // ─── Animation Variants ────────────────────────────────────────────────────
 const staggerContainer: Variants = {
   hidden: {},
@@ -57,7 +68,6 @@ const scaleIn: Variants = {
   visible: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } },
 };
 
-// ─── NEW: Hero & Filter Entry Animations ──────────────────────────────────
 const heroContainer: Variants = {
   hidden: {},
   visible: { transition: { staggerChildren: 0.15, delayChildren: 0.1 } },
@@ -97,6 +107,7 @@ export default function RefactoredProductShowcase() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [sortType, setSortType] = useState<SortType>("default");
   const [selectedDistrict, setSelectedDistrict] = useState<string>("all");
+  const [selectedCategory, setSelectedCategory] = useState<CategoryType>("all"); // State สำหรับหมวดหมู่
 
   const closeContactPopup = () => setSelectedProduct(null);
 
@@ -111,18 +122,24 @@ export default function RefactoredProductShowcase() {
     return () => { document.body.style.overflow = ""; };
   }, [selectedProduct]);
 
+  // แก้ไขเอาการหาร / 100 ออก เพื่อให้ราคาแสดงผลตรงกับฐานข้อมูล
   const formatPrice = (price: number) =>
     new Intl.NumberFormat(locale === "en" ? "en-US" : locale === "th" ? "th-TH" : "zh-CN", {
       style: "currency",
       currency: "THB",
       minimumFractionDigits: 0,
-    }).format(price / 100);
+    }).format(price); 
 
   const allDistricts = Array.from(
     new Set(productsWithVerifiedLocations.map((p) => p.district).filter((d): d is string => Boolean(d)))
   ).sort();
 
+  // กรองข้อมูลตามอำเภอและหมวดหมู่
   let filteredProducts = productsWithVerifiedLocations;
+  
+  if (selectedCategory !== "all") {
+    filteredProducts = filteredProducts.filter((p) => getProductCategory(p) === selectedCategory);
+  }
   if (selectedDistrict !== "all") {
     filteredProducts = filteredProducts.filter((p) => p.district === selectedDistrict);
   }
@@ -324,7 +341,7 @@ export default function RefactoredProductShowcase() {
         /* ── FILTER BAR ────────────────────────────────────────── */
         .filter-section {
           padding: 48px 64px 32px;
-          display: flex; align-items: center; justify-content: space-between;
+          display: flex; align-items: flex-start; justify-content: space-between;
           flex-wrap: wrap; gap: 20px;
           max-width: 1400px;
           margin: 0 auto;
@@ -336,8 +353,16 @@ export default function RefactoredProductShowcase() {
         }
         .filter-heading span { color: var(--rust); }
 
+        .filter-group {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+          flex: 1;
+        }
+
         .filter-controls {
           display: flex; gap: 12px; flex-wrap: wrap;
+          align-items: center;
         }
         .filter-pill {
           padding: 9px 20px;
@@ -349,6 +374,9 @@ export default function RefactoredProductShowcase() {
           color: var(--ink-mid);
           transition: all 0.18s;
           font-family: 'DM Sans', 'Noto Sans Thai', sans-serif;
+          display: flex;
+          align-items: center;
+          gap: 6px;
         }
         .filter-pill:hover, .filter-pill.active {
           background: var(--ink);
@@ -357,6 +385,7 @@ export default function RefactoredProductShowcase() {
         }
         .filter-select-wrap {
           position: relative;
+          margin-left: auto;
         }
         .filter-select-wrap select {
           appearance: none;
@@ -604,6 +633,7 @@ export default function RefactoredProductShowcase() {
           .hero { grid-template-columns: 1fr; min-height: auto; }
           .hero-right { height: 420px; }
           .filter-section, .products-section { padding-left: 24px; padding-right: 24px; }
+          .filter-select-wrap { margin-left: 0; }
         }
         @media (max-width: 640px) {
           .hero {
@@ -754,34 +784,59 @@ export default function RefactoredProductShowcase() {
               </p>
             </div>
             
-            <div className="filter-controls">
-              <button 
-                className={`filter-pill ${selectedDistrict === 'all' ? 'active' : ''}`}
-                onClick={() => setSelectedDistrict('all')}
-              >
-                {tri(locale, "All Districts", "全部地区", "ทุกอำเภอ")}
-              </button>
-              
-              {allDistricts.map(d => (
+            <div className="filter-group">
+              {/* Category Filter */}
+              <div className="filter-controls">
                 <button 
-                  key={d}
-                  className={`filter-pill ${selectedDistrict === d ? 'active' : ''}`}
-                  onClick={() => setSelectedDistrict(d)}
+                  className={`filter-pill ${selectedCategory === 'all' ? 'active' : ''}`}
+                  onClick={() => setSelectedCategory('all')}
                 >
-                  {locale === "en"
-                    ? d
-                    : locale === "zh"
-                      ? productsWithVerifiedLocations.find(p => p.district === d)?.districtCN || d
-                      : productsWithVerifiedLocations.find(p => p.district === d)?.districtTH ?? d}
+                  {tri(locale, "All Categories", "所有类别", "หมวดหมู่ทั้งหมด")}
                 </button>
-              ))}
+                <button 
+                  className={`filter-pill ${selectedCategory === 'food' ? 'active' : ''}`}
+                  onClick={() => setSelectedCategory('food')}
+                >
+                  {tri(locale, "Food & Beverages", "食品与饮料", "อาหารและเครื่องดื่ม")} 🍲
+                </button>
+                <button 
+                  className={`filter-pill ${selectedCategory === 'product' ? 'active' : ''}`}
+                  onClick={() => setSelectedCategory('product')}
+                >
+                  {tri(locale, "Handicrafts & Souvenirs", "手工艺品与纪念品", "สินค้าและของที่ระลึก")} 🛍️
+                </button>
+              </div>
 
-              <div className="filter-select-wrap">
-                <select value={sortType} onChange={e => setSortType(e.target.value as SortType)}>
-                  <option value="default">{tri(locale, "Sort: Default", "默认排序", "เรียง: ค่าเริ่มต้น")}</option>
-                  <option value="price-asc">{tri(locale, "Price: Low → High", "价格从低到高", "ราคา: ต่ำ → สูง")}</option>
-                  <option value="price-desc">{tri(locale, "Price: High → Low", "价格从高到低", "ราคา: สูง → ต่ำ")}</option>
-                </select>
+              {/* District & Sort Filter */}
+              <div className="filter-controls">
+                <button 
+                  className={`filter-pill ${selectedDistrict === 'all' ? 'active' : ''}`}
+                  onClick={() => setSelectedDistrict('all')}
+                >
+                  {tri(locale, "All Districts", "全部地区", "ทุกอำเภอ")}
+                </button>
+                
+                {allDistricts.map(d => (
+                  <button 
+                    key={d}
+                    className={`filter-pill ${selectedDistrict === d ? 'active' : ''}`}
+                    onClick={() => setSelectedDistrict(d)}
+                  >
+                    {locale === "en"
+                      ? d
+                      : locale === "zh"
+                        ? productsWithVerifiedLocations.find(p => p.district === d)?.districtCN || d
+                        : productsWithVerifiedLocations.find(p => p.district === d)?.districtTH ?? d}
+                  </button>
+                ))}
+
+                <div className="filter-select-wrap">
+                  <select value={sortType} onChange={e => setSortType(e.target.value as SortType)}>
+                    <option value="default">{tri(locale, "Sort: Default", "默认排序", "เรียง: ค่าเริ่มต้น")}</option>
+                    <option value="price-asc">{tri(locale, "Price: Low → High", "价格从低到高", "ราคา: ต่ำ → สูง")}</option>
+                    <option value="price-desc">{tri(locale, "Price: High → Low", "价格从高到低", "ราคา: สูง → ต่ำ")}</option>
+                  </select>
+                </div>
               </div>
             </div>
           </motion.div>
@@ -791,7 +846,7 @@ export default function RefactoredProductShowcase() {
               variants={staggerContainer}
               initial="hidden"
               animate="visible"
-              key={`${selectedDistrict}-${sortType}`}
+              key={`${selectedDistrict}-${selectedCategory}-${sortType}`}
               className="product-grid"
             >
               {filteredProducts.map((product) => (
@@ -816,7 +871,11 @@ export default function RefactoredProductShowcase() {
                   </div>
                   
                   <div className="card-body">
-                    <div className="card-category">OTOP</div> 
+                    <div className="card-category">
+                      {getProductCategory(product) === 'food' 
+                        ? tri(locale, 'Food & Drink', '食品', 'อาหารและเครื่องดื่ม') 
+                        : tri(locale, 'Souvenir', '纪念品', 'สินค้าและของที่ระลึก')}
+                    </div> 
                     <h3 className="card-name">{displayName(product)}</h3>
                     <p className="card-name-sub body-serif">{secondaryName(product)}</p>
                     <p className="card-desc body-serif">{displayDesc(product)}</p>
@@ -852,15 +911,15 @@ export default function RefactoredProductShowcase() {
             </motion.div>
 
             {filteredProducts.length === 0 && (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="py-20 text-center">
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="py-20 text-center" style={{ padding: "80px 0" }}>
                 <div style={{ display: "flex", justifyContent: "center", marginBottom: "16px" }}>
                   <div style={{ fontSize: "48px", opacity: 0.2 }}>🔍</div>
                 </div>
                 <p style={{ fontFamily: "'Inter', 'Prompt', sans-serif", fontSize: "20px", fontWeight: 700, color: "var(--ink)" }}>
-                  {tri(locale, "No products found", "未找到商品", "ไม่พบสินค้าในอำเภอนี้")}
+                  {tri(locale, "No products found", "未找到商品", "ไม่พบสินค้าในหมวดหมู่นี้")}
                 </p>
                 <p style={{ fontSize: "13px", color: "var(--ink-soft)", marginTop: "6px" }}>
-                  {tri(locale, "Try selecting a different district.", "请尝试选择其他地区。", "ลองเลือกอำเภออื่น")}
+                  {tri(locale, "Try selecting a different district or category.", "请尝试选择其他地区或分类。", "ลองเลือกอำเภอหรือหมวดหมู่แบบอื่น")}
                 </p>
               </motion.div>
             )}
