@@ -1,10 +1,13 @@
 {
   "Nav": {
     "home": "首页",
-    "products": "产品",
+    "products": "清迈好物",
+    "products_otop": "OTOP 产品",
+    "restaurants": "推荐餐厅",
+    "hotels": "推荐酒店",
     "map": "地图清迈地图",
-    "essentials": "旅行必备",
-    "dashboard": "数据",
+    "essentials": "旅行助手",
+    "dashboard": "用户评价",
     "openMenu": "打开菜单"
   },
 
