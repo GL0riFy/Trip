@@ -158,8 +158,10 @@ export default function RefactoredProductShowcase() {
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=Prompt:wght@400;500;600;700;800&display=swap');
 
         :root {
-          --cream: #F7F3EE;
-          --cream-dark: #EDE7DE;
+          /* ปรับสีพื้นหลังหลักเป็นโทนขาวมินิมอล (Off-white) */
+          --cream: #F9F8F6; 
+          --cream-dark: #EFECE7; 
+          
           --ink: #1A1714;
           --ink-mid: #4A4540;
           --ink-soft: #8A837C;
@@ -169,7 +171,10 @@ export default function RefactoredProductShowcase() {
           --rust-mid: #E8C4AB;
           --white: #FFFFFF;
           --gold: #A07840;
-          --border: #DDD5CA;
+          
+          /* ปรับสีเส้นขอบให้ละมุนเข้ากับพื้นหลังมินิมอล */
+          --border: #E8E5E1; 
+          
           --shadow-sm: 0 2px 8px rgba(26,23,20,0.06);
           --shadow-md: 0 8px 32px rgba(26,23,20,0.1);
           --shadow-lg: 0 24px 64px rgba(26,23,20,0.14);
@@ -356,7 +361,7 @@ export default function RefactoredProductShowcase() {
           flex: 1;
         }
 
-        /* ── CATEGORY BUTTONS (ปรับใหม่) ──────────────────────── */
+        /* ── CATEGORY BUTTONS ──────────────────────── */
         .category-controls {
           display: flex; gap: 12px; flex-wrap: wrap;
           align-items: center;
@@ -519,7 +524,6 @@ export default function RefactoredProductShowcase() {
           text-transform: uppercase; 
           margin-bottom: 8px;
         }
-        /* เพิ่มสีให้หมวดหมู่ในการ์ดสอดคล้องกับปุ่ม Filter */
         .card-category.cat-food { color: var(--rust); }
         .card-category.cat-product { color: var(--gold); }
 
@@ -688,6 +692,11 @@ export default function RefactoredProductShowcase() {
           .filter-select-wrap { margin-left: 0; }
         }
         @media (max-width: 640px) {
+          /* ซ่อนรูปโชว์สินค้าฝั่งขวาในหน้าจอมือถือ */
+          .hero-right {
+            display: none;
+          }
+
           .hero {
             min-height: auto; 
           }

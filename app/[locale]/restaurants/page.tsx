@@ -1,18 +1,17 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { restaurantData, tipsData } from '@/src/data/popular/food_data';
 import Link from 'next/link';
-import { motion, AnimatePresence, Variants } from 'framer-motion'; // 1. Import เพิ่ม
+import { motion, AnimatePresence, Variants } from 'framer-motion';
 
 type Locale = 'th' | 'en' | 'zh';
 
-// 2. กำหนด Animation สำหรับ Card รายร้าน
 const cardVariants: Variants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { 
-        opacity: 1, 
+    visible: {
+        opacity: 1,
         y: 0,
         transition: { duration: 0.4, ease: "easeOut" }
     },
@@ -21,7 +20,7 @@ const cardVariants: Variants = {
 
 export default function ChiangMaiTravelGuide() {
     const params = useParams();
-    const locale = (params.locale as Locale) || 'en'; 
+    const locale = (params.locale as Locale) || 'en';
 
     const [showAllRestaurants, setShowAllRestaurants] = useState(false);
     const [activeSection, setActiveSection] = useState('restaurant-section');
@@ -48,21 +47,20 @@ export default function ChiangMaiTravelGuide() {
             showMore: (n: number) => `Show All (${n})`, hide: "Hide"
         },
         zh: {
-             heroSub: "美食打卡地",
-             heroTitle: "必吃餐厅指南",
-             heroCity: "在清迈",
-             heroDesc: "探索最地道的清迈美味，汇集传统泰北菜肴和吃货必去的名店。",
-             catTitle: "类别", catRest: "推荐餐厅", catTips: "旅游小贴士",
-             sec01: "01 - 推荐", sec01Title: "20 家清迈地道餐馆", sec01Desc: "当地人推荐的知名餐厅和私藏小店。",
-             sec02: "02 - 小贴士", sec02Title: "出发前必看", sec02Desc: "让您的美食之旅更加顺畅的小技巧。",
-             showMore: (n: number) => `查看全部 (${n})`, hide: "隐藏"
+            heroSub: "美食打卡地",
+            heroTitle: "必吃餐厅指南",
+            heroCity: "在清迈",
+            heroDesc: "探索最地道的清迈美味，汇集传统泰北菜肴和吃货必去的名店。",
+            catTitle: "类别", catRest: "推荐餐厅", catTips: "旅游小贴士",
+            sec01: "01 - 推荐", sec01Title: "20 家清迈地道餐馆", sec01Desc: "当地人推荐的知名餐厅和私藏小店。",
+            sec02: "02 - 小贴士", sec02Title: "出发前必看", sec02Desc: "让您的美食之旅更加顺畅的小技巧。",
+            showMore: (n: number) => `查看全部 (${n})`, hide: "隐藏"
         }
     };
 
     const ui = uiMap[locale] || uiMap.th;
-    
-    // กรองข้อมูลร้านอาหาร
-    const displayedRestaurants = showAllRestaurants ? restaurantData : restaurantData.slice(0, 6);
+
+    const displayedRestaurants = showAllRestaurants ? restaurantData : restaurantData.slice(0, 9);
 
     const scrollToSection = (sectionId: string) => {
         setActiveSection(sectionId);
@@ -73,10 +71,44 @@ export default function ChiangMaiTravelGuide() {
         }
     };
 
+    useEffect(() => {
+        const handleScroll = () => {
+            const tipsSection = document.getElementById('tips-section');
+            if (tipsSection) {
+                const tipsTop = tipsSection.getBoundingClientRect().top;
+                if (tipsTop < 300) {
+                    setActiveSection('tips-section');
+                } else {
+                    setActiveSection('restaurant-section');
+                }
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
+    const handleToggleShowAll = () => {
+        if (showAllRestaurants) {
+            // เมื่อกด "ซ่อน" ให้เลื่อนจอกลับไปด้านบนของ Section ก่อน
+            const element = document.getElementById('restaurant-section');
+            if (element) {
+                const y = element.getBoundingClientRect().top + window.scrollY - 80;
+                window.scrollTo({ top: y, behavior: 'smooth' });
+            }
+            // หน่วงเวลาเล็กน้อยให้จอเริ่มเลื่อนก่อนค่อยตัด Component ออก (ป้องกันการวาร์ป)
+            setTimeout(() => {
+                setShowAllRestaurants(false);
+            }, 250);
+        } else {
+            setShowAllRestaurants(true);
+        }
+    };
+
     return (
         <div className="font-sans text-gray-800 bg-[#fbfbfb] min-h-screen">
-            
-            {/* --- HERO SECTION (เหมือนเดิม) --- */}
+
+            {/* --- HERO SECTION --- */}
             <div className="relative h-screen w-full bg-black overflow-hidden">
                 <img src="https://images.unsplash.com/photo-1559314809-0d155014e29e?auto=format&fit=crop&w=1920&q=80" alt="Northern Thai Food" className="w-full h-full object-cover opacity-80" />
                 <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"></div>
@@ -92,21 +124,36 @@ export default function ChiangMaiTravelGuide() {
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 flex flex-col md:flex-row gap-12 relative">
 
-                {/* --- SIDEBAR (เหมือนเดิม) --- */}
+                {/* --- SIDEBAR: นำ md:order-last ออก เพื่อให้กลับมาอยู่ซ้ายมือเหมือนเดิม --- */}
                 <div className="w-full md:w-1/4">
-                    <div className="sticky top-12 self-start">  
-                        <h3 className="text-xl font-bold mb-6 text-gray-700">{ui.catTitle}</h3>
-                        <ul className="space-y-3 font-medium">
-                            <li onClick={() => scrollToSection('restaurant-section')} className={`flex justify-between items-center px-4 py-3 rounded-md cursor-pointer transition ${activeSection === 'restaurant-section' ? 'bg-green-50 text-green-600' : 'text-gray-500 hover:bg-gray-100'}`}>
-                                <span className="flex items-center gap-3">
-                                    <span className={`w-2 h-2 rounded-full ${activeSection === 'restaurant-section' ? 'bg-green-500' : 'bg-gray-300'}`}></span>
+                    <div className="sticky top-20 self-start">
+                        <h3 className="text-xl font-bold mb-6 text-gray-700 px-4">{ui.catTitle}</h3>
+                        <ul className="space-y-2 font-medium">
+                            <li
+                                onClick={() => scrollToSection('restaurant-section')}
+                                // ปรับ style ให้ตรงกับในรูป (พื้นหลังสีเขียวอ่อน, ตัวหนังสือสีเขียว)
+                                className={`flex justify-between items-center px-4 py-3.5 rounded-xl cursor-pointer transition-all ${activeSection === 'restaurant-section'
+                                    ? 'bg-[#f0fdf4] text-[#16a34a] font-semibold'
+                                    : 'text-gray-500 hover:bg-gray-100'
+                                    }`}
+                            >
+                                <span className="flex items-center gap-4 text-[15px]">
+                                    <span className="text-xl">🍽️</span>
                                     {ui.catRest}
                                 </span>
-                                <span className="text-sm">{restaurantData.length}</span>
+                                <span className={`text-sm font-bold ${activeSection === 'restaurant-section' ? 'text-[#16a34a]' : ''}`}>
+                                    {restaurantData.length}
+                                </span>
                             </li>
-                            <li onClick={() => scrollToSection('tips-section')} className={`flex justify-between items-center px-4 py-3 rounded-md cursor-pointer transition ${activeSection === 'tips-section' ? 'bg-yellow-50 text-yellow-600' : 'text-gray-500 hover:bg-gray-100'}`}>
-                                <span className="flex items-center gap-3">
-                                    <span className={`w-2 h-2 rounded-full ${activeSection === 'tips-section' ? 'bg-yellow-500' : 'bg-gray-300'}`}></span>
+                            <li
+                                onClick={() => scrollToSection('tips-section')}
+                                className={`flex justify-between items-center px-4 py-3.5 rounded-xl cursor-pointer transition-all ${activeSection === 'tips-section'
+                                    ? 'bg-yellow-50 text-yellow-600 font-semibold'
+                                    : 'text-gray-500 hover:bg-gray-100'
+                                    }`}
+                            >
+                                <span className="flex items-center gap-4 text-[15px]">
+                                    <span className="text-xl">💡</span>
                                     {ui.catTips}
                                 </span>
                             </li>
@@ -116,7 +163,7 @@ export default function ChiangMaiTravelGuide() {
 
                 {/* --- MAIN CONTENT --- */}
                 <div className="w-full md:w-3/4">
-                    
+
                     {/* Section 1: Restaurants */}
                     <div id="restaurant-section" className="mb-24 pt-8">
                         <motion.div layout className="mb-8">
@@ -125,10 +172,9 @@ export default function ChiangMaiTravelGuide() {
                             <p className="text-gray-500 text-sm">{ui.sec01Desc}</p>
                         </motion.div>
 
-                        {/* 3. ใช้ layout บน motion.div (Grid) เพื่อให้การขยายตัวลื่นไหล */}
-                        <motion.div 
+                        <motion.div
                             layout
-                            className="grid grid-cols-1 md:grid-cols-2 gap-6"
+                            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
                         >
                             <AnimatePresence mode='popLayout'>
                                 {displayedRestaurants.map((rest, index) => (
@@ -139,25 +185,25 @@ export default function ChiangMaiTravelGuide() {
                                         initial="hidden"
                                         animate="visible"
                                         exit="exit"
-                                        // ใส่ delay ตามลำดับเฉพาะตัวที่มาใหม่
-                                        transition={{ delay: index > 5 ? (index - 6) * 0.05 : 0 }} 
+                                        transition={{ delay: index > 8 ? (index - 9) * 0.05 : 0 }}
                                     >
-                                        <Link 
+                                        <Link
                                             href={`/${locale}/restaurants/${rest.slug}`}
-                                            className="bg-white h-full rounded-xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col sm:flex-row group cursor-pointer"
+                                            className="bg-white h-full rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group cursor-pointer"
                                         >
-                                            <div className="w-full sm:w-2/5 h-48 relative overflow-hidden shrink-0">
+                                            <div className="w-full h-44 relative overflow-hidden shrink-0">
                                                 <img src={rest.image} alt={rest.locales[locale].name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                                             </div>
-                                            <div className="w-full sm:w-3/5 p-4 sm:p-5 flex flex-col justify-between">
+
+                                            <div className="w-full p-5 flex flex-col justify-between flex-grow">
                                                 <div>
-                                                    <h3 className="text-lg font-bold text-gray-900 mb-1">{rest.locales[locale].name}</h3>
-                                                    <p className="text-sm text-gray-500 line-clamp-2">{rest.locales[locale].desc}</p>
+                                                    <h3 className="text-lg font-bold text-gray-900 mb-2">{rest.locales[locale].name}</h3>
+                                                    <p className="text-sm text-gray-500 line-clamp-2 leading-relaxed">{rest.locales[locale].desc}</p>
                                                 </div>
-                                                <div className="mt-4">
-                                                    <div className="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 max-w-full">
+                                                <div className="mt-5">
+                                                    <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-600 max-w-full">
                                                         <span className="text-red-500 text-xs">📍</span>
-                                                        <span className="truncate">{rest.locales[locale].location}</span>
+                                                        <span className="truncate font-medium">{rest.locales[locale].location}</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -168,10 +214,10 @@ export default function ChiangMaiTravelGuide() {
                         </motion.div>
 
                         <motion.div layout className="mt-14 flex justify-center border-t border-gray-200 relative">
-                            <motion.button 
+                            <motion.button
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
-                                onClick={() => setShowAllRestaurants(!showAllRestaurants)} 
+                                onClick={handleToggleShowAll}
                                 className="absolute -top-5 bg-white border border-gray-200 text-gray-600 px-8 py-2.5 rounded-full font-bold shadow-md hover:text-green-600 hover:border-green-600 transition-colors z-20"
                             >
                                 {showAllRestaurants ? ui.hide : ui.showMore(restaurantData.length)}
@@ -179,7 +225,7 @@ export default function ChiangMaiTravelGuide() {
                         </motion.div>
                     </div>
 
-                    {/* Section 2: Tips (เหมือนเดิม) */}
+                    {/* Section 2: Tips */}
                     <div id="tips-section" className="mb-20 pt-8">
                         <div className="mb-10">
                             <span className="text-yellow-600 font-semibold text-sm">{ui.sec02}</span>

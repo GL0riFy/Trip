@@ -1,10 +1,13 @@
 {
   "Nav": {
     "home": "Home",
-    "products": "Products",
+    "products": "Chiang Mai Best Picks",
+    "products_otop": "OTOP Products",
+    "restaurants": "Recommended Restaurants",
+    "hotels": "Recommended Hotels",
     "map": "ChiangMai Map",
-    "essentials": "Essentials",
-    "dashboard": "Insights",
+    "essentials": "Travel Tools",
+    "dashboard": "User Reviews",
     "openMenu": "Open menu"
   },
 

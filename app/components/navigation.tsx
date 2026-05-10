@@ -26,6 +26,8 @@ export default function Navigation() {
   const router = useRouter()
 
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isMobileProductsOpen, setIsMobileProductsOpen] = useState(false)
+  const [isDesktopProductsOpen, setIsDesktopProductsOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const [isClient, setIsClient] = useState(false)
   const [isLangOpen, setIsLangOpen] = useState(false)
@@ -33,7 +35,15 @@ export default function Navigation() {
 
   const navigationLinks = [
     { key: 'home', href: `/${locale}` },
-    { key: 'products', href: `/${locale}/products` },
+    { 
+      key: 'products', 
+      href: '#',
+      subItems: [
+        { key: 'products_otop', href: `/${locale}/products` },
+        { key: 'restaurants', href: `/${locale}/restaurants` },
+        { key: 'hotels', href: `/${locale}/hotels` },
+      ]
+    },
     { key: 'map', href: `/${locale}/maps` },
     { key: 'essentials', href: `/${locale}/essentials` },
     { key: 'dashboard', href: `/${locale}/dashboard` }
@@ -45,9 +55,17 @@ export default function Navigation() {
       const mobileCheck = window.innerWidth <= 910;
       setIsMobile(mobileCheck);
     }
+    const handleGlobalClick = () => {
+      setIsLangOpen(false);
+      setIsDesktopProductsOpen(false);
+    }
     handleResize()
     window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
+    window.addEventListener('click', handleGlobalClick)
+    return () => {
+      window.removeEventListener('resize', handleResize)
+      window.removeEventListener('click', handleGlobalClick)
+    }
   }, [])
 
   useEffect(() => {
@@ -143,18 +161,49 @@ export default function Navigation() {
           </div>
 
           {/* DESKTOP MENU */}
-          <div className="hidden min-[911px]:flex absolute left-1/2 -translate-x-1/2 space-x-8">
+          <div className="hidden min-[911px]:flex absolute left-1/2 -translate-x-1/2 space-x-4 lg:space-x-8">
             {navigationLinks.map(link => (
-              <Link key={link.key} href={link.href} className="text-white font-medium hover:text-blue-300 transition-colors text-sm uppercase tracking-widest drop-shadow-md">
-                {t(link.key)}
-              </Link>
+              link.subItems ? (
+                <div key={link.key} className="relative">
+                  <div 
+                    onClick={(e) => { e.stopPropagation(); setIsDesktopProductsOpen(!isDesktopProductsOpen); setIsLangOpen(false); }}
+                    className="text-white font-medium hover:text-blue-300 transition-colors text-sm uppercase tracking-widest drop-shadow-md cursor-pointer flex items-center gap-1 py-1"
+                  >
+                    <span className="whitespace-nowrap">{t(link.key)}</span>
+                    <svg className={`w-4 h-4 transition-transform duration-300 flex-shrink-0 ${isDesktopProductsOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                  </div>
+                  {/* Dropdown Menu */}
+                  <AnimatePresence>
+                    {isDesktopProductsOpen && (
+                      <motion.div 
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        className="absolute left-1/2 -translate-x-1/2 top-full mt-2 min-w-[220px] z-[60]"
+                      >
+                        <div className="bg-black/80 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-2xl p-2 flex flex-col" onClick={(e) => e.stopPropagation()}>
+                          {link.subItems.map(sub => (
+                            <Link key={sub.key} href={sub.href} onClick={() => setIsDesktopProductsOpen(false)} className="px-4 py-3 text-sm text-white/80 hover:bg-white/10 hover:text-white rounded-xl transition-colors text-center whitespace-nowrap font-medium">
+                              {t(sub.key)}
+                            </Link>
+                          ))}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              ) : (
+                <Link key={link.key} href={link.href} className="text-white font-medium hover:text-blue-300 transition-colors text-sm uppercase tracking-widest drop-shadow-md py-1 whitespace-nowrap">
+                  {t(link.key)}
+                </Link>
+              )
             ))}
           </div>
 
           {/* RIGHT: LANGUAGE (Desktop) */}
           <div className="ml-auto relative hidden min-[911px]:block">
             <button
-              onClick={(e) => { e.stopPropagation(); setIsLangOpen(!isLangOpen); }}
+              onClick={(e) => { e.stopPropagation(); setIsLangOpen(!isLangOpen); setIsDesktopProductsOpen(false); }}
               className="flex items-center gap-2 text-white font-medium hover:text-blue-300 transition-colors text-sm drop-shadow-md"
             >
               <img src={`https://flagcdn.com/w40/${LANGUAGES.find(l => l.code === locale)?.country}.png`} className="w-5 h-3.5 object-cover rounded-sm" alt="flag" />
@@ -189,7 +238,7 @@ export default function Navigation() {
 
           {/* MOBILE BURGER */}
           <div className="min-[911px]:hidden ml-auto">
-            <button onClick={() => { setIsMenuOpen(!isMenuOpen); setIsLangOpen(false); }} className="p-2 text-white">
+            <button onClick={() => { setIsMenuOpen(!isMenuOpen); setIsLangOpen(false); setIsMobileProductsOpen(false); }} className="p-2 text-white">
               {isMenuOpen ? <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg> : <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" /></svg>}
             </button>
           </div>
@@ -206,9 +255,49 @@ export default function Navigation() {
             >
               <div className="flex flex-col px-6 pb-6 pt-2 space-y-1">
                 {navigationLinks.map(link => (
-                  <Link key={link.key} href={link.href} onClick={() => setIsMenuOpen(false)} className="block py-3.5 text-white font-medium border-b border-white/5 last:border-0 text-lg">
-                    {t(link.key)}
-                  </Link>
+                  link.subItems ? (
+                    <div key={link.key} className="block border-b border-white/5 last:border-0">
+                      <button 
+                        onClick={() => setIsMobileProductsOpen(!isMobileProductsOpen)} 
+                        className="w-full py-3.5 text-white font-medium text-lg flex items-center justify-between"
+                      >
+                        {t(link.key)}
+                        <svg className={`w-5 h-5 transition-transform duration-300 ${isMobileProductsOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                      </button>
+                      <AnimatePresence>
+                        {isMobileProductsOpen && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            exit={{ opacity: 0, height: 0 }}
+                            className="overflow-hidden"
+                          >
+                            <div className="flex flex-col pl-4 pb-2 space-y-1 border-l-2 border-white/10 ml-2 mb-2">
+                              {link.subItems.map(sub => (
+                                <Link 
+                                  key={sub.key} 
+                                  href={sub.href} 
+                                  onClick={() => { setIsMenuOpen(false); setIsMobileProductsOpen(false); }} 
+                                  className="py-2.5 text-white/70 hover:text-white font-medium text-base block"
+                                >
+                                  {t(sub.key)}
+                                </Link>
+                              ))}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  ) : (
+                    <Link 
+                      key={link.key} 
+                      href={link.href} 
+                      onClick={() => { setIsMenuOpen(false); setIsMobileProductsOpen(false); }} 
+                      className="block py-3.5 text-white font-medium border-b border-white/5 last:border-0 text-lg"
+                    >
+                      {t(link.key)}
+                    </Link>
+                  )
                 ))}
               </div>
             </motion.div>
