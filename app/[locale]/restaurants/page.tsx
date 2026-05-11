@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
-import { restaurantData, tipsData } from '@/src/data/popular/food_data';
+import { restaurantData, tipsData } from '@/src/data/restaurants/food_data';
 import Link from 'next/link';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
 

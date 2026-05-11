@@ -79,7 +79,7 @@ export default function Popular() {
   const categoryLinks = [
     '/restaurants',
     '/hotels',
-    '/trips'
+    '/tourist'
   ];
 
   return (

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
+import Link from "next/link";
 
 const backgroundImages = [
   "/Slide/1.jpg",
@@ -89,13 +90,15 @@ export default function HeroSec() {
           transition={{ duration: 1.0, delay: 0.7, ease: "easeOut" }}
           className="mt-0"
         >
-          <button
-            className="px-6 py-2.5 border border-white text-white text-sm font-medium rounded-full
-                       hover:bg-white hover:text-gray-800 transition-all duration-300
-                       backdrop-blur-sm bg-white/10"
-          >
-            {t('exploreBtn')}
-          </button>
+          <Link href="/tourist">
+            <button
+              className="px-6 py-2.5 border border-white text-white text-sm font-medium rounded-full
+                        hover:bg-white hover:text-gray-800 transition-all duration-300
+                        backdrop-blur-sm bg-white/10"
+            >
+              {t('exploreBtn')}
+            </button>
+          </Link>
         </motion.div>
       </div>
 
