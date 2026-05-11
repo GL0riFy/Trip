@@ -1,0 +1,253 @@
+export const ChiangDaoTrips = [
+  {
+    id: "Doi-Chiang-Dao",
+    title: {
+      en: "Doi Chiang Dao",
+      zh: "清道山 (Doi Chiang Dao)",
+      th: "ดอยเชียงดาว"
+    },
+    price: {
+      en: "Entrance fee (Wildlife Sanctuary): 400 THB (Foreigner). Garbage deposit: 500 THB. Tent site: 30 THB/night. Insurance: 100 THB. Camping gear rental available.",
+      zh: "清道野生动物保护区门票（外国人）：400 泰铢。垃圾保证金：500 泰铢。露营地费：30 泰铢/人/晚。意外保险：100 泰铢。提供露营装备租赁。",
+      th: "ค่าเข้าเขตรักษาพันธุ์สัตว์ป่า (ชาวต่างชาติ): 400 บาท, มัดจำขยะ: 500 บาท, ค่าพื้นที่กางเต็นท์: 30 บาท/คืน, ค่าประกัน: 100 บาท, มีอุปกรณ์แคมป์ปิ้งให้เช่า"
+    },
+    hours: {
+      en: "Daytime (Overnight camping requires advance permit)",
+      zh: "白天开放（夜间露营需提前申请许可）",
+      th: "เปิดเวลากลางวัน (การพักแรมต้องขอใบอนุญาตล่วงหน้า)"
+    },
+    detail: {
+      en: "Doi Chiang Dao is a limestone mountain with complex terrain and rich rainforests, home to diverse wildlife. The highest peak, Doi Luang Chiang Dao, stands at 2,225 meters. Camping rental rates: Tent 300 THB, Sleeping bag 100 THB, Mat 50 THB, Pot 80 THB, Stove 100 THB, Gas 60 THB, and Portable toilet kit ~250 THB.",
+      zh: "清道山是一座地形复杂的石灰岩山脉，拥有丰富的热带雨林和野生动物。最高峰清道大山（Doi Luang Chiang Dao）海拔 2,225 米。露营装备租赁价格参考：帐篷 300 泰铢，睡袋 100 泰铢，睡垫 50 泰铢，锅具 80 泰铢，炉头 100 泰铢，瓦斯罐 60 泰铢，便携式厕所套件约 250 泰铢。",
+      th: "ดอยเชียงดาวเป็นภูเขาหินปูนที่มีภูมิประเทศซับซ้อน ปกคลุมด้วยป่าดิบชื้นอุดมสมบูรณ์ เป็นถิ่นที่อยู่ของสัตว์ป่าหลากชนิด ยอดสูงสุดคือดอยหลวงเชียงดาว ความสูง 2,225 เมตร อัตราเช่าอุปกรณ์แคมป์ปิ้ง: เต็นท์ 300 บาท, ถุงนอน 100 บาท, แผ่นรองนอน 50 บาท, หม้อ 80 บาท, เตา 100 บาท, แก๊ส 60 บาท, ชุดห้องน้ำแบบพกพา ~250 บาท"
+    },
+    detail_more: {
+      location: "9VWQ+QXH ถนนอบจ. ชม. 3232 ตำบล เชียงดาว อำเภอเชียงดาว เชียงใหม่ 50170",
+      lat: 19.4015466,
+      lng: 98.8878756,
+      img: "ImgTrip/chiang-dao/Doi-Chiang-Dao.jpg",
+      video: "",
+      credit: ""
+    }
+  },
+  {
+    id: "Wat-Tham-Chiang-Dao",
+    title: {
+      en: "Wat Tham Chiang Dao",
+      zh: "清道洞寺 (Wat Tham Chiang Dao)",
+      th: "วัดถ้ำเชียงดาว"
+    },
+    price: {
+      en: "Temple grounds: Free. Cave entrance: 40 THB (Thai), 80 THB (Foreigner) + Guide fee for dark zone (~150 THB/group).",
+      zh: "寺庙区域免费。洞穴门票：泰国人 40 泰铢，外国人 80 泰铢（进入深层黑暗区域需另付导游费约 150 泰铢/组）。",
+      th: "บริเวณวัด: ฟรี, ค่าเข้าถ้ำ: 40 บาท (คนไทย), 80 บาท (ชาวต่างชาติ) + ค่ามัคคุเทศก์บริเวณถ้ำมืด (~150 บาท/กลุ่ม)"
+    },
+    hours: {
+      en: "Daily 07:00 - 17:00",
+      zh: "每天 07:00 - 17:00",
+      th: "ทุกวัน 07:00 - 17:00 น."
+    },
+    detail: {
+      en: "Located at the foot of Doi Luang Chiang Dao, this famous cave complex features stunning stalagmites and stalactites. The cave is part of a revered temple and houses several Buddha images and sacred shrines.",
+      zh: "清道洞位于清道大山脚下，是当地著名的旅游景点。洞内拥有壮丽的钟乳石和石笋景观。该洞穴也是清道洞寺的一部分，供奉着多尊佛像和神龛。",
+      th: "ตั้งอยู่บริเวณเชิงดอยหลวงเชียงดาว เป็นกลุ่มถ้ำที่มีชื่อเสียงซึ่งมีหินงอกหินย้อยงดงาม ถ้ำแห่งนี้เป็นส่วนหนึ่งของวัดศักดิ์สิทธิ์และเป็นที่ประดิษฐานพระพุทธรูปและศาลบูชาหลายแห่ง"
+    },
+    detail_more: {
+      location: "273 หมู่ 5 ตำบล เชียงดาว อำเภอเชียงดาว เชียงใหม่ 50170",
+      lat: 19.390418,
+      lng: 98.9111165,
+      img: "ImgTrip/chiang-dao/Wat-Tham-Chiang-Dao.jpg",
+      video: "",
+      credit: ""
+    }
+  },
+  {
+    id: "Mueang-Khong",
+    title: {
+      en: "Mueang Khong Community",
+      zh: "湄康村 (Mueang Khong)",
+      th: "ชุมชนเมืองคอง"
+    },
+    price: {
+      en: "Free Admission",
+      zh: "免费入场",
+      th: "เข้าชมฟรี"
+    },
+    hours: {
+      en: "Open all day",
+      zh: "全天开放",
+      th: "เปิดตลอดวัน"
+    },
+    detail: {
+      en: "A peaceful rural community that retains its traditional charm. Villagers live sustainably with the forest, gathering wild vegetables and herbs. The Kong River flows through the village, surrounded by lush green rice fields during the rainy season.",
+      zh: "这是一个保留着传统乡村魅力的宁静社区，空气清新。村民与森林和谐共处，采集野菜和草药，过着自给自足的生活。康河（Kong River）穿村而过，雨季时两岸稻田翠绿，景色宜人。",
+      th: "ชุมชนชนบทที่สงบและยังคงเสน่ห์แบบดั้งเดิม ชาวบ้านอยู่ร่วมกับป่าอย่างยั่งยืน เก็บหาผักป่าและสมุนไพร แม่น้ำคองไหลผ่านหมู่บ้าน ล้อมรอบด้วยทุ่งนาเขียวขจีในช่วงฤดูฝน"
+    },
+    detail_more: {
+      location: "9PP8+525 ตำบล เมืองคอง อำเภอเชียงดาว เชียงใหม่",
+      lat: 19.385398,
+      lng: 98.7125277,
+      img: "ImgTrip/chiang-dao/Mueang-Khong.jpg",
+      video: "",
+      credit: ""
+    }
+  },
+  {
+    id: "Wat-Tham-Pha-Plong",
+    title: {
+      en: "Wat Tham Pha Plong",
+      zh: "帕隆洞寺 (Wat Tham Pha Plong)",
+      th: "วัดถ้ำผาปล่อง"
+    },
+    price: {
+      en: "Free (Donation based)",
+      zh: "免费 (可随喜功德)",
+      th: "ฟรี (ตามความศรัทธา)"
+    },
+    hours: {
+      en: "Daily 06:00 - 18:00",
+      zh: "每天 06:00 - 18:00",
+      th: "ทุกวัน 06:00 - 18:00 น."
+    },
+    detail: {
+      en: "Visitors must climb over 500 steps to reach this peaceful temple nestled in the forest. It houses the 'Chedi Katanyu' (Grateful Pagoda) and a museum dedicated to the revered monk Luang Pu Sim, offering a quiet place for meditation.",
+      zh: "游客需攀登 500 多级台阶才能到达这座隐于森林中的宁静寺庙。寺内建有 感恩佛塔 (Chedi Katanyu) 以及展示高僧隆普辛 (Luang Pu Sim) 遗物的博物馆，是一个适合冥想修行的清幽之地。",
+      th: "ผู้มาเยือนต้องปีนบันไดกว่า 500 ขั้นเพื่อขึ้นไปยังวัดอันสงบเงียบที่ตั้งอยู่ในป่า ภายในมีเจดีย์กตัญญู (Chedi Katanyu) และพิพิธภัณฑ์อุทิศให้แก่หลวงปู่สิม พระอาจารย์ที่เคารพนับถือ เป็นสถานที่เงียบสงบเหมาะแก่การทำสมาธิ"
+    },
+    detail_more: {
+      location: "139 ตำบล เชียงดาว อำเภอเชียงดาว เชียงใหม่ 50170",
+      lat: 19.402207,
+      lng: 98.9180188,
+      img: "ImgTrip/chiang-dao/Wat-Tham-Pha-Plong.jpg",
+      video: "",
+      credit: ""
+    }
+  },
+  {
+    id: "Pha-Daeng-National-Park",
+    title: {
+      en: "Pha Daeng National Park",
+      zh: "帕登国家公园 (Pha Daeng National Park)",
+      th: "อุทยานแห่งชาติผาแดง"
+    },
+    price: {
+      en: "Foreigner: Adults 100 THB, Children 50 THB",
+      zh: "外国人：成人 100 泰铢，儿童 50 泰铢",
+      th: "ชาวต่างชาติ: ผู้ใหญ่ 100 บาท, เด็ก 50 บาท"
+    },
+    hours: {
+      en: "Daily 08:00 - 16:30",
+      zh: "每天 08:00 - 16:30",
+      th: "ทุกวัน 08:00 - 16:30 น."
+    },
+    detail: {
+      en: "This park features complex mountain ranges and is the source of the Ping and Mae Tang rivers. It is home to diverse forests and wildlife such as sambar deer, barking deer, and rare birds. Points of interest include the Sri Sangwan Waterfall and Pong Arng Hot Springs.",
+      zh: "帕登国家公园拥有复杂的山脉地形，是平河和湄唐河的源头。这里森林资源丰富，栖息着水鹿、赤麂以及多种珍稀鸟类。主要景点包括 Sri Sangwan 瀑布和 Pong Arng 温泉。",
+      th: "อุทยานแห่งนี้มีเทือกเขาที่ซับซ้อนและเป็นต้นน้ำของแม่น้ำปิงและแม่น้ำแม่แตง เป็นถิ่นอาศัยของสัตว์ป่าหลากชนิด เช่น กวางซัมบาร์ เก้ง และนกหายาก จุดท่องเที่ยวสำคัญ ได้แก่ น้ำตกศรีสังวาล และน้ำพุร้อนโป่งอาง"
+    },
+    detail_more: {
+      location: "ตำบล เชียงดาว อำเภอเชียงดาว เชียงใหม่ 50170",
+      lat: 19.4733608,
+      lng: 98.8293993,
+      img: "ImgTrip/chiang-dao/Pha-Daeng-National-Park.jpg",
+      video: "",
+      credit: ""
+    }
+  }
+];
+
+export const ChiangDaoOTOP = [
+  {
+    id: "Highland-Coffee",
+    title: {
+      en: "Highland Coffee",
+      zh: "高地咖啡",
+      th: "กาแฟที่ราบสูง"
+    },
+    price: {
+      en: "150 - 500 THB",
+      zh: "150 - 500 泰铢",
+      th: "150 - 500 บาท"
+    },
+    hours: {
+      en: "Daily 08:00 - 17:00",
+      zh: "每天 08:00 - 17:00",
+      th: "ทุกวัน 08:00 - 17:00 น."
+    },
+    detail: {
+      en: "Premium arabica and robusta coffee grown in the cool highlands of Chiang Dao. Freshly roasted and ground, featuring rich flavors distinctive to the region.",
+      zh: "在清道寒冷的高地种植的优质阿拉比卡和罗布斯塔咖啡。新鲜烘焙和研磨，具有该地区独特的浓郁风味。",
+      th: "กาแฟอาราบิก้าและโรบัสต้าชั้นเยี่ยม ปลูกบนที่สูงที่มีอากาศเย็นสบายของอำเภอเชียงดาว คั่วสดและบดใหม่ มีรสชาติเข้มข้นเป็นเอกลักษณ์ของภูมิภาค"
+    },
+    detail_more: {
+      location: "Chiang Dao Highland Coffee Farmers Co-op, Chiang Dao District",
+      lat: 19.4200000,
+      lng: 98.8500000,
+      img: "ImgTrip/chiang-dao/Doi-Chiang-Dao.jpg",
+      video: "",
+      credit: ""
+    }
+  },
+  {
+    id: "Hill-Tribe-Handicrafts",
+    title: {
+      en: "Hill Tribe Handicrafts & Textiles",
+      zh: "山地部落手工艺品和纺织品",
+      th: "งานหัตถกรรมและสิ่งทอชาวเขา"
+    },
+    price: {
+      en: "100 - 800 THB",
+      zh: "100 - 800 泰铢",
+      th: "100 - 800 บาท"
+    },
+    hours: {
+      en: "Daily 09:00 - 18:00",
+      zh: "每天 09:00 - 18:00",
+      th: "ทุกวัน 09:00 - 18:00 น."
+    },
+    detail: {
+      en: "Handmade crafts from local hill tribe communities including hand-woven textiles, embroidered items, and traditional weaving. Beautiful patterns and authentic cultural pieces.",
+      zh: "来自当地山地部落社区的手工艺品，包括手工织布、刺绣物品和传统纺织。美丽的图案和真实的文化工艺品。",
+      th: "งานหัตถกรรมทำมือจากชุมชนชาวเขาในท้องถิ่น ได้แก่ ผ้าทอมือ สิ่งปักถัก และงานทอแบบดั้งเดิม ลวดลายสวยงามและเป็นชิ้นงานวัฒนธรรมที่แท้จริง"
+    },
+    detail_more: {
+      location: "Hill Tribe Craft Centers, Chiang Dao Subdistrict",
+      lat: 19.4150000,
+      lng: 98.7800000,
+      img: "ImgTrip/chiang-dao/Mueang-Khong.jpg",
+      video: "",
+      credit: ""
+    }
+  },
+  {
+    id: "Forest-Bee-Products",
+    title: {
+      en: "Forest Bee Products",
+      zh: "森林蜂产品",
+      th: "ผลิตภัณฑ์ผึ้งจากป่า"
+    },
+    price: {
+      en: "80 - 350 THB",
+      zh: "80 - 350 泰铢",
+      th: "80 - 350 บาท"
+    },
+    hours: {
+      en: "Daily 08:00 - 17:00",
+      zh: "每天 08:00 - 17:00",
+      th: "ทุกวัน 08:00 - 17:00 น."
+    },
+    detail: {
+      en: "Pure forest honey, bee pollen, and propolis collected from natural beehives in the pristine forests. Rich in natural nutrients and therapeutic properties.",
+      zh: "从原始森林中的自然蜂巢采集的纯森林蜂蜜、蜂花粉和蜂胶。富含天然营养物质和治疗功效。",
+      th: "น้ำผึ้งป่าบริสุทธิ์ เกสรดอกไม้ และโพรพอลิส เก็บจากรังผึ้งธรรมชาติในป่าบริสุทธิ์ อุดมด้วยสารอาหารธรรมชาติและสรรพคุณทางยา"
+    },
+    detail_more: {
+      location: "Forest beekeeping sites, Chiang Dao District",
+      lat: 19.4300000,
+      lng: 98.8400000,
+      img: "ImgTrip/chiang-dao/Doi-Chiang-Dao.jpg",
+      video: "",
+      credit: ""
+    }
+  }
+];

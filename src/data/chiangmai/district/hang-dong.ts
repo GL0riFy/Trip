@@ -1,21 +1,25 @@
-export const HangDongTrip = [
+export const HangDongTrips = [
   {
     id: "Grand-Canyon-Water-Park",
     title: {
       en: "Grand Canyon Water Park",
-      zh: "清迈大峡谷水上乐园"
+      zh: "清迈大峡谷水上乐园",
+      th: "แกรนด์แคนยอนวอเตอร์ปาร์ค"
     },
     price: {
       en: "Swimming pass: Adult 950 THB | Child (90–120 cm) 750 THB | Under 90 cm Free. Wakeboard 1 hr 550 THB. Combo promo 1,400 THB.",
-      zh: "游泳票：成人 950 泰铢 | 儿童 750 泰铢 | 90cm 以下免费。滑水 550 泰铢/小时。套票 1,400 泰铢。"
+      zh: "游泳票：成人 950 泰铢 | 儿童 750 泰铢 | 90cm 以下免费。滑水 550 泰铢/小时。套票 1,400 泰铢。",
+      th: "บัตรว่ายน้ำ: ผู้ใหญ่ 950 บาท | เด็ก (90–120 ซม.) 750 บาท | ต่ำกว่า 90 ซม. เข้าฟรี | เวคบอร์ด 1 ชม. 550 บาท | โปรโมชั่นคอมโบ 1,400 บาท"
     },
     hours: {
       en: "Open daily (Check official page for latest hours)",
-      zh: "每日开放（建议查看官方时间）"           
+      zh: "每日开放（建议查看官方时间）",
+      th: "เปิดทุกวัน (ตรวจสอบเวลาทำการล่าสุดจากหน้าเพจอย่างเป็นทางการ)"
     },
     detail: {
       en: "The largest outdoor water park in northern Chiang Mai. Offers water sliders, kayaking, canoeing, cliff jumping, zipline (1 round included), and wakeboarding. Great for adventure lovers.",
-      zh: "清迈北部大型户外水上乐园，提供滑水道、皮划艇、跳崖、滑索和滑水活动，适合喜欢刺激活动的游客。"
+      zh: "清迈北部大型户外水上乐园，提供滑水道、皮划艇、跳崖、滑索和滑水活动，适合喜欢刺激活动的游客。",
+      th: "สวนน้ำกลางแจ้งที่ใหญ่ที่สุดในเชียงใหม่ตอนเหนือ มีเครื่องเล่นทางน้ำอย่างสไลเดอร์ คายัค แคนู กระโดดหน้าผา ซิปไลน์ (รวม 1 รอบ) และเวคบอร์ด เหมาะสำหรับผู้ที่รักการผจญภัย"
     },
     detail_more: {
       location: "202 ถนนเลียบคลองชลประทาน น้ำแพร่ อำเภอหางดง เชียงใหม่ 50230",
@@ -30,15 +34,18 @@ export const HangDongTrip = [
     id: "Ob-Khan-National-Park",
     title: {
       en: "Ob Khan National Park",
-      zh: "奥坎国家公园"
+      zh: "奥坎国家公园",
+      th: "อุทยานแห่งชาติออบขาน"
     },
     price: {
       en: "Free (National park fee may apply in some cases)",
-      zh: "免费（部分情况可能收国家公园费）"
+      zh: "免费（部分情况可能收国家公园费）",
+      th: "ฟรี (อาจมีค่าเข้าอุทยานแห่งชาติในบางกรณี)"
     },
     hours: {
       en: "6:00 a.m. – 6:00 p.m.",
-      zh: "06:00 – 18:00"
+      zh: "06:00 – 18:00",
+      th: "06:00 – 18:00 น."
     },
     detail: {
       en: "Famous for its steep canyon cliffs and the Mae Khan River flowing through the middle. Shallow water areas make it suitable for swimming and photography.",
@@ -57,15 +64,18 @@ export const HangDongTrip = [
     id: "Wat-Ton-Kwen",
     title: {
       en: "Wat Ton Kwen (Wat Intharawat)",
-      zh: "通宽寺 (Wat Ton Kwen)"
+      zh: "通宽寺 (Wat Ton Kwen)",
+      th: "วัดต้นเกว๋น (วัดอินทราวาส)"
     },
     price: {
       en: "Free entry (Traditional costume rental 120–140 THB)",
-      zh: "免费入场（传统服装租赁 120–140 泰铢）"
+      zh: "免费入场（传统服装租赁 120–140 泰铢）",
+      th: "เข้าฟรี (ค่าเช่าชุดพื้นเมือง 120-140 บาท)"
     },
     hours: {
       en: "Open daily",
-      zh: "每日开放"
+      zh: "每日开放",
+      th: "เปิดทุกวัน"
     },
     detail: {
       en: "A beautiful classic Lanna-style wooden temple in the countryside. Known for its traditional viharn and peaceful atmosphere.",
@@ -84,15 +94,18 @@ export const HangDongTrip = [
     id: "Ban-Tawai-Wood-Carving",
     title: {
       en: "Ban Tawai Wood Carving Handicraft Center",
-      zh: "班塔外木雕村"
+      zh: "班塔外木雕村",
+      th: "ศูนย์หัตถกรรมไม้แกะสลักบ้านถวาย"
     },
     price: {
       en: "Free entry (Pay for products)",
-      zh: "免费入场（商品另购）"
+      zh: "免费入场（商品另购）",
+      th: "เข้าฟรี (จ่ายเฉพาะค่าสินค้าที่ซื้อ)"
     },
     hours: {
       en: "Open daily",
-      zh: "每日开放"
+      zh: "每日开放",
+      th: "เปิดทุกวัน"
     },
     detail: {
       en: "One of Thailand’s largest wood carving communities. Visitors can shop for high-quality wood crafts, home decorations, and handmade souvenirs.",
@@ -111,15 +124,18 @@ export const HangDongTrip = [
     id: "Wat-Aranyawat",
     title: {
       en: "Wat Aranyawat (Ban Pong Temple)",
-      zh: "阿兰雅瓦寺 (Ban Pong Temple)"
+      zh: "阿兰雅瓦寺 (Ban Pong Temple)",
+      th: "วัดอรัญญาวาส (วัดบ้านปง)"
     },
     price: {
       en: "Free",
-      zh: "免费"
+      zh: "免费",
+      th: "ฟรี"
     },
     hours: {
       en: "8:00 a.m. – 4:00 p.m.",
-      zh: "08:00 – 16:00"
+      zh: "08:00 – 16:00",
+      th: "08:00 – 16:00 น."
     },
     detail: {
       en: "Also known as Phra That Si Mueang Pong. A stunning white temple considered the 2nd metal castle in Thailand and 4th in the world.",
@@ -141,15 +157,18 @@ export const HangDongOTOP = [
     id: "Wood-Carving-Crafts",
     title: {
       en: "Hand-carved Wood Crafts",
-      zh: "手工木雕工艺品"
+      zh: "手工木雕工艺品",
+      th: "งานไม้แกะสลักด้วยมือ"
     },
     price: {
       en: "200 - 2000 THB",
-      zh: "200 - 2000 泰铢"
+      zh: "200 - 2000 泰铢",
+      th: "200 - 2000 บาท"
     },
     hours: {
       en: "Daily 09:00 - 18:00",
-      zh: "每天 09:00 - 18:00"
+      zh: "每天 09:00 - 18:00",
+      th: "ทุกวัน 09:00 - 18:00 น."
     },
     detail: {
       en: "Exquisite wood carvings and wooden furniture crafted by skilled artisans in Ban Tawai. Including home decorations, statues, and decorative pieces made from various wood types.",
@@ -168,15 +187,18 @@ export const HangDongOTOP = [
     id: "Lacquerware-Pottery",
     title: {
       en: "Lacquerware & Traditional Pottery",
-      zh: "漆器和传统陶器"
+      zh: "漆器和传统陶器",
+      th: "เครื่องเขินและเครื่องปั้นดินเผาแบบดั้งเดิม"
     },
     price: {
       en: "150 - 1500 THB",
-      zh: "150 - 1500 泰铢"
+      zh: "150 - 1500 泰铢",
+      th: "150 - 1500 บาท"
     },
     hours: {
       en: "Daily 09:00 - 18:00",
-      zh: "每天 09:00 - 18:00"
+      zh: "每天 09:00 - 18:00",
+      th: "ทุกวัน 09:00 - 18:00 น."
     },
     detail: {
       en: "Beautiful lacquerware and hand-thrown pottery produced by local artisans. Traditional patterns and techniques passed down through generations. Perfect for home decoration.",
@@ -195,18 +217,22 @@ export const HangDongOTOP = [
     id: "Local-Snacks-Souvenirs",
     title: {
       en: "Local Snacks & Preserved Foods",
-      zh: "本地零食和腌制食品"
+      zh: "本地零食和腌制食品",
+      th: "ขนมพื้นเมืองและอาหารแปรรูป"
     },
     price: {
       en: "50 - 300 THB",
-      zh: "50 - 300 泰铢"
+      zh: "50 - 300 泰铢",
+      th: "50 - 300 บาท"
     },
     hours: {
       en: "Daily 08:00 - 17:00",
-      zh: "每天 08:00 - 17:00"
+      zh: "每天 08:00 - 17:00",
+      th: "ทุกวัน 08:00 - 17:00 น."
     },
     detail: {
       en: "Traditional snacks and preserved foods from Hang Dong including dried fruits, roasted nuts, and local confectionery. All made using traditional methods.",
+      th: "ขนมขบเคี้ยวและอาหารแปรรูปแบบดั้งเดิมจากหางดง ได้แก่ ผลไม้อบแห้ง ถั่วคั่ว และขนมหวานพื้นเมือง ทั้งหมดทำโดยใช้กรรมวิธีแบบดั้งเดิม",
       zh: "来自杭东的传统零食和腌制食品，包括干果、烤坚果和本地糖果。均采用传统方法制作。"
     },
     detail_more: {
