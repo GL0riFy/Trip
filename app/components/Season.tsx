@@ -54,21 +54,21 @@ export default function SeasonLayout() {
   const t = useTranslations('Seasons');
 
   return (
-    <section className={`bg-[#0F172A] text-white py-16 px-4 md:px-8 xl:px-12 ${promptFont.className}`}>
+    <section className={`bg-[#0F172A] text-white py-12 sm:py-16 px-3 sm:px-4 md:px-8 xl:px-12 ${promptFont.className}`}>
       <div className="w-full mx-auto">
         
         {/* Header Section */}
-        <div className="mb-10 text-left">
-          <h2 className="text-3xl md:text-[40px] font-bold mb-4 text-white">
+        <div className="mb-8 sm:mb-10 text-left">
+          <h2 className="text-2xl sm:text-3xl md:text-[40px] font-bold mb-3 sm:mb-4 text-white">
             {t('title')}
           </h2>
-          <p className="text-slate-300 text-sm md:text-base max-w-2xl leading-relaxed">
+          <p className="text-slate-300 text-xs sm:text-sm md:text-base max-w-2xl leading-relaxed">
             {t('description')}
           </p>
         </div>
 
         {/* Cards Grid Section */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 w-full">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 w-full">
           {/* 3. ระบุ Type ให้ season (แก้ Error: Parameter 'season' implicitly has an 'any' type) */}
           {SEASONS_DATA.map((season: SeasonData) => (
             <Link href={season.href} key={season.id} className="group flex flex-col h-full w-full">
@@ -87,17 +87,17 @@ export default function SeasonLayout() {
                 </div>
 
                 {/* Content Area */}
-                <div className="p-6 md:p-8 flex flex-col grow">
-                  <h3 className="text-xl md:text-2xl font-bold text-white mb-3 leading-tight">
+                <div className="p-4 sm:p-5 md:p-6 lg:p-8 flex flex-col grow">
+                  <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-2 sm:mb-3 leading-tight">
                     {season.title[currentLocale]}
                   </h3>
                   
-                  <p className="text-slate-400 text-sm md:text-base leading-relaxed mb-6">
+                  <p className="text-slate-400 text-xs sm:text-sm md:text-base leading-relaxed mb-4 sm:mb-6">
                     {season.desc[currentLocale]}
                   </p>
 
                   <div className="mt-auto text-right w-full">
-                    <span className="text-sm md:text-base font-medium text-slate-300 group-hover:text-white transition-colors">
+                    <span className="text-xs sm:text-sm md:text-base font-medium text-slate-300 group-hover:text-white transition-colors">
                       {t('more')}
                     </span>
                   </div>

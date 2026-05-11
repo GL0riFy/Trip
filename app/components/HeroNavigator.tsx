@@ -25,7 +25,7 @@ export default function HeroSec() {
   }, []);
 
   return (
-    <section className="relative w-full h-screen flex flex-col items-center justify-center overflow-hidden">
+    <section className="relative w-full h-screen min-h-[925px] flex flex-col items-center justify-center overflow-hidden">
       
       {/* Background Slideshow */}
       <div className="absolute inset-0 z-0">
