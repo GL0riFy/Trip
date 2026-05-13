@@ -9,11 +9,8 @@ import Link from "next/link";
 export default function WelcomePopup() {
   const [isOpen, setIsOpen] = useState(false);
   const params = useParams();
-  const router = useRouter();
-
   const locale = (params?.locale as "th" | "en" | "zh") || "th";
 
-  // Dictionary สำหรับ 3 ภาษา
   const uiMap = {
     th: {
       title: "ท่องเที่ยวเชียงใหม่",
@@ -37,11 +34,28 @@ export default function WelcomePopup() {
 
   const ui = uiMap[locale] || uiMap.th;
 
+  // ---------------------------------
+  // 1. Logic สำหรับแสดง Popup และ นับจำนวนผู้เข้าชม
+  // ---------------------------------
   useEffect(() => {
-    // เช็คว่าเคยเห็น Popup หรือยัง
+    // เช็คว่าเคยเห็น Popup ใน Session นี้หรือยัง
     const hasSeenPopup = sessionStorage.getItem("hasSeenWelcomePopup");
+    
     if (!hasSeenPopup) {
       setIsOpen(true);
+      
+      // 🔹 เริ่มกระบวนการนับ Visitor (นับเฉพาะครั้งแรกที่เจอ Popup)
+      const hasVisited = sessionStorage.getItem('has_visited_chiangmai');
+      
+      if (!hasVisited) {
+        fetch('/api/visitors', { method: 'POST' })
+          .then(res => res.json())
+          .then(data => {
+            console.log('✅ Visitor counted via Popup:', data.count);
+            sessionStorage.setItem('has_visited_chiangmai', 'true');
+          })
+          .catch(err => console.error('❌ Error counting visitor:', err));
+      }
     }
   }, []);
 
@@ -51,7 +65,7 @@ export default function WelcomePopup() {
   };
 
   // ---------------------------------
-  // Framer Motion Variants (Wow Effect)
+  // Framer Motion Variants
   // ---------------------------------
   const overlayVariants: Variants = {
     hidden: { opacity: 0 },
@@ -81,7 +95,6 @@ export default function WelcomePopup() {
     visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
   };
 
-  // Variant สำหรับตัวหนังสือ "คลิก Here" เด้งไปมา
   const floatingTextVariants: Variants = {
     animate: {
       y: [0, -5, 0],
@@ -131,73 +144,27 @@ export default function WelcomePopup() {
 
             {/* 3 Images Grid */}
             <motion.div variants={itemVariants} className="flex flex-col md:flex-row justify-center items-center gap-12 md:gap-8 mb-10">
-
-              {/* Product 1 */}
-              <Link href={`/${locale}/products`} onClick={handleClose} className="relative group cursor-pointer block w-full max-w-[200px]">
-                <motion.div
-                  variants={floatingTextVariants}
-                  animate="animate"
-                  className="absolute -top-6 -left-4 md:-left-8 z-10 text-gray-800 font-black text-xl md:text-2xl drop-shadow-md"
-                  style={{ fontFamily: "'Inter', 'Prompt', sans-serif" }}
-                >
-                  {ui.clickHere}
-                </motion.div>
-                <div className="w-full aspect-square relative overflow-hidden rounded-[2rem] drop-shadow-xl group-hover:scale-105 transition-transform duration-300">
-                  <Image
-                    src="/Products/11.png"
-                    alt="Product 1"
-                    fill
-                    sizes="200px"
-                    priority
-                    className="object-cover"
-                  />
-                </div>
-              </Link>
-
-              {/* Product 2 */}
-              <Link href={`/${locale}/products`} onClick={handleClose} className="relative group cursor-pointer block w-full max-w-[200px]">
-                <motion.div
-                  variants={floatingTextVariants}
-                  animate="animate"
-                  className="absolute -top-6 -left-4 md:-left-8 z-10 text-gray-800 font-black text-xl md:text-2xl drop-shadow-md"
-                  style={{ fontFamily: "'Inter', 'Prompt', sans-serif" }}
-                >
-                  {ui.clickHere}
-                </motion.div>
-                <div className="w-full aspect-square relative overflow-hidden rounded-[2rem] drop-shadow-xl group-hover:scale-105 transition-transform duration-300">
-                  <Image
-                    src="/Products/2.png"
-                    alt="Product 2"
-                    fill
-                    sizes="200px"
-                    priority
-                    className="object-cover"
-                  />
-                </div>
-              </Link>
-
-              {/* Product 3 */}
-              <Link href={`/${locale}/products`} onClick={handleClose} className="relative group cursor-pointer block w-full max-w-[200px]">
-                <motion.div
-                  variants={floatingTextVariants}
-                  animate="animate"
-                  className="absolute -top-6 -left-4 md:-left-8 z-10 text-gray-800 font-black text-xl md:text-2xl drop-shadow-md"
-                  style={{ fontFamily: "'Inter', 'Prompt', sans-serif" }}
-                >
-                  {ui.clickHere}
-                </motion.div>
-                <div className="w-full aspect-square relative overflow-hidden rounded-[2rem] drop-shadow-xl group-hover:scale-105 transition-transform duration-300">
-                  <Image
-                    src="/Products/3.png"
-                    alt="Product 3"
-                    fill
-                    sizes="200px"
-                    priority
-                    className="object-cover"
-                  />
-                </div>
-              </Link>
-
+              {[1, 2, 3].map((num) => (
+                <Link key={num} href={`/${locale}/products`} onClick={handleClose} className="relative group cursor-pointer block w-full max-w-[200px]">
+                  <motion.div
+                    variants={floatingTextVariants}
+                    animate="animate"
+                    className="absolute -top-6 -left-4 md:-left-8 z-10 text-gray-800 font-black text-xl md:text-2xl drop-shadow-md"
+                  >
+                    {ui.clickHere}
+                  </motion.div>
+                  <div className="w-full aspect-square relative overflow-hidden rounded-[2rem] drop-shadow-xl group-hover:scale-105 transition-transform duration-300">
+                    <Image
+                      src={num === 1 ? "/Products/11.png" : `/Products/${num}.png`}
+                      alt={`Product ${num}`}
+                      fill
+                      sizes="200px"
+                      priority
+                      className="object-cover"
+                    />
+                  </div>
+                </Link>
+              ))}
             </motion.div>
 
             {/* Footer Description */}

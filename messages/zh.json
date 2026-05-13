@@ -7,7 +7,7 @@
     "hotels": "推荐酒店",
     "map": "地图清迈地图",
     "essentials": "旅行助手",
-    "dashboard": "用户评价",
+    "review": "用户评价",
     "openMenu": "打开菜单"
   },
 
@@ -109,29 +109,6 @@
     "title": "按县区游览",
     "subtitle": "选择县区查看行程数据。",
     "no_trips": "暂无行程条目。"
-  },
-  "Dashboard": {
-    "title": "Traffic Dashboard",
-    "subtitle": "实时网站访问统计",
-    "total_visits": "总访问量",
-    "by_country": "按国家统计访问量",
-    "visits": "次",
-    "share": "占比",
-    "no_data": "暂无数据",
-    "legacy_badge": "估算 · 国家分割前",
-    "unknown_country": "未知 / 本地",
-    "note_geo": "通过服务器标头检测国家，本地开发通常显示为\"未知\"",
-    "last_updated": "每次页面加载时数据会保存到服务器",
-    "live": "实时",
-    "daily_visits": "每日访问量",
-    "traffic_source": "流量来源",
-    "device": "设备",
-    "countries": "国家",
-    "top_country": "第一名国家",
-    "others": "其他",
-    "mobile": "手机",
-    "desktop": "电脑",
-    "tablet": "平板"
   },
   "Hero": {
     "logoAlt": "畅游清迈，心旷神怡",

@@ -7,20 +7,20 @@ import { motion } from 'framer-motion';
 import { useLocale, useTranslations } from 'next-intl'; // เพิ่ม useTranslations
 import { MapPin, Phone, Mail, Facebook, MessageCircle, BarChart2 } from 'lucide-react';
 
-const Footer = () => {
-  const [visitorCount, setVisitorCount] = useState<number | null>(null);
-  const locale = useLocale();
-  const t = useTranslations('Footer'); // เรียกใช้ namespace 'Footer'
+  const Footer = () => {
+    const [visitorCount, setVisitorCount] = useState<number | null>(null);
+    const locale = useLocale();
+    const t = useTranslations('Footer'); // เรียกใช้ namespace 'Footer'
 
   useEffect(() => {
-    fetch('/api/redis')
+    fetch('/api/visitors') 
       .then((res) => res.json())
       .then((data) => {
         if (data && typeof data.count === 'number') {
           setVisitorCount(data.count);
         }
       })
-      .catch((err) => console.error("Error updating visitors:", err));
+      .catch((err) => console.error("Error fetching visitors:", err));
   }, []);
 
   return (

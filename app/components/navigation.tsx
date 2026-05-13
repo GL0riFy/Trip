@@ -46,7 +46,7 @@ export default function Navigation() {
     },
     { key: 'map', href: `/${locale}/maps` },
     { key: 'essentials', href: `/${locale}/essentials` },
-    { key: 'dashboard', href: `/${locale}/dashboard` }
+    { key: 'review', href: `/${locale}/review` }
   ]
 
   useEffect(() => {
