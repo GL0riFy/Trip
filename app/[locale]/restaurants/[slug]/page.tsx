@@ -8,7 +8,7 @@ import {
     Star, MapPin, Clock, Phone, ChevronLeft, 
     UtensilsCrossed, ExternalLink, DollarSign
 } from 'lucide-react';
-import { restaurantData, Restaurant } from '@/src/data/popular/food_data';
+import { restaurantData, Restaurant } from '@/src/data/restaurants/food_data';
 
 type Locale = 'th' | 'en' | 'zh';
 
