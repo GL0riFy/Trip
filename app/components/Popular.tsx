@@ -66,14 +66,14 @@ export default function Popular() {
 
   const featuredPlace = {
     ...lang.featured,
-    image: '/Popular/otop.jpg',
+    image: '/Popular/1.svg',
     link: `/products`
   };
 
   const categoryImages = [
-    '/Popular/food.jpg',
-    '/Popular/hotel.webp',
-    '/Popular/doi-suthep1.jpg'
+    '/Popular/3.svg',
+    '/Popular/2.svg',
+    '/Popular/4.svg'
   ];
 
   const categoryLinks = [
@@ -91,43 +91,43 @@ export default function Popular() {
 
           {/* ===== ซ้าย: Featured Card ===== */}
           <Link
-                href={featuredPlace.link}
-                className="flex-1 flex"
-              >
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            variants={fadeUpVariant}
-            className="w-full bg-gray-200 rounded-4xl p-4 md:p-5 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.10)] border border-gray-100 flex flex-col group hover:shadow-[0_15px_50px_-10px_rgba(0,0,0,0.14)] transition-shadow duration-300"
+            href={featuredPlace.link}
+            className="flex-1 flex"
           >
-            <div className="relative w-full flex-1 min-h-[500px] rounded-3xl overflow-hidden mb-5">
-              <Image
-                src={featuredPlace.image}
-                alt={featuredPlace.title}
-                fill
-                className="object-cover transition-transform duration-700 group-hover:scale-105"
-                sizes="(max-width: 1024px) 100vw, 60vw"
-              />
-            </div>
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              variants={fadeUpVariant}
+              className="w-full bg-gray-200 rounded-4xl p-4 md:p-5 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.10)] border border-gray-100 flex flex-col group hover:shadow-[0_15px_50px_-10px_rgba(0,0,0,0.14)] transition-shadow duration-300"
+            >
+              <div className="relative w-full flex-1 min-h-[500px] rounded-3xl overflow-hidden mb-5">
+                <Image
+                  src={featuredPlace.image}
+                  alt={featuredPlace.title}
+                  fill
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  sizes="(max-width: 1024px) 100vw, 60vw"
+                />
+              </div>
 
-            <div className="shrink-0 px-2 pb-2">
-              <h3 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-3 tracking-tight">
-                {featuredPlace.title}
-              </h3>
-              <p className="text-gray-500 text-sm sm:text-base leading-relaxed mb-5 line-clamp-2">
-                {featuredPlace.desc}
-              </p>
-            </div>
-          </motion.div>
+              <div className="shrink-0 px-2 pb-2">
+                <h3 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-3 tracking-tight">
+                  {featuredPlace.title}
+                </h3>
+                <p className="text-gray-500 text-sm sm:text-base leading-relaxed mb-5 line-clamp-2">
+                  {featuredPlace.desc}
+                </p>
+              </div>
+            </motion.div>
           </Link>
 
           {/* ===== ขวา: 3 การ์ด ===== */}
           <div className="lg:w-5/12 flex flex-col gap-3 md:gap-4">
             {lang.categories.map((item: any, index: number) => (
               // เพิ่ม Link หุ้มตรงนี้
-              <Link 
-                key={index} 
+              <Link
+                key={index}
                 href={`/${locale}${categoryLinks[index]}`}
                 className="flex-1 flex"
               >
