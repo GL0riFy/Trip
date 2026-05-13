@@ -1,3 +1,6 @@
+import { tag } from "@turf/turf";
+import { th } from "framer-motion/client";
+
 export const MaeRimTrips = [
   {
     id: "Mae-Sa-Waterfall",
@@ -21,11 +24,18 @@ export const MaeRimTrips = [
       zh: "湄沙瀑布是清迈著名的瀑布，共有10层。这里终年流水不断，景色优美，非常适合游泳、避暑以及在自然中野餐。",
       th: "น้ำตกแม่สาเป็นน้ำตก 10 ชั้นที่มีชื่อเสียงในเชียงใหม่ มีน้ำไหลตลอดทั้งปี เหมาะสำหรับการเล่นน้ำ คลายร้อน และปิกนิกท่ามกลางธรรมชาติ"
     },
+    tag: {
+      th: "ธรรมชาติ",
+      en: "nature",
+      zh: "自然"
+    },
     detail_more: {
       location: "WV4X+H63 ซอย น้ำตกแม่สา 4 ตำบล แม่แรม อำเภอแม่ริม เชียงใหม่ 50180",
       lat: 18.9061569, 
       lng: 98.8960827,
-      img: "ImgTrip/mae-rim/Mae-Sa-Waterfall.jpg",
+      img: "",
+      gallery: [
+      ],
       video: "",
       credit: ""
     }
@@ -52,11 +62,18 @@ export const MaeRimTrips = [
       zh: "泰北最大的大象营之一。游客可以通过给大象洗澡、喂食、观看大象绘画表演以及体验象夫生活等活动，近距离接触可爱的大象。",
       th: "ปางช้างที่ใหญ่ที่สุดแห่งหนึ่งในภาคเหนือของไทย นักท่องเที่ยวสามารถสัมผัสความน่ารักของช้างผ่านกิจกรรมต่างๆ เช่น อาบน้ำให้ช้าง ป้อนอาหาร ชมการสาธิตการวาดภาพ และเรียนรู้วิถีชีวิตของควาญช้าง"
     },
+    tag: {
+      th: "สัตว์",
+      en: "animal",
+      zh: "动物"
+    },
     detail_more: {
       location: "101 ตำบล แม่แรม อำเภอแม่ริม เชียงใหม่ 50230",
       lat: 18.8998083, 
       lng: 98.8754329,
-      img: "ImgTrip/mae-rim/Mae-Sa-Elephant-Camp.jpg",
+      img: "",
+      gallery: [
+      ],
       video: "",
       credit: ""
     }
@@ -83,11 +100,18 @@ export const MaeRimTrips = [
       zh: "这里拥有著名的“丛林过山车”，让您在森林中体验过山车的刺激快感。此外还有丛林滑索、巨型秋千以及类似蹦极的“Quick Jump”（14米高空跳跃）等挑战项目。",
       th: "สถานที่ตั้งของ 'Jungle Coaster' เครื่องเล่นรถไฟเหาะรางไม้สุดมันส์ที่แล่นผ่านป่า กิจกรรมอื่นๆ ได้แก่ ซิปไลน์ ชิงช้ายักษ์ และ 'Quick Jump' (คล้ายบันจี้จัมพ์จากความสูง 14 เมตร)"
     },
+    tag: {
+      th: "กิจกรรม",
+      en: "activity",
+      zh: "活动"
+    },
     detail_more: {
       location: "99 9 ตำบล โป่งแยง อำเภอแม่ริม เชียงใหม่ 50180",
       lat: 18.9167205, 
       lng: 98.8216974,
-      img: "ImgTrip/mae-rim/Pongyang-Jungle-Coaster-Zipline-Camp-&Resort.jpg",
+      img: "",
+      gallery: [
+      ],
       video: "",
       credit: ""
     }
@@ -114,11 +138,18 @@ export const MaeRimTrips = [
       zh: "动物爱好者可以在这里与真老虎近距离接触。这里有从幼崽到成年大虎等不同体型的老虎。老虎并未被铁链锁住，游客可以在工作人员陪同下进入笼内拍照互动。",
       th: "สัมผัสเสืออย่างใกล้ชิดในขนาดต่างๆ ตั้งแต่ลูกเสือไปจนถึงเสือโตเต็มวัย เสือที่นี่ไม่ได้ถูกล่ามโซ่ แต่จะอยู่ในกรงล้อม นักท่องเที่ยวสามารถเข้าไปถ่ายรูปได้ภายใต้การดูแลของเจ้าหน้าที่"
     },
+    tag: {
+      th: "สัตว์",
+      en: "animal",
+      zh: "动物"
+    },
     detail_more: {
       location: "51/1 หมู่ที่ 7 ถนน แม่ริม - สะเมิง ตำบล ริมใต้ อำเภอแม่ริม เชียงใหม่ 50180",
       lat: 18.9249445, 
       lng: 98.9318453,
-      img: "ImgTrip/mae-rim/Tiger-Kingdom-Mae-Rim.jpg",
+      img: "",
+      gallery: [
+      ],
       video: "",
       credit: ""
     }
@@ -145,11 +176,18 @@ export const MaeRimTrips = [
       zh: "这是一座皇家寺庙，原为达拉·拉萨米王妃宫殿附近的墓地。寺庙建筑精美，充满了兰纳艺术风格，是清迈非常值得参拜的寺庙之一。",
       th: "พระอารามหลวงที่มีความงดงามยิ่ง เดิมเป็นสุสานร้างใกล้กับพระตำหนักดาราภิรมย์ของเจ้าดารารัศมี พระราชชายา ได้รับการปรับปรุงจนกลายเป็นวัดที่โดดเด่นด้วยสถาปัตยกรรมล้านนาที่วิจิตรงดงาม"
     },
+    tag: {
+      th: "วัด",
+      en: "temple",
+      zh: "寺庙"
+    },
     detail_more: {
       location: "WW6R+7GJ ตำบล ริมใต้ อำเภอแม่ริม เชียงใหม่ 50180",
       lat: 18.911194, 
       lng: 98.941194,
-      img: "ImgTrip/mae-rim/Wat-Pa-Dara-Phirom.jpg",
+      img: "",
+      gallery: [
+      ],
       video: "",
       credit: ""
     }
@@ -176,11 +214,18 @@ export const MaeRimTrips = [
       zh: "一个风景优美的大型水库。这里的亮点是巨大的金刚稻草雕塑，非常适合拍照。游客可以在水边的竹屋用餐，或者租脚踏船在湖上游玩。",
       th: "อ่างเก็บน้ำที่มีทัศนียภาพอันงดงาม เหมาะสำหรับการพักผ่อน ไฮไลท์รวมถึงหุ่นฟางคิงคองยักษ์สำหรับถ่ายรูป ซุ้มไม้ไผ่ริมน้ำสำหรับรับประทานอาหาร และจักรยานน้ำให้เช่าปั่นบนทะเลสาบ"
     },
+    tag: {
+      th: "ธรรมชาติ",
+      en: "nature",
+      zh: "自然"
+    },
     detail_more: {
       location: "ตำบล ดอนแก้ว อำเภอแม่ริม เชียงใหม่ 50180",
       lat: 18.8675364, 
       lng: 98.9387502,
-      img: "ImgTrip/mae-rim/Huay-Thung-Thao.jpg",
+      img: "",
+      gallery: [
+      ],
       video: "",
       credit: ""
     }
@@ -207,107 +252,18 @@ export const MaeRimTrips = [
       zh: "泰国国家天文研究所（NARIT）总部所在地。园内设有天文展览、数字天文馆以及天文台。这是一个适合家庭和科学爱好者学习天文知识的好地方。",
       th: "สำนักงานใหญ่สถาบันวิจัยดาราศาสตร์แห่งชาติ (NARIT) นำเสนอนิทรรศการดาราศาสตร์ ท้องฟ้าจำลองดิจิทัล และหอดูดาว เป็นสถานที่เรียนรู้ที่ยอดเยี่ยมสำหรับครอบครัวและผู้ที่รักวิทยาศาสตร์"
     },
+    tag: {
+      th: "กิจกรรม",
+      en: "activity",
+      zh: "活动"
+    },
     detail_more: {
       location: "260 อำเภอแ ม่ริม ตำบล ดอนแก้ว อำเภอแม่ริม เชียงใหม่ 50180",
       lat: 18.8527479, 
       lng: 98.9572773,
-      img: "ImgTrip/mae-rim/Princess-Sirindhorn-AstroPark.jpg",
-      video: "",
-      credit: ""
-    }
-  }
-];
-
-export const MaeRimOTOP = [
-  {
-    id: "Orchids-Mac-Rim",
-    title: {
-      en: "Fresh Orchids & Decorative Plants",
-      zh: "新鲜兰花和装饰植物",
-      th: "กล้วยไม้และไม้ประดับหลากสายพันธุ์"
-    },
-    price: {
-      en: "80 - 600 THB",
-      zh: "80 - 600 泰铢",
-      th: "80 - 600 บาท"
-    },
-    hours: {
-      en: "Daily 08:00 - 17:00",
-      zh: "每天 08:00 - 17:00",
-      th: "เปิดทุกวัน 08:00 - 17:00 น."
-    },
-    detail: {
-      en: "Beautiful orchid flowers and tropical plants cultivated in Mae Rim's greenhouses. Premium quality flowers perfect for gifts and home decoration. Fresh arrangements available.",
-      zh: "在美琳温室种植的美丽兰花和热带植物。优质花卉非常适合礼物和家居装饰。提供新鲜花卉布置。",
-      th: "กล้วยไม้อันงดงามและพืชเขตร้อนที่ปลูกในเรือนกระจกของแม่ริม ดอกไม้คุณภาพระดับพรีเมียมเหมาะสำหรับเป็นของขวัญและตกแต่งบ้าน มีบริการจัดดอกไม้สด"
-    },
-    detail_more: {
-      location: "Orchid nurseries, Mae Rim District",
-      lat: 18.8550000,
-      lng: 98.9600000,
-      img: "ImgTrip/mae-rim/Wat-Pa-Dara-Phirom.jpg",
-      video: "",
-      credit: ""
-    }
-  },
-  {
-    id: "Garden-Products-Mae-Rim",
-    title: {
-      en: "Fresh Vegetables & Garden Products",
-      zh: "新鲜蔬菜和花园产品",
-      th: "ผักสดและผลผลิตจากสวน"
-    },
-    price: {
-      en: "50 - 200 THB",
-      zh: "50 - 200 泰铢",
-      th: "50 - 200 บาท"
-    },
-    hours: {
-      en: "Daily 08:00 - 17:00",
-      zh: "每天 08:00 - 17:00",
-      th: "เปิดทุกวัน 08:00 - 17:00 น."
-    },
-    detail: {
-      en: "Organically grown vegetables and herbs from Mae Rim's community gardens. Includes leafy greens, root vegetables, and cooking herbs without pesticides.",
-      zh: "来自美琳社区花园的有机种植蔬菜和草药。包括叶菜、根菜和无农药烹饪草药。",
-      th: "ผักและสมุนไพรที่ปลูกแบบออร์แกนิกจากสวนชุมชนแม่ริม รวมทั้งผักใบเขียว ไซรัปผัก และสมุนไพรทำอาหารที่ปลอดสารพิษ"
-    },
-    detail_more: {
-      location: "Community gardens, Mae Rim District",
-      lat: 18.8600000,
-      lng: 98.9700000,
-      img: "ImgTrip/mae-rim/Wat-Pa-Dara-Phirom.jpg",
-      video: "",
-      credit: ""
-    }
-  },
-  {
-    id: "Local-Honey-Herbs",
-    title: {
-      en: "Honey & Herbal Products",
-      zh: "蜂蜜和草药产品",
-      th: "น้ำผึ้งและผลิตภัณฑ์สมุนไพร"
-    },
-    price: {
-      en: "100 - 350 THB",
-      zh: "100 - 350 泰铢",
-      th: "100 - 350 บาท"
-    },
-    hours: {
-      en: "Daily 08:00 - 17:00",
-      zh: "每天 08:00 - 17:00",
-      th: "เปิดทุกวัน 08:00 - 17:00 น."
-    },
-    detail: {
-      en: "Pure honey from orchid and garden flower nectar. Also includes herbal tea blends and medicinal plant products for wellness and health.",
-      zh: "从兰花和花园花朵蜜源生产的纯蜂蜜。还包括草药茶混合液和保健和疗愈的药用植物产品。",
-      th: "น้ำผึ้งแท้จากน้ำหวานกล้วยไม้และดอกไม้ในสวน นอกจากนี้ยังมาพร้อมชาสมุนไพรและยาสมุนไพรเพื่อสุขภาพและความเป็นอยู่ที่ดี"
-    },
-    detail_more: {
-      location: "Honey producers & herbal centers, Mae Rim",
-      lat: 18.8650000,
-      lng: 98.9650000,
-      img: "ImgTrip/mae-rim/Wat-Pa-Dara-Phirom.jpg",
+      img: "",
+      gallery: [
+      ],
       video: "",
       credit: ""
     }

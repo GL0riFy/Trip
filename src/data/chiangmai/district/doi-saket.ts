@@ -1,3 +1,6 @@
+import { tag } from "@turf/turf";
+import { th } from "framer-motion/client";
+
 export const DoiSaketTrips = [
   {
     id: "Wat-Phra-That-Doi-Saket",
@@ -21,11 +24,18 @@ export const DoiSaketTrips = [
       zh: "这是位于山顶的素帖沙革佛塔金色佛塔，十分醒目。该佛塔已有一千多年历史，塔内供奉着佛陀的头发舍利。",
       th: "พระธาตุสีทองแห่งวัดพระธาตุดอยสะเก็ด ตั้งตระหง่านอยู่บนภูเขา เป็นพระธาตุเก่าแก่อายุเกิน 1,000 ปี ภายในบรรจุพระเกศาธาตุของพระพุทธเจ้า"
     },
+    tag: {
+      th: "วัด",
+      en: "temple",
+      zh: "寺庙"
+    },
     detail_more: {
       location: "5 118 ตำบล เชิงดอย อำเภอดอยสะเก็ด เชียงใหม่ 50220",
       lat: 18.8725775,
       lng: 99.1400038,
-      img: "ImgTrip/doi-saket/Wat-Phra-That-Doi-Saket.jpg",
+      img: "",
+      gallery: [
+      ],
       video: "",
       credit: ""
     }
@@ -52,11 +62,18 @@ export const DoiSaketTrips = [
       zh: "一家位于森林与溪流中的咖啡馆，环境清幽凉爽。咖啡馆由木屋建筑组成，包括泰山屋、霍比特屋以及吊桥，是热门的拍照打卡地点。进入店铺需要步行约 200 米，穿过竹林、沿着溪流并跨过吊桥，真正符合“Take a Walk（走进去）”的概念。到达后能完全沉浸在大自然之中。",
       th: "คาเฟ่ริมลำธารกลางป่าอันร่มรื่น โดดเด่นด้วยสิ่งปลูกสร้างที่ทำจากไม้ ทั้งบ้านทาร์ซาน บ้านฮอบบิท และสะพานแขวน ทางเดินเข้าร้านต้องเดินผ่านป่าไผ่และข้ามสะพานกว่า 200 เมตร ให้คุณได้สัมผัสธรรมชาติอย่างแท้จริง"
     },
+    tag: {
+      th: "คาเฟ่",
+      en: "cafe",
+      zh: "咖啡馆"
+    },
     detail_more: {
       location: "98 Baan Pongsamaki, ตำบล ป่าเมี่ยง อำเภอดอยสะเก็ด เชียงใหม่ 50220",
       lat: 18.9088281,
       lng: 99.2486855,
-      img: "ImgTrip/doi-saket/Take-a-Walk-house-&-coffee.jpg",
+      img: "",
+      gallery: [
+      ],
       video: "",
       credit: ""
     }
@@ -83,11 +100,18 @@ export const DoiSaketTrips = [
       zh: "这是一个占地超过 302 莱的大型植物园，是学习和研究多种植物的中心，包括棕榈类、苏铁、耐旱植物、多肉植物、开花植物、凤梨科植物、观叶植物、蕨类以及季节性花卉。同时园区布置精美，适合游客参观和休闲。",
       th: "สวนพฤกษศาสตร์ขนาดใหญ่พื้นที่กว่า 302 ไร่ เป็นศูนย์เรียนรู้พันธุ์ไม้ต่างๆ เช่น ปาล์ม ปรง พืชทนแล้ง ไม้อวบน้ำ สับปะรดสี เฟิร์น และไม้ดอกตามฤดูกาล มีการจัดสวนอย่างสวยงามเหมาะแก่การพักผ่อนหย่อนใจ"
     },
+    tag: {
+      th: "สวน",
+      en: "garden",
+      zh: "花园"
+    },
     detail_more: {
       location: "118 Chiang Mai , Route 118, ตำบล เชิงดอย อำเภอดอยสะเก็ด เชียงใหม่ 50220",
       lat: 18.857584,
       lng: 99.098232,
-      img: "ImgTrip/doi-saket/Tweechol-Botanic-Garden-&-Horizon-Village.jpg",
+      img: "",
+      gallery: [
+      ],
       video: "",
       credit: ""
     }
@@ -114,11 +138,18 @@ export const DoiSaketTrips = [
       zh: "这座横跨湄广河的吊桥连接了班帕萨甘村与沙革县，不仅方便当地居民出行，这里的景色也十分优美。如今已成为沙革县新的地标之一。",
       th: "สะพานแขวนที่เชื่อมระหว่างบ้านป่าสักงามและอำเภอดอยสะเก็ด ช่วยอำนวยความสะดวกในการเดินทางและมีทิวทัศน์ที่สวยงาม กลายเป็นแลนด์มาร์คแห่งใหม่ของดอยสะเก็ด"
     },
+    tag: {
+      th: "ธรรมชาติ",
+      en: "nature",
+      zh: "自然"
+    },
     detail_more: {
       location: "W4HH+948 ตำบล ลวงเหนือ อำเภอดอยสะเก็ด เชียงใหม่ 50220",
       lat: 18.9284858,
       lng: 99.1233071,
-      img: "ImgTrip/doi-saket/Mae-Kuang-Udom-Thara-Reservoir-from-the-Dam-Road.jpg",
+      img: "",
+      gallery: [
+      ],
       video: "",
       credit: ""
     }
@@ -145,109 +176,21 @@ export const DoiSaketTrips = [
       zh: "一家位于溪流旁的餐厅和咖啡馆，环境清凉舒适，交通方便，距离清迈市区不远。店铺被高大的树木环绕，可听到潺潺流水声，非常适合家庭、朋友聚会或情侣前来放松休闲。",
       th: "ร้านอาหารและคาเฟ่ริมลำธาร บรรยากาศเย็นสบาย อยู่ไม่ไกลจากตัวเมืองเชียงใหม่ รายล้อมด้วยต้นไม้ใหญ่และเสียงน้ำไหล เหมาะสำหรับครอบครัว เพื่อน หรือคู่รักที่ต้องการมาพักผ่อน"
     },
+    tag: {
+      th: "ค่าเฟ่",
+      en: "cafe",
+      zh: "咖啡馆"
+    },
     detail_more: {
       location: "116 ตำบล ป่าเมี่ยง อำเภอดอยสะเก็ด เชียงใหม่ 50200",
       lat: 19.0113876,
       lng: 99.2957496,
-      img: "ImgTrip/doi-saket/Pang-Fan.jpg",
+      img: "",
+      gallery: [
+      ],
       video: "",
       credit: ""
     }
   }
 ];
 
-export const DoiSaketOTOP = [
-  {
-    id: "Orchids-Flowers",
-    title: {
-      en: "Fresh & Dried Orchids",
-      zh: "新鲜和干花兰花",
-      th: "กล้วยไม้สดและกล้วยไม้แห้ง"
-    },
-    price: {
-      en: "100 - 500 THB",
-      zh: "100 - 500 泰铢",
-      th: "100 - 500 บาท"
-    },
-    hours: {
-      en: "Daily 08:00 - 17:00",
-      zh: "每天 08:00 - 17:00",
-      th: "ทุกวัน 08:00 - 17:00 น."
-    },
-    detail: {
-      en: "Beautiful orchid flowers and arrangements from Doi Saket cultivation centers. Fresh orchids for bouquets and dried flowers for decoration. Premium quality flowers known nationwide.",
-      zh: "来自多沙革种植中心的美丽兰花和花卉布置。新鲜兰花用于花束，干花用于装饰。全国闻名的优质花卉。",
-      th: "ดอกกล้วยไม้ที่สวยงามและการจัดดอกไม้จากศูนย์เพาะปลูกดอยสะเก็ด กล้วยไม้สดสำหรับจัดช่อและดอกไม้แห้งสำหรับตกแต่ง ดอกไม้คุณภาพระดับพรีเมียมที่เป็นที่รู้จักทั่วประเทศ"
-    },
-    detail_more: {
-      location: "Orchid farms, Chiang Doi Subdistrict",
-      lat: 18.8700000,
-      lng: 99.1450000,
-      img: "ImgTrip/doi-saket/Wat-Phra-That-Doi-Saket.jpg",
-      video: "",
-      credit: ""
-    }
-  },
-  {
-    id: "Aromatic-Herbs-Plants",
-    title: {
-      en: "Aromatic Herbs & Medicinal Plants",
-      zh: "芳香草药和药用植物",
-      th: "สมุนไพรหอมและพืชสมุนไพร"
-    },
-    price: {
-      en: "50 - 300 THB",
-      zh: "50 - 300 泰铢",
-      th: "50 - 300 บาท"
-    },
-    hours: {
-      en: "Daily 08:00 - 17:00",
-      zh: "每天 08:00 - 17:00",
-      th: "ทุกวัน 08:00 - 17:00 น."
-    },
-    detail: {
-      en: "Fresh and dried aromatic herbs including lemongrass, basil, and medicinal plants. Used in traditional Thai cooking and herbal remedies, cultivated locally.",
-      zh: "新鲜和干芳香草药，包括柠檬草、罗勒和药用植物。用于传统泰国烹饪和草药疗法，由当地种植。",
-      th: "สมุนไพรสดและแห้งหลากหลายชนิด ทั้งตะไคร้ โหระพา และพืชสมุนไพรต่างๆ ใช้ในการปรุงอาหารไทยแบบดั้งเดิมและยาสมุนไพร ที่ปลูกในท้องถิ่น"
-    },
-    detail_more: {
-      location: "Herb cultivation centers, Doi Saket District",
-      lat: 18.8750000,
-      lng: 99.1500000,
-      img: "ImgTrip/doi-saket/Take-a-Walk-house-&-coffee.jpg",
-      video: "",
-      credit: ""
-    }
-  },
-  {
-    id: "Flower-Arrangements-Crafts",
-    title: {
-      en: "Flower Crafts & Dried Arrangements",
-      zh: "花卉工艺品和干花布置",
-      th: "งานฝีมือประดิษฐ์และจัดดอกไม้แห้ง"
-    },
-    price: {
-      en: "150 - 600 THB",
-      zh: "150 - 600 泰铢",
-      th: "150 - 600 บาท"
-    },
-    hours: {
-      en: "Daily 09:00 - 17:00",
-      zh: "每天 09:00 - 17:00",
-      th: "ทุกวัน 09:00 - 17:00 น."
-    },
-    detail: {
-      en: "Handmade flower crafts including dried flower arrangements, pressed flowers, and decorative pieces. Unique souvenirs showcasing Doi Saket's beautiful flora.",
-      zh: "手工制作的花卉工艺品，包括干花布置、压花和装饰品。展示多沙革美丽植物群的独特纪念品。",
-      th: "งานฝีมือดอกไม้ทำมือ รวมถึงการจัดดอกไม้แห้ง ดอกไม้ทับ และของประดับตกแต่ง นำเสนอเป็นของที่ระลึกที่สวยงามและมีเอกลักษณ์จากดอยสะเก็ด"
-    },
-    detail_more: {
-      location: "Flower craft workshops, Chiang Doi & Pa Miang",
-      lat: 18.8800000,
-      lng: 99.1600000,
-      img: "ImgTrip/doi-saket/Wat-Phra-That-Doi-Saket.jpg",
-      video: "",
-      credit: ""
-    }
-  }
-];

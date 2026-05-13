@@ -210,66 +210,56 @@ function ProgressBar({ progress }: { progress: number }) {
 
 interface PreloaderProps {
   onComplete: () => void;
+  dataPromise: Promise<void>;  // ← เพิ่ม
 }
 
-export default function ChiangMaiPreloader({ onComplete }: PreloaderProps) {
+export default function ChiangMaiPreloader({ onComplete, dataPromise }: PreloaderProps) {
   const [stars, setStars] = useState<Star[]>([]);
   const [mounted, setMounted] = useState(false);
   const [lanterns, setLanterns] = useState<Lantern[]>([]);
   const [progress, setProgress] = useState(0);
   const lanternIdRef = useRef(0);
   const progressRef = useRef(0);
+  const dataReadyRef = useRef(false);    // ← เพิ่ม
+  const progressDoneRef = useRef(false); // ← เพิ่ม
+
+  // ← เพิ่ม: callback เช็คทั้งคู่พร้อมกัน
+  const tryComplete = useRef(() => {
+    if (dataReadyRef.current && progressDoneRef.current) {
+      setTimeout(onComplete, 800);
+    }
+  });
 
   useEffect(() => {
     setStars(generateStars(70));
     setMounted(true);
   }, []);
 
-  // Spawn lanterns
+  // ← เพิ่ม: รอ data
   useEffect(() => {
-    function spawnLantern() {
-      const id = lanternIdRef.current++;
-      const color = LANTERN_COLORS[Math.floor(Math.random() * LANTERN_COLORS.length)];
-      const size = rand(12, 26);
-      const duration = rand(10, 18);
-      const delay = rand(0, 2);
+    dataPromise.then(() => {
+      dataReadyRef.current = true;
+      tryComplete.current();
+    });
+  }, [dataPromise]);
 
-      const newLantern: Lantern = {
-        id,
-        left: rand(20, 80),
-        size,
-        duration,
-        delay,
-        color,
-      };
-
-      setLanterns((prev) => [...prev, newLantern]);
-
-      // Remove after animation ends
-      setTimeout(() => {
-        setLanterns((prev) => prev.filter((l) => l.id !== id));
-      }, (duration + delay + 1) * 1000);
-    }
-
-    spawnLantern();
-    const interval = setInterval(spawnLantern, 1800);
-    return () => clearInterval(interval);
+  // Spawn lanterns (เหมือนเดิม ไม่ต้องแก้)
+  useEffect(() => {
+    // ... โค้ดเดิม
   }, []);
 
-  // Progress animation
-useEffect(() => {
+  // Progress animation — แก้แค่ตอน progress ครบ 100
+  useEffect(() => {
     function tick() {
-      const step = rand(2, 6); // ปรับให้เร็วขึ้นนิดนึง
+      const step = rand(2, 6);
       progressRef.current = Math.min(100, progressRef.current + step);
       setProgress(progressRef.current);
 
       if (progressRef.current < 100) {
         setTimeout(tick, rand(50, 120));
       } else {
-        // --- ส่วนสุดท้าย: เมื่อโหลดเสร็จ ---
-        setTimeout(() => {
-          onComplete(); // สั่งให้หน้าหลักเริ่มแสดงผล
-        }, 800); 
+        progressDoneRef.current = true;
+        tryComplete.current();
       }
     }
     const timeout = setTimeout(tick, 400);

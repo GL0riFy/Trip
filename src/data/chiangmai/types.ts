@@ -9,24 +9,7 @@ export type TripDetailMore = {
   lat: number;
   lng: number;
   img: string;
+  gallery: string[];
   video: string;
   credit: string;
-};
-
-export type TripItem = {
-  id: string;
-  title: LocalizedText;
-  price: LocalizedText;
-  hours: LocalizedText;
-  detail: LocalizedText;
-  detail_more: TripDetailMore;
-};
-
-export type OTOPItem = {
-  id: string;
-  title: LocalizedText;
-  price: LocalizedText;
-  hours: LocalizedText;
-  detail: LocalizedText;
-  detail_more: TripDetailMore;
 };

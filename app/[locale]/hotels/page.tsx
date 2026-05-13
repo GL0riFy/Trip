@@ -18,10 +18,20 @@ export default function HotelGuide() {
     const locale = (params.locale as Locale) || 'en';
     const [activeTab, setActiveTab] = useState<Category>('all');
     const [isReady, setIsReady] = useState(false);
+    
+    const [hotels, setHotels] = useState(HotelData); // ถ้าเป็น static data แบบนี้
+    const [dataPromise] = useState<Promise<void>>(
+        () => Promise.resolve().then(() => setHotels(HotelData))
+    );
 
-    // if (!isReady) {
-    //     return <ChiangMaiPreloader onComplete={() => setIsReady(true)} />;
-    // }
+    if (!isReady) {
+        return (
+            <ChiangMaiPreloader
+                onComplete={() => setIsReady(true)}
+                dataPromise={dataPromise}
+            />
+        );
+    }
 
     interface UITranslation {
         heroTitle: string;
@@ -62,9 +72,9 @@ export default function HotelGuide() {
     // ดึงข้อมูลตาม locale ถ้าไม่มีให้ใช้ภาษาไทยเป็นหลัก
     const ui = uiMap[locale] || uiMap.en;
 
-    const filteredHotels = activeTab === 'all' 
-        ? HotelData 
-        : HotelData.filter(h => h.type === activeTab);
+    const filteredHotels = activeTab === 'all'
+        ? hotels
+        : hotels.filter(h => h.type === activeTab);
 
     return (
         <motion.div 
@@ -113,64 +123,63 @@ export default function HotelGuide() {
                         ))}
                     </div>
 
-                    {/* --- GRID (ส่วนที่เหลือเหมือนเดิม) --- */}
-<motion.div layout className="grid grid-cols-1 md:grid-cols-6 gap-6 items-stretch">
-    <AnimatePresence mode='popLayout'>
-        {filteredHotels.map((hotel, index) => {
-            // ถัาอยู่หน้า 'ทั้งหมด' 2 อันแรกจะกินพื้นที่ครึ่งจอ (3/6 คอลัมน์) อันที่เหลือกิน 1/3 จอ (2/6 คอลัมน์)
-            const isLarge = activeTab === 'all' && index < 2;
-            
-            return (
-                <motion.div
-                    key={hotel.id}
-                    layout
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ duration: 0.3 }}
-                    // จัดการขนาด Responsive: มือถือ = เต็มจอ, Tablet = ครึ่งจอ, PC = ตามเงื่อนไข isLarge
-                    className={`flex ${isLarge ? 'md:col-span-3' : 'md:col-span-3 lg:col-span-2'}`} 
-                >
-                    <Link 
-                        href={`/${locale}/hotels/${hotel.slug}`} 
-                        className="group flex flex-col w-full h-full bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-gray-100"
-                    >
-                        {/* 1. FIX ความสูงรูปภาพตรงนี้เลยครับ */}
-                        <div className={`relative w-full shrink-0 overflow-hidden ${isLarge ? 'h-[360px]' : 'h-[240px]'}`}>
-                            <img 
-                                src={hotel.image} 
-                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
-                                alt={hotel.locales[locale]?.name || hotel.locales['th'].name} 
-                            />
-                        </div>
+                    <motion.div layout className="grid grid-cols-1 md:grid-cols-6 gap-6 items-stretch">
+                        <AnimatePresence mode='popLayout'>
+                            {filteredHotels.map((hotel, index) => {
+                                // ถัาอยู่หน้า 'ทั้งหมด' 2 อันแรกจะกินพื้นที่ครึ่งจอ (3/6 คอลัมน์) อันที่เหลือกิน 1/3 จอ (2/6 คอลัมน์)
+                                const isLarge = activeTab === 'all' && index < 2;
+                                
+                                return (
+                                    <motion.div
+                                        key={hotel.id}
+                                        layout
+                                        initial={{ opacity: 0, scale: 0.95 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        exit={{ opacity: 0, scale: 0.95 }}
+                                        transition={{ duration: 0.3 }}
+                                        // จัดการขนาด Responsive: มือถือ = เต็มจอ, Tablet = ครึ่งจอ, PC = ตามเงื่อนไข isLarge
+                                        className={`flex ${isLarge ? 'md:col-span-3' : 'md:col-span-3 lg:col-span-2'}`} 
+                                    >
+                                        <Link 
+                                            href={`/${locale}/hotels/${hotel.slug}`} 
+                                            className="group flex flex-col w-full h-full bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-gray-100"
+                                        >
+                                            {/* 1. FIX ความสูงรูปภาพตรงนี้เลยครับ */}
+                                            <div className={`relative w-full shrink-0 overflow-hidden ${isLarge ? 'h-[360px]' : 'h-[240px]'}`}>
+                                                <img 
+                                                    src={hotel.image} 
+                                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
+                                                    alt={hotel.locales[locale]?.name || hotel.locales['th'].name} 
+                                                />
+                                            </div>
 
-                        {/* 2. ดันเนื้อหาให้เต็มพื้นที่การ์ด */}
-                        <div className="p-6 flex flex-col flex-grow">
-                            <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-900 transition-colors line-clamp-1">
-                                {hotel.locales[locale]?.name || hotel.locales['th'].name}
-                            </h3>
-                            
-                            <p className="text-sm text-gray-500 mt-3 line-clamp-2 leading-relaxed">
-                                {hotel.locales[locale]?.desc || hotel.locales['th'].desc}
-                            </p>
+                                            {/* 2. ดันเนื้อหาให้เต็มพื้นที่การ์ด */}
+                                            <div className="p-6 flex flex-col flex-grow">
+                                                <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-900 transition-colors line-clamp-1">
+                                                    {hotel.locales[locale]?.name || hotel.locales['th'].name}
+                                                </h3>
+                                                
+                                                <p className="text-sm text-gray-500 mt-3 line-clamp-2 leading-relaxed">
+                                                    {hotel.locales[locale]?.desc || hotel.locales['th'].desc}
+                                                </p>
 
-                            {/* 3. mt-auto จะดันหมุดหมายและราคาไปติดขอบล่างสุดเสมอ */}
-                            <div className="mt-auto pt-5 flex justify-between items-center text-xs font-medium text-gray-400">
-                                <span className="truncate mr-2 flex items-center gap-1">
-                                    <span className="text-pink-500 text-base"><MapPin /></span> 
-                                    {hotel.locales[locale]?.location || hotel.locales['th'].location}
-                                </span>
-                                <span className="text-blue-600 font-bold shrink-0 text-sm">
-                                    {hotel.priceRange} ฿
-                                </span>
-                            </div>
-                        </div>
-                    </Link>
-                </motion.div>
-            );
-        })}
-    </AnimatePresence>
-</motion.div>
+                                                {/* 3. mt-auto จะดันหมุดหมายและราคาไปติดขอบล่างสุดเสมอ */}
+                                                <div className="mt-auto pt-5 flex justify-between items-center text-xs font-medium text-gray-400">
+                                                    <span className="truncate mr-2 flex items-center gap-1">
+                                                        <span className="text-pink-500 text-base"><MapPin /></span> 
+                                                        {hotel.locales[locale]?.location || hotel.locales['th'].location}
+                                                    </span>
+                                                    <span className="text-blue-600 font-bold shrink-0 text-sm">
+                                                        {hotel.priceRange} ฿
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </Link>
+                                    </motion.div>
+                                );
+                            })}
+                        </AnimatePresence>
+                    </motion.div>
                 </div>
             </div>
         </motion.div>

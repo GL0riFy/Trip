@@ -3,10 +3,22 @@
 import React, { useState } from "react";
 
 import { reviewsData, Review } from "@/src/data/reviews";
+import ChiangMaiPreloader from '@/app/perloding/ChiangMaiPreloader';
 
 export default function ReviewPage() {
     // State สำหรับจัดการการเปิด/ปิด Popup
     const [selectedReview, setSelectedReview] = useState<Review | null>(null);
+    const [isReady, setIsReady] = useState(false); // ← เพิ่ม
+    const [dataPromise] = useState<Promise<void>>( // ← เพิ่ม
+        () => Promise.resolve() // data เป็น static import อยู่แล้ว ไม่ต้อง fetch
+    );
+
+    // แบบใช้ api
+//     const [dataPromise] = useState<Promise<void>>(() =>
+//     fetch('/api/your-endpoint')
+//       .then(r => r.json())
+//       .then(result => setData(result))
+//   );
 
     // ฟังก์ชันวาดดาว
     const renderStars = (count: number) => {
@@ -16,6 +28,15 @@ export default function ReviewPage() {
             </svg>
         ));
     };
+
+    if (!isReady) {
+        return (
+            <ChiangMaiPreloader
+                onComplete={() => setIsReady(true)}
+                dataPromise={dataPromise}
+            />
+        );
+    }
 
     return (
         <div className="min-h-screen bg-gray-50 pb-20">

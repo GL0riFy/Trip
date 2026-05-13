@@ -1,3 +1,6 @@
+import { tag } from "@turf/turf";
+import { th } from "framer-motion/client";
+
 export const HangDongTrips = [
   {
     id: "Grand-Canyon-Water-Park",
@@ -21,11 +24,18 @@ export const HangDongTrips = [
       zh: "清迈北部大型户外水上乐园，提供滑水道、皮划艇、跳崖、滑索和滑水活动，适合喜欢刺激活动的游客。",
       th: "สวนน้ำกลางแจ้งที่ใหญ่ที่สุดในเชียงใหม่ตอนเหนือ มีเครื่องเล่นทางน้ำอย่างสไลเดอร์ คายัค แคนู กระโดดหน้าผา ซิปไลน์ (รวม 1 รอบ) และเวคบอร์ด เหมาะสำหรับผู้ที่รักการผจญภัย"
     },
+    tag: {
+      th: "กิจกรรม",
+      en: "activity",
+      zh: "活动"
+    },
     detail_more: {
       location: "202 ถนนเลียบคลองชลประทาน น้ำแพร่ อำเภอหางดง เชียงใหม่ 50230",
       lat: 18.6958239, 
       lng: 98.8913324,
-      img: "ImgTrip/hang-dong/grand-canyon-water-park.jpg",
+      img: "",
+      gallery: [
+      ],
       video: "",
       credit: ""
     }
@@ -51,11 +61,18 @@ export const HangDongTrips = [
       en: "Famous for its steep canyon cliffs and the Mae Khan River flowing through the middle. Shallow water areas make it suitable for swimming and photography.",
       zh: "以峡谷峭壁和湄坎河闻名，水位较浅，适合游泳和拍照。"
     },
+    tag: {
+      th: "ธรรมชาติ",
+      en: "nature",
+      zh: "自然"
+    },
     detail_more: {
       location: "น้ำแพร่ อำเภอหางดง เชียงใหม่ 50230",
       lat: 18.7232836, 
       lng: 98.8201689,
-      img: "ImgTrip/hang-dong/Ob-Khan-National-Park.jpg",
+      img: "",
+      gallery: [
+      ],
       video: "",
       credit: ""
     }
@@ -81,11 +98,18 @@ export const HangDongTrips = [
       en: "A beautiful classic Lanna-style wooden temple in the countryside. Known for its traditional viharn and peaceful atmosphere.",
       zh: "经典兰纳风格木质寺庙，环境安静，非常适合拍照和参观。"
     },
+    tag: {
+      th: "วัด",
+      en: "temple",
+      zh: "寺庙"
+    },
     detail_more: {
       location: "PWFG+45F บ้านต้นเกว๋น ซอย 3 ตำบล หนองควาย อำเภอหางดง เชียงใหม่ 50230",
       lat: 18.7227136, 
       lng: 98.9254005,
-      img: "ImgTrip/hang-dong/Wat-Ton-Kwen.jpg",
+      img: "",
+      gallery: [
+      ],
       video: "",
       credit: ""
     }
@@ -111,11 +135,18 @@ export const HangDongTrips = [
       en: "One of Thailand’s largest wood carving communities. Visitors can shop for high-quality wood crafts, home decorations, and handmade souvenirs.",
       zh: "泰国大型木雕村，可购买优质木雕和家居装饰品。"
     },
+    tag: {
+      th: "สถาปัตยกรรม",
+      en: "architecture",
+      zh: "建筑"
+    },
     detail_more: {
       location: "MXM2+PG ตำบล ขุนคง อำเภอหางดง เชียงใหม่",
       lat: 18.6846473, 
       lng: 98.9502479,
-      img: "ImgTrip/hang-dong/Ban-Tawai-Wood-Carving.jpg",
+      img: "",
+      gallery: [
+      ],
       video: "",
       credit: ""
     }
@@ -141,105 +172,18 @@ export const HangDongTrips = [
       en: "Also known as Phra That Si Mueang Pong. A stunning white temple considered the 2nd metal castle in Thailand and 4th in the world.",
       zh: "又称 Phra That Si Mueang Pong，是泰国第二座金属城堡式寺庙，外观洁白壮观。"
     },
+    tag: {
+      th: "วัด",
+      en: "temple",
+      zh: "寺庙"
+    },
     detail_more: {
       location: "QV2M+3MQ ตำบล บ้านปง อำเภอหางดง เชียงใหม่ 50230",
       lat: 18.7503332, 
       lng: 98.8842523,
-      img: "ImgTrip/hang-dong/Wat-Aranyawat.jpg",
-      video: "",
-      credit: ""
-    }
-  }
-];
-
-export const HangDongOTOP = [
-  {
-    id: "Wood-Carving-Crafts",
-    title: {
-      en: "Hand-carved Wood Crafts",
-      zh: "手工木雕工艺品",
-      th: "งานไม้แกะสลักด้วยมือ"
-    },
-    price: {
-      en: "200 - 2000 THB",
-      zh: "200 - 2000 泰铢",
-      th: "200 - 2000 บาท"
-    },
-    hours: {
-      en: "Daily 09:00 - 18:00",
-      zh: "每天 09:00 - 18:00",
-      th: "ทุกวัน 09:00 - 18:00 น."
-    },
-    detail: {
-      en: "Exquisite wood carvings and wooden furniture crafted by skilled artisans in Ban Tawai. Including home decorations, statues, and decorative pieces made from various wood types.",
-      zh: "由班塔外熟练工匠精心雕刻的精美木工艺品和家具。包括各种木材制成的家居装饰品、雕像和装饰品。"
-    },
-    detail_more: {
-      location: "Ban Tawai Woodcarving Village, Khun Khong Subdistrict",
-      lat: 18.6846473,
-      lng: 98.9502479,
-      img: "ImgTrip/hang-dong/Ban-Tawai-Wood-Carving.jpg",
-      video: "",
-      credit: ""
-    }
-  },
-  {
-    id: "Lacquerware-Pottery",
-    title: {
-      en: "Lacquerware & Traditional Pottery",
-      zh: "漆器和传统陶器",
-      th: "เครื่องเขินและเครื่องปั้นดินเผาแบบดั้งเดิม"
-    },
-    price: {
-      en: "150 - 1500 THB",
-      zh: "150 - 1500 泰铢",
-      th: "150 - 1500 บาท"
-    },
-    hours: {
-      en: "Daily 09:00 - 18:00",
-      zh: "每天 09:00 - 18:00",
-      th: "ทุกวัน 09:00 - 18:00 น."
-    },
-    detail: {
-      en: "Beautiful lacquerware and hand-thrown pottery produced by local artisans. Traditional patterns and techniques passed down through generations. Perfect for home decoration.",
-      zh: "由当地工匠制作的精美漆器和手工陶器。传统图案和代代相传的工艺技法。是家居装饰的完美选择。"
-    },
-    detail_more: {
-      location: "Lacquerware workshops, Hang Dong District",
-      lat: 18.6900000,
-      lng: 98.8900000,
-      img: "ImgTrip/hang-dong/Ban-Tawai-Wood-Carving.jpg",
-      video: "",
-      credit: ""
-    }
-  },
-  {
-    id: "Local-Snacks-Souvenirs",
-    title: {
-      en: "Local Snacks & Preserved Foods",
-      zh: "本地零食和腌制食品",
-      th: "ขนมพื้นเมืองและอาหารแปรรูป"
-    },
-    price: {
-      en: "50 - 300 THB",
-      zh: "50 - 300 泰铢",
-      th: "50 - 300 บาท"
-    },
-    hours: {
-      en: "Daily 08:00 - 17:00",
-      zh: "每天 08:00 - 17:00",
-      th: "ทุกวัน 08:00 - 17:00 น."
-    },
-    detail: {
-      en: "Traditional snacks and preserved foods from Hang Dong including dried fruits, roasted nuts, and local confectionery. All made using traditional methods.",
-      th: "ขนมขบเคี้ยวและอาหารแปรรูปแบบดั้งเดิมจากหางดง ได้แก่ ผลไม้อบแห้ง ถั่วคั่ว และขนมหวานพื้นเมือง ทั้งหมดทำโดยใช้กรรมวิธีแบบดั้งเดิม",
-      zh: "来自杭东的传统零食和腌制食品，包括干果、烤坚果和本地糖果。均采用传统方法制作。"
-    },
-    detail_more: {
-      location: "Local markets, Hang Dong District",
-      lat: 18.6950000,
-      lng: 98.8800000,
-      img: "ImgTrip/hang-dong/grand-canyon-water-park.jpg",
+      img: "",
+      gallery: [
+      ],
       video: "",
       credit: ""
     }

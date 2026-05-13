@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import { restaurantData, tipsData } from '@/src/data/restaurants/food_data';
 import Link from 'next/link';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
+import ChiangMaiPreloader from '@/app/perloding/ChiangMaiPreloader'; // ← เพิ่ม
 
 type Locale = 'th' | 'en' | 'zh';
 
@@ -22,8 +23,37 @@ export default function ChiangMaiTravelGuide() {
     const params = useParams();
     const locale = (params.locale as Locale) || 'en';
 
+    const [isReady, setIsReady] = useState(false);
+    const [dataPromise] = useState<Promise<void>>(() => Promise.resolve());
     const [showAllRestaurants, setShowAllRestaurants] = useState(false);
     const [activeSection, setActiveSection] = useState('restaurant-section');
+
+    // ← ย้าย useEffect ขึ้นมาก่อน if (!isReady) เสมอ
+    useEffect(() => {
+        const handleScroll = () => {
+            const tipsSection = document.getElementById('tips-section');
+            if (tipsSection) {
+                const tipsTop = tipsSection.getBoundingClientRect().top;
+                if (tipsTop < 300) {
+                    setActiveSection('tips-section');
+                } else {
+                    setActiveSection('restaurant-section');
+                }
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
+    if (!isReady) {
+        return (
+            <ChiangMaiPreloader
+                onComplete={() => setIsReady(true)}
+                dataPromise={dataPromise}
+            />
+        );
+    }
 
     const uiMap = {
         th: {
@@ -70,23 +100,6 @@ export default function ChiangMaiTravelGuide() {
             window.scrollTo({ top: y, behavior: 'smooth' });
         }
     };
-
-    useEffect(() => {
-        const handleScroll = () => {
-            const tipsSection = document.getElementById('tips-section');
-            if (tipsSection) {
-                const tipsTop = tipsSection.getBoundingClientRect().top;
-                if (tipsTop < 300) {
-                    setActiveSection('tips-section');
-                } else {
-                    setActiveSection('restaurant-section');
-                }
-            }
-        };
-
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
 
     const handleToggleShowAll = () => {
         if (showAllRestaurants) {

@@ -1,3 +1,5 @@
+import { tag } from "@turf/turf";
+
 export const ChiangDaoTrips = [
   {
     id: "Doi-Chiang-Dao",
@@ -21,11 +23,18 @@ export const ChiangDaoTrips = [
       zh: "清道山是一座地形复杂的石灰岩山脉，拥有丰富的热带雨林和野生动物。最高峰清道大山（Doi Luang Chiang Dao）海拔 2,225 米。露营装备租赁价格参考：帐篷 300 泰铢，睡袋 100 泰铢，睡垫 50 泰铢，锅具 80 泰铢，炉头 100 泰铢，瓦斯罐 60 泰铢，便携式厕所套件约 250 泰铢。",
       th: "ดอยเชียงดาวเป็นภูเขาหินปูนที่มีภูมิประเทศซับซ้อน ปกคลุมด้วยป่าดิบชื้นอุดมสมบูรณ์ เป็นถิ่นที่อยู่ของสัตว์ป่าหลากชนิด ยอดสูงสุดคือดอยหลวงเชียงดาว ความสูง 2,225 เมตร อัตราเช่าอุปกรณ์แคมป์ปิ้ง: เต็นท์ 300 บาท, ถุงนอน 100 บาท, แผ่นรองนอน 50 บาท, หม้อ 80 บาท, เตา 100 บาท, แก๊ส 60 บาท, ชุดห้องน้ำแบบพกพา ~250 บาท"
     },
+    tag: {
+      th: "ธรรมชาติ",
+      en: "nature",
+      zh: "自然"
+    },
     detail_more: {
       location: "9VWQ+QXH ถนนอบจ. ชม. 3232 ตำบล เชียงดาว อำเภอเชียงดาว เชียงใหม่ 50170",
       lat: 19.4015466,
       lng: 98.8878756,
-      img: "ImgTrip/chiang-dao/Doi-Chiang-Dao.jpg",
+      img: "https://upload.wikimedia.org/wikipedia/commons/c/c7/Doi_Chiang_Dao_%28I%29.jpg",
+      gallery: [
+        ],
       video: "",
       credit: ""
     }
@@ -52,11 +61,18 @@ export const ChiangDaoTrips = [
       zh: "清道洞位于清道大山脚下，是当地著名的旅游景点。洞内拥有壮丽的钟乳石和石笋景观。该洞穴也是清道洞寺的一部分，供奉着多尊佛像和神龛。",
       th: "ตั้งอยู่บริเวณเชิงดอยหลวงเชียงดาว เป็นกลุ่มถ้ำที่มีชื่อเสียงซึ่งมีหินงอกหินย้อยงดงาม ถ้ำแห่งนี้เป็นส่วนหนึ่งของวัดศักดิ์สิทธิ์และเป็นที่ประดิษฐานพระพุทธรูปและศาลบูชาหลายแห่ง"
     },
+    tag: {
+      th: "วัด",
+      en: "temple",
+      zh: "寺庙"
+    },
     detail_more: {
       location: "273 หมู่ 5 ตำบล เชียงดาว อำเภอเชียงดาว เชียงใหม่ 50170",
       lat: 19.390418,
       lng: 98.9111165,
-      img: "ImgTrip/chiang-dao/Wat-Tham-Chiang-Dao.jpg",
+      img: "https://upload.wikimedia.org/wikipedia/commons/a/ad/Wat_Tham_Chiang_Dao_%28I%29.jpg",
+      gallery: [
+      ],
       video: "",
       credit: ""
     }
@@ -83,11 +99,18 @@ export const ChiangDaoTrips = [
       zh: "这是一个保留着传统乡村魅力的宁静社区，空气清新。村民与森林和谐共处，采集野菜和草药，过着自给自足的生活。康河（Kong River）穿村而过，雨季时两岸稻田翠绿，景色宜人。",
       th: "ชุมชนชนบทที่สงบและยังคงเสน่ห์แบบดั้งเดิม ชาวบ้านอยู่ร่วมกับป่าอย่างยั่งยืน เก็บหาผักป่าและสมุนไพร แม่น้ำคองไหลผ่านหมู่บ้าน ล้อมรอบด้วยทุ่งนาเขียวขจีในช่วงฤดูฝน"
     },
+    tag: {
+      th: "ชุมชน",
+      en: "community",
+      zh: "社区"
+    },
     detail_more: {
       location: "9PP8+525 ตำบล เมืองคอง อำเภอเชียงดาว เชียงใหม่",
       lat: 19.385398,
       lng: 98.7125277,
-      img: "ImgTrip/chiang-dao/Mueang-Khong.jpg",
+      img: "",
+      gallery: [
+      ],
       video: "",
       credit: ""
     }
@@ -145,107 +168,18 @@ export const ChiangDaoTrips = [
       zh: "帕登国家公园拥有复杂的山脉地形，是平河和湄唐河的源头。这里森林资源丰富，栖息着水鹿、赤麂以及多种珍稀鸟类。主要景点包括 Sri Sangwan 瀑布和 Pong Arng 温泉。",
       th: "อุทยานแห่งนี้มีเทือกเขาที่ซับซ้อนและเป็นต้นน้ำของแม่น้ำปิงและแม่น้ำแม่แตง เป็นถิ่นอาศัยของสัตว์ป่าหลากชนิด เช่น กวางซัมบาร์ เก้ง และนกหายาก จุดท่องเที่ยวสำคัญ ได้แก่ น้ำตกศรีสังวาล และน้ำพุร้อนโป่งอาง"
     },
+    tag: {
+      th: "ธรรมชาติ",
+      en: "nature",
+      zh: "自然"
+    },
     detail_more: {
       location: "ตำบล เชียงดาว อำเภอเชียงดาว เชียงใหม่ 50170",
       lat: 19.4733608,
       lng: 98.8293993,
-      img: "ImgTrip/chiang-dao/Pha-Daeng-National-Park.jpg",
-      video: "",
-      credit: ""
-    }
-  }
-];
-
-export const ChiangDaoOTOP = [
-  {
-    id: "Highland-Coffee",
-    title: {
-      en: "Highland Coffee",
-      zh: "高地咖啡",
-      th: "กาแฟที่ราบสูง"
-    },
-    price: {
-      en: "150 - 500 THB",
-      zh: "150 - 500 泰铢",
-      th: "150 - 500 บาท"
-    },
-    hours: {
-      en: "Daily 08:00 - 17:00",
-      zh: "每天 08:00 - 17:00",
-      th: "ทุกวัน 08:00 - 17:00 น."
-    },
-    detail: {
-      en: "Premium arabica and robusta coffee grown in the cool highlands of Chiang Dao. Freshly roasted and ground, featuring rich flavors distinctive to the region.",
-      zh: "在清道寒冷的高地种植的优质阿拉比卡和罗布斯塔咖啡。新鲜烘焙和研磨，具有该地区独特的浓郁风味。",
-      th: "กาแฟอาราบิก้าและโรบัสต้าชั้นเยี่ยม ปลูกบนที่สูงที่มีอากาศเย็นสบายของอำเภอเชียงดาว คั่วสดและบดใหม่ มีรสชาติเข้มข้นเป็นเอกลักษณ์ของภูมิภาค"
-    },
-    detail_more: {
-      location: "Chiang Dao Highland Coffee Farmers Co-op, Chiang Dao District",
-      lat: 19.4200000,
-      lng: 98.8500000,
-      img: "ImgTrip/chiang-dao/Doi-Chiang-Dao.jpg",
-      video: "",
-      credit: ""
-    }
-  },
-  {
-    id: "Hill-Tribe-Handicrafts",
-    title: {
-      en: "Hill Tribe Handicrafts & Textiles",
-      zh: "山地部落手工艺品和纺织品",
-      th: "งานหัตถกรรมและสิ่งทอชาวเขา"
-    },
-    price: {
-      en: "100 - 800 THB",
-      zh: "100 - 800 泰铢",
-      th: "100 - 800 บาท"
-    },
-    hours: {
-      en: "Daily 09:00 - 18:00",
-      zh: "每天 09:00 - 18:00",
-      th: "ทุกวัน 09:00 - 18:00 น."
-    },
-    detail: {
-      en: "Handmade crafts from local hill tribe communities including hand-woven textiles, embroidered items, and traditional weaving. Beautiful patterns and authentic cultural pieces.",
-      zh: "来自当地山地部落社区的手工艺品，包括手工织布、刺绣物品和传统纺织。美丽的图案和真实的文化工艺品。",
-      th: "งานหัตถกรรมทำมือจากชุมชนชาวเขาในท้องถิ่น ได้แก่ ผ้าทอมือ สิ่งปักถัก และงานทอแบบดั้งเดิม ลวดลายสวยงามและเป็นชิ้นงานวัฒนธรรมที่แท้จริง"
-    },
-    detail_more: {
-      location: "Hill Tribe Craft Centers, Chiang Dao Subdistrict",
-      lat: 19.4150000,
-      lng: 98.7800000,
-      img: "ImgTrip/chiang-dao/Mueang-Khong.jpg",
-      video: "",
-      credit: ""
-    }
-  },
-  {
-    id: "Forest-Bee-Products",
-    title: {
-      en: "Forest Bee Products",
-      zh: "森林蜂产品",
-      th: "ผลิตภัณฑ์ผึ้งจากป่า"
-    },
-    price: {
-      en: "80 - 350 THB",
-      zh: "80 - 350 泰铢",
-      th: "80 - 350 บาท"
-    },
-    hours: {
-      en: "Daily 08:00 - 17:00",
-      zh: "每天 08:00 - 17:00",
-      th: "ทุกวัน 08:00 - 17:00 น."
-    },
-    detail: {
-      en: "Pure forest honey, bee pollen, and propolis collected from natural beehives in the pristine forests. Rich in natural nutrients and therapeutic properties.",
-      zh: "从原始森林中的自然蜂巢采集的纯森林蜂蜜、蜂花粉和蜂胶。富含天然营养物质和治疗功效。",
-      th: "น้ำผึ้งป่าบริสุทธิ์ เกสรดอกไม้ และโพรพอลิส เก็บจากรังผึ้งธรรมชาติในป่าบริสุทธิ์ อุดมด้วยสารอาหารธรรมชาติและสรรพคุณทางยา"
-    },
-    detail_more: {
-      location: "Forest beekeeping sites, Chiang Dao District",
-      lat: 19.4300000,
-      lng: 98.8400000,
-      img: "ImgTrip/chiang-dao/Doi-Chiang-Dao.jpg",
+      img: "",
+      gallery: [
+      ],
       video: "",
       credit: ""
     }
