@@ -1,6 +1,3 @@
-import { tag } from "@turf/turf";
-import { th } from "framer-motion/client";
-
 export const MaeRimTrips = [
   {
     id: "Mae-Sa-Waterfall",
@@ -33,8 +30,10 @@ export const MaeRimTrips = [
       location: "WV4X+H63 ซอย น้ำตกแม่สา 4 ตำบล แม่แรม อำเภอแม่ริม เชียงใหม่ 50180",
       lat: 18.9061569, 
       lng: 98.8960827,
-      img: "",
+      img: "https://www.emagtravel.com/wp-content/uploads/2016/10/maesa-800-1.jpg",
       gallery: [
+        "https://media-cdn.tripadvisor.com/media/photo-s/04/82/03/c3/mae-sa-waterfall.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Mae_sa2.jpg/1280px-Mae_sa2.jpg"
       ],
       video: "",
       credit: ""
@@ -71,8 +70,10 @@ export const MaeRimTrips = [
       location: "101 ตำบล แม่แรม อำเภอแม่ริม เชียงใหม่ 50230",
       lat: 18.8998083, 
       lng: 98.8754329,
-      img: "",
+      img: "https://www.palanla.com/ckeditor/upload/files/id37/domestic_location/Mae%20Sa%20Elephant%20Camp/001.jpg",
       gallery: [
+        "https://cdn.faceticket.net/2019/04/faceticket-Maesa-Elephant-Camp_1400x794_acf_cropped.png",
+        "https://f.ptcdn.info/769/040/000/o3r7yudw87zITbiNZC3-o.jpg"
       ],
       video: "",
       credit: ""
@@ -109,8 +110,10 @@ export const MaeRimTrips = [
       location: "99 9 ตำบล โป่งแยง อำเภอแม่ริม เชียงใหม่ 50180",
       lat: 18.9167205, 
       lng: 98.8216974,
-      img: "",
+      img: "https://www.tripgether.com/wp-content/uploads/tripgetter/Pongyangzipline_5.jpg",
       gallery: [
+        "https://cdn.faceticket.net/2018/07/zipline-pongyang-chiangmai-1.jpg",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/10/c5/a5/40/jungle-coaster-night.jpg?w=1200&h=900&s=1"
       ],
       video: "",
       credit: ""
@@ -147,8 +150,10 @@ export const MaeRimTrips = [
       location: "51/1 หมู่ที่ 7 ถนน แม่ริม - สะเมิง ตำบล ริมใต้ อำเภอแม่ริม เชียงใหม่ 50180",
       lat: 18.9249445, 
       lng: 98.9318453,
-      img: "",
+      img: "https://www.visitchiangmai.co/wp-content/uploads/2020/12/p1-9.jpg",
       gallery: [
+        "https://www.ichiangmaipr.com/wp-content/uploads/2018/12/cfc3c7ff5b7db84b0cb3e166a6e777020_10911201_181221_0005.jpg",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/11/e7/ea/7b/our-tigers-all-have-their.jpg?w=1200&h=-1&s=1"
       ],
       video: "",
       credit: ""
@@ -185,8 +190,10 @@ export const MaeRimTrips = [
       location: "WW6R+7GJ ตำบล ริมใต้ อำเภอแม่ริม เชียงใหม่ 50180",
       lat: 18.911194, 
       lng: 98.941194,
-      img: "",
+      img: "https://files.thailandtourismdirectory.go.th/assets/upload/info/attraction/338/20171023b4891a64cbf9c43be7b37a0e4efd085b010233.jpg",
       gallery: [
+        "https://www.emagtravel.com/wp-content/uploads/2019/01/wat-darapirom-800.jpg",
+        "https://media-cdn.tripadvisor.com/media/photo-s/0f/29/40/c6/caption.jpg"
       ],
       video: "",
       credit: ""
@@ -223,8 +230,10 @@ export const MaeRimTrips = [
       location: "ตำบล ดอนแก้ว อำเภอแม่ริม เชียงใหม่ 50180",
       lat: 18.8675364, 
       lng: 98.9387502,
-      img: "",
+      img: "https://files.thailandtourismdirectory.go.th/assets/upload/2017/12/22/201712229f525475daa34f515097d3d111ddac87105649.jpg",
       gallery: [
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0b/7b/67/75/photo4jpg.jpg?w=600&h=-1&s=1",
+        "https://1672travelbuddy.com/article_images/976cdc0a7972314cf983a33e23196949.jpg"
       ],
       video: "",
       credit: ""
@@ -261,8 +270,10 @@ export const MaeRimTrips = [
       location: "260 อำเภอแ ม่ริม ตำบล ดอนแก้ว อำเภอแม่ริม เชียงใหม่ 50180",
       lat: 18.8527479, 
       lng: 98.9572773,
-      img: "",
+      img: "https://f.ptcdn.info/115/077/000/rb1y4zwzjTIi42HoA43-o.jpg",
       gallery: [
+        "https://upload.wikimedia.org/wikipedia/commons/5/5b/AstroPark_02.jpg",
+        "https://darksky.narit.or.th/wp-content/uploads/2021/09/480447421_559151443811328_7307298494949119931_n-768x512.jpg"
       ],
       video: "",
       credit: ""

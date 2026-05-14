@@ -33,8 +33,10 @@ export const HangDongTrips = [
       location: "202 ถนนเลียบคลองชลประทาน น้ำแพร่ อำเภอหางดง เชียงใหม่ 50230",
       lat: 18.6958239, 
       lng: 98.8913324,
-      img: "",
+      img: "https://grandcanyon-waterpark.com/wp-content/uploads/2023/10/GYM00607-2.jpg",
       gallery: [
+        "https://www.visitchiangmai.co/wp-content/uploads/2019/03/GRAND-CANYON-WATER-PARK-01.jpg",
+        "https://res.klook.com/image/upload/w_750,h_469,c_fill,q_85/w_80,x_15,y_15,g_south_west,l_Klook_water_br_trans_yhcmh3/activities/qkta8j06zexomudpw7lw.jpg"
       ],
       video: "",
       credit: ""
@@ -107,8 +109,10 @@ export const HangDongTrips = [
       location: "PWFG+45F บ้านต้นเกว๋น ซอย 3 ตำบล หนองควาย อำเภอหางดง เชียงใหม่ 50230",
       lat: 18.7227136, 
       lng: 98.9254005,
-      img: "",
+      img: "https://www.silpa-mag.com/wp-content/uploads/2019/07/%E0%B8%A7%E0%B8%B4%E0%B8%AB%E0%B8%B2%E0%B8%A3-%E0%B8%A7%E0%B8%B1%E0%B8%94%E0%B8%AD%E0%B8%B4%E0%B8%99%E0%B8%97%E0%B8%A3%E0%B8%B2%E0%B8%A7%E0%B8%B2%E0%B8%AA-%E0%B8%A7%E0%B8%B1%E0%B8%94%E0%B8%95%E0%B9%89%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%A7%E0%B9%8B%E0%B8%99.jpg",
       gallery: [
+        "https://www.emagtravel.com/wp-content/uploads/2016/10/wat-tonkwain-800.jpg",
+        "https://th.readme.me/f/18333/5b540a96420f063c06626847.jpg"
       ],
       video: "",
       credit: ""
@@ -144,8 +148,10 @@ export const HangDongTrips = [
       location: "MXM2+PG ตำบล ขุนคง อำเภอหางดง เชียงใหม่",
       lat: 18.6846473, 
       lng: 98.9502479,
-      img: "",
+      img: "https://www.tourplanet.club/photo/webboards/1683613233_22017122287d39073c724bfec156093270e024a1c112321.jpg",
       gallery: [
+        "https://chiangmai.prd.go.th/th/file/get/type/thumbnail/file/20250123d01b6a0530eb1ba6085cf6ec139b84e1211318.jpg",
+        "https://www.baantipmanee.com/assets/images/about-tipmanee-36-2000x1251.jpg"
       ],
       video: "",
       credit: ""
@@ -181,8 +187,10 @@ export const HangDongTrips = [
       location: "QV2M+3MQ ตำบล บ้านปง อำเภอหางดง เชียงใหม่ 50230",
       lat: 18.7503332, 
       lng: 98.8842523,
-      img: "",
+      img: "https://pukmudmuangthai.com/wp-content/uploads/2022/02/650201-3-scaled.jpg",
       gallery: [
+        "https://pukmudmuangthai.com/wp-content/uploads/2022/02/146701.jpg",
+        "https://www.tripgether.com/wp-content/uploads/2024/12/Wat-Aran-Ya-Wat-422.jpg"
       ],
       video: "",
       credit: ""

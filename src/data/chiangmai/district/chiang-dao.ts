@@ -34,6 +34,8 @@ export const ChiangDaoTrips = [
       lng: 98.8878756,
       img: "https://upload.wikimedia.org/wikipedia/commons/c/c7/Doi_Chiang_Dao_%28I%29.jpg",
       gallery: [
+        "https://mychiangmaitravel.com/wp-content/uploads/2017/08/hiking-at-doi-luang-chiang-dao01.jpg",
+        "https://www.pattayamail.com/wp-content/uploads/2021/09/t-08-UNESCO-prepares-to-declare-Thailands-Doi-Chiang-Dao-in-Chiang-Mai-a-new-biosphere-reserve-3.jpg"
         ],
       video: "",
       credit: ""
@@ -72,6 +74,8 @@ export const ChiangDaoTrips = [
       lng: 98.9111165,
       img: "https://upload.wikimedia.org/wikipedia/commons/a/ad/Wat_Tham_Chiang_Dao_%28I%29.jpg",
       gallery: [
+        "https://nashaplaneta.net/asia/thai/img_chiangmai/chiang-dao-wat-tham2.jpg",
+        "https://temple-thai.com/wp-content/uploads/2020/06/wat-tham-chiang-dao-9.jpg"
       ],
       video: "",
       credit: ""
@@ -108,8 +112,10 @@ export const ChiangDaoTrips = [
       location: "9PP8+525 ตำบล เมืองคอง อำเภอเชียงดาว เชียงใหม่",
       lat: 19.385398,
       lng: 98.7125277,
-      img: "",
+      img: "https://f.ptcdn.info/118/082/000/s369ol1j5bkIHpMC3wE0B-o.jpg",
       gallery: [
+        "https://www.paiduaykan.com/wp-content/uploads/2017/09/dji_fly_20230821_105212_33_1692590412852_photo-800x534.jpg",
+        "https://www.paiduaykan.com/wp-content/uploads/2017/09/dji_fly_20230821_105150_29_1692590446491_photo-800x534.jpg"
       ],
       video: "",
       credit: ""
@@ -137,11 +143,20 @@ export const ChiangDaoTrips = [
       zh: "游客需攀登 500 多级台阶才能到达这座隐于森林中的宁静寺庙。寺内建有 感恩佛塔 (Chedi Katanyu) 以及展示高僧隆普辛 (Luang Pu Sim) 遗物的博物馆，是一个适合冥想修行的清幽之地。",
       th: "ผู้มาเยือนต้องปีนบันไดกว่า 500 ขั้นเพื่อขึ้นไปยังวัดอันสงบเงียบที่ตั้งอยู่ในป่า ภายในมีเจดีย์กตัญญู (Chedi Katanyu) และพิพิธภัณฑ์อุทิศให้แก่หลวงปู่สิม พระอาจารย์ที่เคารพนับถือ เป็นสถานที่เงียบสงบเหมาะแก่การทำสมาธิ"
     },
+    tag: {
+      th: "วัด",
+      en: "temple",
+      zh: "寺庙"
+    },
     detail_more: {
       location: "139 ตำบล เชียงดาว อำเภอเชียงดาว เชียงใหม่ 50170",
       lat: 19.402207,
       lng: 98.9180188,
-      img: "ImgTrip/chiang-dao/Wat-Tham-Pha-Plong.jpg",
+      img: "https://img.wongnai.com/p/1920x0/2018/12/31/e19116e733e24041b7e396362ebf95e8.jpg",
+      gallery: [
+        "https://img.wongnai.com/p/1920x0/2018/12/31/e19116e733e24041b7e396362ebf95e8.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/%E0%B8%A7%E0%B8%B1%E0%B8%94%E0%B8%96%E0%B9%89%E0%B8%B3%E0%B8%9C%E0%B8%B2%E0%B8%9B%E0%B8%A5%E0%B9%88%E0%B8%AD%E0%B8%87_%E0%B9%80%E0%B8%8A%E0%B8%B5%E0%B8%A2%E0%B8%87%E0%B8%94%E0%B8%B2%E0%B8%A7.jpg/3840px-%E0%B8%A7%E0%B8%B1%E0%B8%94%E0%B8%96%E0%B9%89%E0%B8%B3%E0%B8%9C%E0%B8%B2%E0%B8%9B%E0%B8%A5%E0%B9%88%E0%B8%AD%E0%B8%87_%E0%B9%80%E0%B8%8A%E0%B8%B5%E0%B8%A2%E0%B8%87%E0%B8%94%E0%B8%B2%E0%B8%A7.jpg"
+      ],
       video: "",
       credit: ""
     }
@@ -177,8 +192,10 @@ export const ChiangDaoTrips = [
       location: "ตำบล เชียงดาว อำเภอเชียงดาว เชียงใหม่ 50170",
       lat: 19.4733608,
       lng: 98.8293993,
-      img: "",
+      img: "https://files.thailandtourismdirectory.go.th/assets/upload/2018/01/08/201801082a0868d06a69c8e3877226d01154d021093151.jpg",
       gallery: [
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1c/82/d9/02/caption.jpg?w=800&h=800&s=1",
+        "https://files.thailandtourismdirectory.go.th/assets/upload/info/attraction/1785/2017102389002d6c8a9246914008f73083981147010434.jpg"
       ],
       video: "",
       credit: ""

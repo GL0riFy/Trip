@@ -35,6 +35,8 @@ export const ChaiPrakanTrips = [
       lng: 99.1175806,
       img: "https://cbtthailand.dasta.or.th/upload-file-api/Resources/RelateAttraction/Images/RAT500548/1.jpeg",
       gallery: [
+        "https://nashaplaneta.net/asia/thai/img_chiangmai/chiangmai-wat-tham-tap-tao.jpg",
+        "https://nashaplaneta.net/asia/thai/img_chiangmai/chiangmai-wat-tham-tap-tao7.jpg"
         ],
       video: "",
       credit: ""
@@ -73,6 +75,8 @@ export const ChaiPrakanTrips = [
       lng: 99.1454106,
       img: "https://img.wongnai.com/p/1920x0/2018/12/21/ebd702f1cd3f4e63a269449d193c9493.jpg",
       gallery: [
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/21/f2/4a/0a/caption.jpg?w=900&h=500&s=1",
+        "https://f.ptcdn.info/944/065/000/pxr3oo8sa3mCOVAfIJ1-o.jpg"
         ],
       video: "",
       credit: ""
@@ -111,6 +115,8 @@ export const ChaiPrakanTrips = [
       lng: 99.1406334,
       img: "https://www.tripinchiangmai.com/wp-content/uploads/2020/10/ko-lak-the-first-date-palm-01.jpg",
       gallery: [
+        "https://resort-khaolak-palm-beach.khao-lakhotels.com/data/Imgs/OriginalPhoto/17136/1713659/1713659574/img-khaolak-palm-beach-resort-khao-lak-88.JPEG",
+        "https://www.passportsandpreemies.com/wp-content/uploads/2023/12/IMG_7909-1440x960.jpg"
         ],
       video: "",
       credit: ""
@@ -149,6 +155,8 @@ export const ChaiPrakanTrips = [
       lng: 99.197228,
       img: "https://f.ptcdn.info/181/075/000/r15pmu4cbXJhxcW79j6-o.jpg",
       gallery: [
+        "https://www.alltrails.com/mugen/image/location-app-router?url=https%3A%2F%2Fimages.alltrails.com%2FeyJidWNrZXQiOiJhc3NldHMuYWxsdHJhaWxzLmNvbSIsImtleSI6InVwbG9hZHMvcGhvdG8vaW1hZ2UvOTMyNzk3OTIvYWVmMTdiZjRjMTZlNjUwZGFlZGY5ZjNlYzk3ZWYzZjQuanBnIiwiZWRpdHMiOnsidG9Gb3JtYXQiOiJqcGVnIiwicmVzaXplIjp7IndpZHRoIjoxMDgwLCJoZWlnaHQiOjcwMCwiZml0IjoiY292ZXIifSwicm90YXRlIjpudWxsLCJqcGVnIjp7InRyZWxsaXNRdWFudGlzYXRpb24iOnRydWUsIm92ZXJzaG9vdERlcmluZ2luZyI6dHJ1ZSwib3B0aW1pc2VTY2FucyI6dHJ1ZSwicXVhbnRpc2F0aW9uVGFibGUiOjN9fX0%3D&w=3840&q=75",
+        "https://www.easydaythailand.com/wp-content/uploads/2018/07/Doi-Wiang-Pha.jpg"
         ],
       video: "",
       credit: ""

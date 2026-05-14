@@ -2,44 +2,6 @@ import { tag } from "@turf/turf";
 
 export const SanKamphaengTrips = [
   {
-    id: "Borsang-Umbrella-Festival",
-    title: {
-      en: "Borsang Umbrella Festival",
-      zh: "博桑伞节 (Borsang Umbrella Festival)",
-      th: "เทศกาลร่มบ่อสร้าง"
-    },
-    price: {
-      en: "Free Admission",
-      zh: "免费入场",
-      th: "เข้าชมฟรี"
-    },
-    hours: {
-      en: "Open for viewing: 8:30 a.m. – 5:00 p.m.",
-      zh: "开放时间：8:30 a.m. – 5:00 p.m.",
-      th: "เปิดให้เข้าชม: 08:30 – 17:00 น."
-    },
-    detail: {
-      en: "A famous cultural festival in San Kamphaeng featuring colorful handmade umbrellas. Visitors can explore the umbrella-making village, enjoy traditional performances, shop for local handicrafts, and take photos with beautifully decorated umbrellas along the streets.",
-      zh: "这是三甘烹著名的传统文化节，以色彩鲜艳的手工伞闻名。游客可以参观制伞村，欣赏传统表演，购买当地手工艺品，并在街道上与装饰精美的雨伞拍照留念。",
-      th: "เทศกาลเชิงวัฒนธรรมที่มีชื่อเสียงของสันกำแพง โดดเด่นด้วยร่มกระดาษสาทำมือสีสันสดใส นักท่องเที่ยวสามารถเที่ยวชมหมู่บ้านทำร่ม ชมการแสดงพื้นบ้าน เลือกซื้อสินค้าหัตถกรรมท้องถิ่น และถ่ายรูปกับร่มที่ประดับประดาอย่างสวยงามตามท้องถนน"
-    },
-    tag: {
-      th: "เทศกาล",
-      en: "festival",
-      zh: "节日"
-    },
-    detail_more: {
-      location: "41/67 ตำบลต้นเปา อำเภอสันกำแพง เชียงใหม่ 50130",
-      lat: 18.764504746543157, 
-      lng: 99.08192622361146,
-      img: "",
-      gallery: [
-      ],
-      video: "",
-      credit: ""
-    }
-  },
-  {
     id: "Huai-Lan-Reservoir",
     title: {
       en: "Huai Lan Reservoir",
@@ -70,8 +32,10 @@ export const SanKamphaengTrips = [
       location: "P644+CGF, Unnamed Road, ตำบล ออนใต้ อำเภอสันกำแพง เชียงใหม่ 50130",
       lat: 18.705984194983127, 
       lng: 99.20630264732885,
-      img: "",
+      img: "https://img.wongnai.com/p/1920x0/2022/12/25/931c38e63d2e4237b52745ddf0a27dbe.jpg",
       gallery: [
+        "https://img.wongnai.com/p/1920x0/2022/11/20/e9a05038c5104c308e3927744e5d6690.jpg",
+        "https://chiangmaimommy.com/wp-content/uploads/2025/06/510802172_1283965596425868_8965192434635497028_n.jpg"
       ],
       video: "",
       credit: ""
@@ -108,8 +72,10 @@ export const SanKamphaengTrips = [
       location: "122, Moo 7 Tonpao อำเภอสันกำแพง เชียงใหม่ 50130",
       lat: 18.757421868711894, 
       lng: 99.09376045654409,
-      img: "",
+      img: "https://img.kapook.com/u/2016/suppaporn/chiangmai/maiiam/cnx01.jpg",
       gallery: [
+        "https://media-cdn.tripadvisor.com/media/photo-s/17/e7/dc/9e/navin-rawanchaikul.jpg",
+        "https://www.hashcorner.com/wp-content/uploads/2016/10/maiiam-01.jpg"
       ],
       video: "",
       credit: ""
@@ -146,8 +112,10 @@ export const SanKamphaengTrips = [
       location: "56 หมู่ 5 ตำบล ออนใต้ อำเภอสันกำแพง เชียงใหม่ 50130",
       lat: 18.732934058190533, 
       lng: 99.19539341892028,
-      img: "",
+      img: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/16/9e/44/5f/dutch-farm.jpg?w=1200&h=-1&s=1",
       gallery: [
+        "https://www.dutchfarm2u.com/upload/3117/Xk3u90dnMw.jpg",
+        "https://www.dutchfarm2u.com/upload/3117/n2CpdJUFG4.jpg"
       ],
       video: "",
       credit: ""

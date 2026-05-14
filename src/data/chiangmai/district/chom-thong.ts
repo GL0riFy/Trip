@@ -32,8 +32,10 @@ export const ChomThongTrips = [
       location: "119 ตำบลบ้านหลวง อำเภอจอมทอง เชียงใหม่ 50160",
       lat: 18.5902719,
       lng: 98.4863298,
-      img: "",
+      img: "https://image-tc.galaxy.tf/wijpeg-sxrfid5inslt46adwg0pwpho/intanon.jpg",
       gallery: [
+        "https://media-cdn.tripadvisor.com/media/photo-s/01/17/e1/eb/doi-inthanon-national.jpg",
+        "https://www.ananda.co.th/blog/thegenc/wp-content/uploads/2023/11/shutterstock_2091837973-1-825x550.jpg"
       ],
       video: "",
       credit: ""
@@ -70,8 +72,10 @@ export const ChomThongTrips = [
       location: "Highway 1009 , Ban Luang , 50160 Chom Thong , Chiang Mai",
       lat: 18.4396776,
       lng: 98.5979932,
-      img: "",
+      img: "https://upload.wikimedia.org/wikipedia/commons/a/a2/Mae_Ya_waterfall_09.22.jpg",
       gallery: [
+        "https://files.thailandtourismdirectory.go.th/assets/upload/2017/12/29/20171229c6b1d98a259f4671a5e8cc21003769c2144358.jpg",
+        "https://thesunsight.com/wp-content/uploads/2020/01/MY03-copy.jpg"
       ],
       video: "",
       credit: ""
@@ -107,8 +111,10 @@ export const ChomThongTrips = [
       location: "น้ำตกแม่เตี๊ยะ ตำบล ดอยแก้ว อำเภอจอมทอง เชียงใหม่ 50160",
       lat: 18.3989196,
       lng: 98.6003517,
-      img: "",
+      img: "https://www.tripgether.com/wp-content/uploads/2024/12/MaeTea_Waterfall-1.jpg",
       gallery: [
+        "https://www.tripgether.com/wp-content/uploads/2024/12/MaeTea_Waterfall-1.jpg",
+        "https://f.ptcdn.info/664/028/000/1424526381-1084871889-o.jpg"
       ],
       video: "",
       credit: ""

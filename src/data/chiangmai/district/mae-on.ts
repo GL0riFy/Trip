@@ -32,8 +32,10 @@ export const MaeOnTrips = [
       location: "V982+695 ตำบล ห้วยแก้ว อำเภอ แม่ออน เชียงใหม่ 50130",
       lat: 18.8653706, 
       lng: 99.3512625,
-      img: "",
+      img: "https://www.kkday.com/th/blog/wp-content/uploads/Alt-om-rejsen-til-Thailand-artikler-og-rejsetilbud-1.jpg",
       gallery: [
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/16/1b/e2/ef/photo0jpg.jpg?w=900&h=500&s=1",
+        "https://upload.wikimedia.org/wikipedia/commons/0/09/%E0%B8%AB%E0%B8%A1%E0%B8%B9%E0%B9%88%E0%B8%9A%E0%B9%89%E0%B8%B2%E0%B8%99%E0%B9%81%E0%B8%A1%E0%B9%88%E0%B8%81%E0%B8%B3%E0%B8%9B%E0%B8%AD%E0%B8%87_%E0%B9%80%E0%B8%8A%E0%B8%B5%E0%B8%A2%E0%B8%87%E0%B9%83%E0%B8%AB%E0%B8%A1%E0%B9%88.jpg"
       ],
       video: "",
       credit: ""
@@ -70,8 +72,10 @@ export const MaeOnTrips = [
       location: "1 ตำบล บ้านสหกรณ์ อำเภอ แม่ออน เชียงใหม่ 50130",
       lat: 18.8145004, 
       lng: 99.2294265,
-      img: "",
+      img: "https://www.oonvalleyfarmstay.com/upload/6225/wHJC2IqhaI.jpg",
       gallery: [
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/06/5d/e7/d9/san-kamphaeng-hot-springs.jpg?w=900&h=500&s=1",
+        "https://cbtthailand.dasta.or.th/upload-file-api/Resources/RelateAttraction/Images/RAT500526/1.jpeg"
       ],
       video: "",
       credit: ""
@@ -108,8 +112,10 @@ export const MaeOnTrips = [
       location: "อุทยานแห่งชาติแจ้ซ้อน ตำบล แจ้ซ้อน อำเภอ เมืองปาน เชียงใหม่ 52240",
       lat: 18.8545595, 
       lng: 99.3685236,
-      img: "",
+      img: "https://img.wongnai.com/p/1920x0/2019/01/11/e538d70558e54e51955a743b9ebc1b7a.jpg",
       gallery: [
+        "https://img.kapook.com/u/2020/sutasinee/09/e1.jpg",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0a/42/42/97/caption.jpg?w=900&h=500&s=1"
       ],
       video: "",
       credit: ""
@@ -146,8 +152,10 @@ export const MaeOnTrips = [
       location: "99/5 หมู่ที่8 ถนน ห้วยแก้ว ตำบล ห้วยแก้ว อำเภอ แม่ออน เชียงใหม่ 50130",
       lat: 18.8669089, 
       lng: 99.3225066,
-      img: "",
+      img: "https://image.makewebeasy.net/makeweb/m_1920x0/pMrtkmxgt/1_projects_R9/teentok01.jpg?v=202012190947",
       gallery: [
+        "https://f.tpkcdn.com/images-source/b719e43893a6323a7ed7d1267cef2290.jpg",
+        "https://www.autoinfo.co.th/uploads/2017/05/DSC_1520-1024x683.jpg"
       ],
       video: "",
       credit: ""
@@ -184,8 +192,10 @@ export const MaeOnTrips = [
       location: "Q6PQ+G6P ตำบล บ้านสหกรณ์ อำเภอ แม่ออน เชียงใหม่ 50130", 
       lat: 18.7863323, 
       lng: 99.2354941,
-      img: "",
+      img: "https://scontent.fcnx3-1.fna.fbcdn.net/v/t1.6435-9/91406805_3180645421947848_5947980232613953536_n.jpg?stp=dst-jpg_p180x540_tt6&_nc_cat=102&ccb=1-7&_nc_sid=127cfc&_nc_ohc=9SlwhttFRp4Q7kNvwHx8Aam&_nc_oc=Ado62KtN6O7zWWBpjWEAzr8Dv0_GrJ5TN2NDYeZ1WOBfPJPgzliQaczjIzwNqZePAyhSuQRYu96mUrC5C_y6nZlU&_nc_zt=23&_nc_ht=scontent.fcnx3-1.fna&_nc_gid=2-95T5au2AqiMxn3byGypQ&_nc_ss=7b2a8&oh=00_Af7OttPAtE3DczDEfZwwO82vPjSHaNrn5mxroDwBV6PGVQ&oe=6A2D0AE3",
       gallery: [
+        "https://www.museumthailand.com/evidence-thumbImage.php?w=955&h=500&p=1539745858_65494.jpg",
+        "https://img.kapook.com/u/pree/pree6/5_7.jpg"
       ],
       video: "",
       credit: ""

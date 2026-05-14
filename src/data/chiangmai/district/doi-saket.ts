@@ -33,8 +33,10 @@ export const DoiSaketTrips = [
       location: "5 118 ตำบล เชิงดอย อำเภอดอยสะเก็ด เชียงใหม่ 50220",
       lat: 18.8725775,
       lng: 99.1400038,
-      img: "",
+      img: "https://files.thailandtourismdirectory.go.th/assets/upload/2020/06/10/20200610f7177163c833dff4b38fc8d2872f1ec6102715.jpg",
       gallery: [
+        "https://cms.dmpcdn.com/travel/2022/11/15/35140620-6505-11ed-954a-9960a66131cc_webp_original.jpg",
+        "https://media-cdn.tripadvisor.com/media/photo-s/08/3e/bc/ba/phrathat-doi-saket-temple.jpg"
       ],
       video: "",
       credit: ""
@@ -71,8 +73,10 @@ export const DoiSaketTrips = [
       location: "98 Baan Pongsamaki, ตำบล ป่าเมี่ยง อำเภอดอยสะเก็ด เชียงใหม่ 50220",
       lat: 18.9088281,
       lng: 99.2486855,
-      img: "",
+      img: "https://img.wongnai.com/p/1920x0/2020/11/23/34fb47ac74e84b89aac0effede7680bf.jpg",
       gallery: [
+        "https://i0.wp.com/thailandtidbits.com/wp-content/uploads/2021/05/img_20210530_104737.jpg?resize=4608%2C3456&ssl=1",
+        "https://www.talontiew.com/wp-content/uploads/2023/11/take-a-walk-cafe-7.webp"
       ],
       video: "",
       credit: ""
@@ -109,8 +113,10 @@ export const DoiSaketTrips = [
       location: "118 Chiang Mai , Route 118, ตำบล เชิงดอย อำเภอดอยสะเก็ด เชียงใหม่ 50220",
       lat: 18.857584,
       lng: 99.098232,
-      img: "",
+      img: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/07/0f/8d/dc/tweechol-botanic-garden.jpg?w=800&h=500&s=1",
       gallery: [
+        "https://res.klook.com/image/upload/w_750,h_469,c_fill,q_85/w_80,x_15,y_15,g_south_west,l_Klook_water_br_trans_yhcmh3/activities/ie1hzsrf9dmnqjkzxxog.jpg",
+        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/a4/25/cd/stunning-red-colour-of.jpg?w=900&h=500&s=1"
       ],
       video: "",
       credit: ""
@@ -147,8 +153,10 @@ export const DoiSaketTrips = [
       location: "W4HH+948 ตำบล ลวงเหนือ อำเภอดอยสะเก็ด เชียงใหม่ 50220",
       lat: 18.9284858,
       lng: 99.1233071,
-      img: "",
+      img: "https://media-cdn.tripadvisor.com/media/photo-s/13/8c/cc/9e/mae-kuang-udom-thara.jpg",
       gallery: [
+        "https://media-cdn.tripadvisor.com/media/photo-s/13/8c/cc/9e/mae-kuang-udom-thara.jpg",
+        "https://cms.dmpcdn.com/travel/2020/05/07/1b47b760-9036-11ea-ad1e-63f543975826_original.jpg"
       ],
       video: "",
       credit: ""
@@ -185,8 +193,10 @@ export const DoiSaketTrips = [
       location: "116 ตำบล ป่าเมี่ยง อำเภอดอยสะเก็ด เชียงใหม่ 50200",
       lat: 19.0113876,
       lng: 99.2957496,
-      img: "",
+      img: "https://images.trvl-media.com/lodging/107000000/106550000/106541100/106541093/722ac579.jpg?impolicy=resizecrop&rw=575&rh=575&ra=fill",
       gallery: [
+        "https://images.trvl-media.com/lodging/107000000/106550000/106541100/106541093/525e5c17.jpg?impolicy=resizecrop&rw=575&rh=575&ra=fill",
+        "https://cf.bstatic.com/xdata/images/hotel/max1024x768/584367280.jpg?k=b9bf6a668209c01f812e2c7528798c9114ae7075457f61cb024b6ff8376a5338&o="
       ],
       video: "",
       credit: ""

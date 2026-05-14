@@ -1,5 +1,3 @@
-import { tag } from "@turf/turf";
-
 export const MaeTaengTrips = [
     {
       id: "Wat-Ban-Den-main-entrance",
@@ -32,8 +30,10 @@ export const MaeTaengTrips = [
         location: "5X4H+VRG, Unnamed Road, ตำบล อินทขิล อำเภอแม่แตง เชียงใหม่ 50150",
         lat: 19.15719643270193, 
         lng: 98.97910659375854,
-        img: "",
+        img: "https://img.salehere.co.th/p/1200x0/2022/02/07/q36ylfuquu2v.jpg",
         gallery: [
+          "https://www.watportal.com/th/file/get/file/20181225a79069c6adc256f3fd6ebaac8989b11c101308.jpg",
+          "https://www.perfectfurnituremall.com/wp-content/uploads/2017/08/18278659_10213066865409140_1787727961485265828_o.jpg"
         ],
         video: "",
         credit: ""
@@ -70,8 +70,10 @@ export const MaeTaengTrips = [
         location: "99 1 ตำบล กื้ดช้าง อำเภอแม่แตง เชียงใหม่ 50100",
         lat: 19.198354647225006, 
         lng: 98.88676236905197,
-        img: "",
+        img: "https://cbtthailand.dasta.or.th/upload-file-api/Resources/RelateAttraction/Images/RAT500558/1.jpeg",
         gallery: [
+          "https://files.thailandtourismdirectory.go.th/assets/upload/2017/12/21/201712211b0fd9efa5279c4203b7c70233f86dbf142735.jpg",
+          "https://files.thailandtourismdirectory.go.th/assets/upload/2017/12/21/2017122166d8c0f4ab3c3681ff3f9093b05136a6142746.jpg"
         ],
         video: "",
         credit: ""
@@ -108,8 +110,10 @@ export const MaeTaengTrips = [
         location: "6Q4V+9XC ไร่ชาลุงเดช ตำบล เมืองก๋าย อำเภอแม่แตง เชียงใหม่ 50150",
         lat: 19.205944028665904, 
         lng: 98.79501477192387,
-        img: "",
+        img: "https://www.paiduaykan.com/wp-content/uploads/2017/12/1-%E0%B8%9B%E0%B8%81%E0%B9%84%E0%B8%A3%E0%B9%88%E0%B8%8A%E0%B8%B2.jpg",
         gallery: [
+          "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1a/98/b1/a8/caption.jpg?w=800&h=500&s=1",
+          "https://s.isanook.com/tr/0/ud/282/1412049/40509531_2651575681535144_105.jpg?ip/resize/w728/q80/jpg"
         ],
         video: "",
         credit: ""
@@ -146,8 +150,10 @@ export const MaeTaengTrips = [
         location: "ตำบล แม่หอพระ อำเภอแม่แตง เชียงใหม่ 50150",
         lat: 19.069613132484648, 
         lng: 99.07936673423258,
-        img: "",
+        img: "https://img.kapook.com/u/2018/Tanapol/travel/june/burtong/b1.jpg",
         gallery: [
+          "https://img.kapook.com/u/2018/Tanapol/travel/june/burtong/b2.jpg",
+          "https://changpuakmagazine.com/images/article/17422703bt_waterfall_Dec20.jpg"
         ],
         video: "",
         credit: ""
@@ -184,8 +190,10 @@ export const MaeTaengTrips = [
         location: "ตำบล กื้ดช้าง อำเภอแม่แตง เชียงใหม่ 50150",
         lat: 19.243009827722947, 
         lng: 98.83001228756605,
-        img: "",
+        img: "https://f.ptcdn.info/094/089/000/t20pf32gyzym95o7d8J7o-o.jpg",
         gallery: [
+          "https://s359.kapook.com/pagebuilder/c8db01af-ba9e-45af-ace1-829de3285e1b.jpg",
+          "https://1672travelbuddy.com/article_images/a75fee6a2cba197bd2d904eee77c411e.jpg"
         ],
         video: "",
         credit: ""
@@ -222,8 +230,10 @@ export const MaeTaengTrips = [
         location: "288 ตำบล สันมหาพน อำเภอแม่แตง เชียงใหม่ 50150",
         lat: 19.12317529773727, 
         lng: 98.94201856625949,
-        img: "",
+        img: "https://www.tripinchiangmai.com/wp-content/uploads/2021/04/dan-teyvada-chiangmai.jpg",
         gallery: [
+          "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/31/cb/99/22/caption.jpg?w=900&h=500&s=1",
+          "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/31/cb/99/21/caption.jpg?w=900&h=500&s=1"
         ],
         video: "",
         credit: ""

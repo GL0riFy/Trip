@@ -32,8 +32,10 @@ export const FangTrips = [
       location: "224 ตำบล โป่งน้ำร้อน อำเภอ ฝาง เชียงใหม่ 50110",
       lat: 20.0321111,
       lng: 99.145329,
-      img: "",
+      img: "https://lirp.cdn-website.com/7dbcb2b4/dms3rep/multi/opt/14883522_1481104638583763_7207391494916034365_o-1920w.jpg",
       gallery: [
+        "https://img.kapook.com/u/2018/Tanapol/travel/november/doypahompok/t5.jpg",
+        "https://thailandtravel.app/media/img/CCQHA7GJOjVq8is4tvANY48RAuAh3ieu.jpg"
       ],
       video: "",
       credit: ""
@@ -70,8 +72,10 @@ export const FangTrips = [
       location: "X583+9P6 Chiangmai 4050 Road อำเภอ ฝาง เชียงใหม่ 50110",
       lat: 19.9656768,
       lng: 99.1546307,
-      img: "",
+      img: "https://mychiangmaitour.com/wp-content/uploads/2024/12/fang-hot-spring001.jpg",
       gallery: [
+        "https://chiangmaiupdate.com/wp-content/uploads/2024/12/fang-hot-spring002.jpg",
+        "https://files.thailandtourismdirectory.go.th/assets/upload/2017/12/12/20171212a87ff679a2f3e71d9181a67b7542122c155929.jpg"
       ],
       video: "",
       credit: ""
@@ -108,8 +112,10 @@ export const FangTrips = [
       location: "ตำบล แม่สูน อำเภอ ฝาง เชียงใหม่ 50320",
       lat: 19.8702668,
       lng: 99.0526599,
-      img: "",
+      img: "https://www.one2go.co/wp-content/uploads/2019/09/3.jpg",
       gallery: [
+        "https://thesunsight.com/wp-content/uploads/2020/01/AK01-copy.jpg",
+        "https://f.tpkcdn.com/review-source/6e350010-1b1e-3782-e817-5b1e1fc59d2e.jpg"
       ],
       video: "",
       credit: ""
@@ -146,8 +152,10 @@ export const FangTrips = [
       location: "W542+FCH Unnamed Road ตำบล สันทราย อำเภอ ฝาง เชียงใหม่ 50110",
       lat: 19.9061412,
       lng: 99.1508336,
-      img: "",
+      img: "https://www.monpin.go.th/2021/office/uploads/1621937936S__20381712.jpg",
       gallery: [
+        "https://www.monpin.go.th/2021/office/uploads/16219379774905_2919_080805112215_8L.jpg",
+        "https://pukmudmuangthai.com/wp-content/uploads/2022/02/IMG_7270-1024x683.jpg"
       ],
       video: "",
       credit: ""

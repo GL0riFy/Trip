@@ -32,8 +32,10 @@ export const MaeAiTrips = [
         location: "888 ตำบล ท่าตอน อำเภอ แม่อาย เชียงใหม่ 50280",
         lat: 20.0819467, 
         lng: 99.487844,
-        img: "",
+        img: "https://scontent.fcnx3-1.fna.fbcdn.net/v/t39.30808-6/482017009_980054447603467_570441245914901668_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=127cfc&_nc_ohc=xi7LgKjTZdMQ7kNvwFFsjNq&_nc_oc=Adrl3LtAFsmcbyIi_2xA8piKbfnzV4cHxB7O7qEvOx2-yWIgf_7JTzWCwj-CIfcYHMojIp6Wilqxk_XZlScDWDsf&_nc_zt=23&_nc_ht=scontent.fcnx3-1.fna&_nc_gid=Mbc9DNDCN-ITG_6zRIKs8g&_nc_ss=7b2a8&oh=00_Af6pXDQ8Bg6E3xfmxkxdTe6ZHkEJlkE_o02LT3oIk6HBZQ&oe=6A0B7491",
         gallery: [
+          "https://scontent.fcnx3-1.fna.fbcdn.net/v/t39.30808-6/481226582_980054440936801_6155718053234785992_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=127cfc&_nc_ohc=Q062K4bVz7oQ7kNvwF1PEMQ&_nc_oc=AdpmKWxmX22Cz_56KY9h_Xe7CTRpyoZ4CfyjbkN1pK2YphVey9h5JiYWjgBas8WsHc3NrgVVyNx-keOlpWE39_SG&_nc_zt=23&_nc_ht=scontent.fcnx3-1.fna&_nc_gid=SRbyEfQdpnJyGaVT-LNPhA&_nc_ss=7b2a8&oh=00_Af5fNh8QyXv4jekWyAsrKCkM5uc45JCEEsjCgsxxgdN05Q&oe=6A0B74F4",
+          "https://scontent.fcnx3-1.fna.fbcdn.net/v/t39.30808-6/482028182_980054590936786_7021035398142775038_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=127cfc&_nc_ohc=ryON-SEbG4EQ7kNvwGwlynN&_nc_oc=AdrIw97sQ8XR3z3ez18YHumLAxms0lMa5c9AXo-xpJAbrCiPjyJjk0AbifSzhRBpFFlC-KkAp1z7vkn5E8xFhWf2&_nc_zt=23&_nc_ht=scontent.fcnx3-1.fna&_nc_gid=BYvALVRSmE90eTGKQCQzeA&_nc_ss=7b2a8&oh=00_Af7YbavS1bfaTkQjV1Anf4kun6F1sOieergomptvOAQ6Aw&oe=6A0B47C7"
       ],
         video: "",
         credit: ""
@@ -70,8 +72,10 @@ export const MaeAiTrips = [
         location: "3FG6+987 320 ตำบล ท่าตอน อำเภอ แม่อาย เชียงใหม่ 50280",
         lat: 20.0759148, 
         lng: 99.4607919,
-        img: "",
+        img: "https://scontent.fcnx3-1.fna.fbcdn.net/v/t39.30808-6/506285307_9049022478534276_2432656910838414249_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=833d8c&_nc_ohc=lqmBY7aTnscQ7kNvwGC5LF9&_nc_oc=Adp2gJtorLE24y-HMANF3BQvNCQXnHWc06eJU9WaorVZtZ6SKiPWBE56CPhi1bSBmwqBPpbPXhDeKLV3RebRE96Z&_nc_zt=23&_nc_ht=scontent.fcnx3-1.fna&_nc_gid=l4mGeyeQjhuuZ487humi9w&_nc_ss=7b2a8&oh=00_Af6t0sGEzKxfqtO6eSRRf6nwe9iEngnh7Yzeb-ewol8Ing&oe=6A0B5C96",
         gallery: [
+          "https://scontent.fcnx3-1.fna.fbcdn.net/v/t39.30808-6/506141982_9049023338534190_3587195107505137398_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=833d8c&_nc_ohc=8VxQ18zHx2oQ7kNvwHx9bsn&_nc_oc=AdqE8-hdCo0miJ94O03mGxwTC3ORAVUdSZ-OwwQtjFO0uv3VR4IADApWtaxrvzyE39iDNl4W_1XKuVglTHrLPgCC&_nc_zt=23&_nc_ht=scontent.fcnx3-1.fna&_nc_gid=Mk3ovncfPgKYgfNxUfIQlg&_nc_ss=7b2a8&oh=00_Af6kDeOofMRh4sghfW7RQ-G6fYFwPusxjve1FEhItKHHng&oe=6A0B5B21",
+          "https://scontent.fcnx3-1.fna.fbcdn.net/v/t39.30808-6/506141982_9049023338534190_3587195107505137398_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=833d8c&_nc_ohc=8VxQ18zHx2oQ7kNvwHx9bsn&_nc_oc=AdqE8-hdCo0miJ94O03mGxwTC3ORAVUdSZ-OwwQtjFO0uv3VR4IADApWtaxrvzyE39iDNl4W_1XKuVglTHrLPgCC&_nc_zt=23&_nc_ht=scontent.fcnx3-1.fna&_nc_gid=Mk3ovncfPgKYgfNxUfIQlg&_nc_ss=7b2a8&oh=00_Af6kDeOofMRh4sghfW7RQ-G6fYFwPusxjve1FEhItKHHng&oe=6A0B5B21"
         ],
         video: "",
         credit: ""
@@ -108,8 +112,10 @@ export const MaeAiTrips = [
         location: "3965+6W6 ตำบล ท่าตอน อำเภอ แม่อาย เชียงใหม่ 50280",
         lat: 20.060559, 
         lng: 99.359773,
-        img: "",
+        img: "https://www.dhammathai.org/watthai/data/imagedb/188-1.jpg",
         gallery: [
+          "https://www.dhammathai.org/watthai/data/imagedb/188-2.jpg",
+          "https://travel.mthai.com/app/uploads/2015/05/%E0%B8%A7%E0%B8%B1%E0%B8%94%E0%B8%97%E0%B9%88%E0%B8%B2%E0%B8%95%E0%B8%AD%E0%B8%99-1024x684.jpg"
         ],
         video: "",
         credit: ""
@@ -146,8 +152,10 @@ export const MaeAiTrips = [
         location: "ทางหลวงแผ่นดิน 107 หมู่5 ตำบล ท่าตอน อำเภอ แม่อาย เชียงใหม่ 50280",
         lat: 20.0531032, 
         lng: 99.4049796,
-        img: "",
+        img: "https://media-cdn.tripadvisor.com/media/photo-s/09/89/a4/26/caption.jpg",
         gallery: [
+          "https://media-cdn.tripadvisor.com/media/photo-s/09/89/a4/24/caption.jpg",
+          "https://static.thairath.co.th/media/4DQpjUtzLUwmJZY36775QTMMzXRDPTp00RlXBLnqpyrE.jpg"
         ],
         video: "",
         credit: ""
@@ -184,8 +192,10 @@ export const MaeAiTrips = [
         location: "37PQ+GF5 ตำบล มะลิกา อำเภอ แม่อาย เชียงใหม่ 50280",
         lat: 20.0862532, 
         lng: 99.2887485,
-        img: "",
+        img: "https://s359.kapook.com/pagebuilder/1098d7be-ed7f-4c56-a488-9df76b6f693b.jpg",
         gallery: [
+          "https://s359.kapook.com/pagebuilder/5c7ad60b-c8c3-42c0-bf23-50b504b28048.jpg",
+          "https://f.ptcdn.info/172/062/000/plxskw9eu5U4wCO3wXY-o.jpg"
         ],
         video: "",
         credit: ""
