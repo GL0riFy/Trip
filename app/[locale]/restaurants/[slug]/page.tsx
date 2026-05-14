@@ -99,11 +99,6 @@ export default function RestaurantDetail() {
                                     <Star className="w-4 h-4 fill-yellow-400 stroke-yellow-400" />
                                     <span className="font-bold">{restaurant.rating}</span>
                                 </div>
-                                <div className="flex items-center gap-0.5 font-medium">
-                                    {[...Array(3)].map((_, i) => (
-                                        <DollarSign key={i} className={`w-4 h-4 ${i < (restaurant.priceLevel?.length || 0) ? 'text-slate-900' : 'text-slate-300'}`} />
-                                    ))}
-                                </div>
                             </div>
                         </div>
                     </div>
