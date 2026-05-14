@@ -2,13 +2,13 @@ export interface Restaurant {
     id: string;
     slug: string;
     image: string;
+    gallery: string[];
     mapLink: string;
     coords: {
         lat: number;
         lng: number;
     };
     rating: number;
-    priceLevel: string;
     openHours: string;
     tel: string;
     locales: Record<'th' | 'en' | 'zh', {

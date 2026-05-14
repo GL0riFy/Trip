@@ -518,9 +518,9 @@ export const natureHotels: Hotel[] = [
         slug: "the-chai-lai-orchid",
         type: "nature",
         starRating: 5,
-        image: "https://lh3.googleusercontent.com/p/AF1QipNQkz1afYYlJSwq3_cFEfZGy0J7clO0zMXGcS0f=s680-w680-h510-rw",
+        image: "https://petfriendlythailand.com/wp-content/uploads/2021/09/11The-Chai-Lai-Orchid.jpg",
         gallery: [
-            "https://lh3.googleusercontent.com/p/AF1QipNQkz1afYYlJSwq3_cFEfZGy0J7clO0zMXGcS0f=s680-w680-h510-rw",
+            "https://petfriendlythailand.com/wp-content/uploads/2021/09/11The-Chai-Lai-Orchid.jpg",
             "https://chailaiorchid.com/wp-content/uploads/2021/08/DSC0354.jpg",
             "https://chailaiorchid.com/wp-content/uploads/2023/12/Screenshot-2023-12-22-132358.png"
         ],

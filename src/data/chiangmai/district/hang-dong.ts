@@ -1,4 +1,3 @@
-import { tag } from "@turf/turf";
 import { th } from "framer-motion/client";
 
 export const HangDongTrips = [
@@ -60,6 +59,7 @@ export const HangDongTrips = [
       th: "06:00 – 18:00 น."
     },
     detail: {
+      th: "อุทยานแห่งชาติออบขาน มีภูมิประเทศที่เป็นหุบเขาลึกและแม่น้ำแม่ขานไหลผ่าน เหมาะสำหรับการว่ายน้ำและถ่ายภาพ",
       en: "Famous for its steep canyon cliffs and the Mae Khan River flowing through the middle. Shallow water areas make it suitable for swimming and photography.",
       zh: "以峡谷峭壁和湄坎河闻名，水位较浅，适合游泳和拍照。"
     },
@@ -72,8 +72,10 @@ export const HangDongTrips = [
       location: "น้ำแพร่ อำเภอหางดง เชียงใหม่ 50230",
       lat: 18.7232836, 
       lng: 98.8201689,
-      img: "",
+      img: "https://img.wongnai.com/p/1920x0/2023/04/29/8ad321261252486a9387763222e26d0e.jpg",
       gallery: [
+        "https://f.ptcdn.info/056/031/000/1430849479-IMG4891res-o.jpg",
+        "https://www.tripgether.com/wp-content/uploads/2025/10/Op-Khan-26-copy.jpg"
       ],
       video: "",
       credit: ""
@@ -98,7 +100,8 @@ export const HangDongTrips = [
     },
     detail: {
       en: "A beautiful classic Lanna-style wooden temple in the countryside. Known for its traditional viharn and peaceful atmosphere.",
-      zh: "经典兰纳风格木质寺庙，环境安静，非常适合拍照和参观。"
+      zh: "经典兰纳风格木质寺庙，环境安静，非常适合拍照和参观。",
+      th: "วัดไม้สไตล์ล้านนาที่สวยงามในชนบท ทราบว่ามีวิหารแบบดั้งเดิมและบรรยากาศสงบ"
     },
     tag: {
       th: "วัด",
@@ -136,6 +139,7 @@ export const HangDongTrips = [
       th: "เปิดทุกวัน"
     },
     detail: {
+      th: "หมู่บ้านถวายเป็นชุมชนช่างแกะสลักไม้ที่ใหญ่ที่สุดในประเทศไทย มีร้านค้าขายงานไม้คุณภาพสูงและของตกแต่งบ้าน",
       en: "One of Thailand’s largest wood carving communities. Visitors can shop for high-quality wood crafts, home decorations, and handmade souvenirs.",
       zh: "泰国大型木雕村，可购买优质木雕和家居装饰品。"
     },
@@ -175,6 +179,7 @@ export const HangDongTrips = [
       th: "08:00 – 16:00 น."
     },
     detail: {
+      th: "วัดอรัญญาวาส หรือที่รู้จักกันในชื่อวัดบ้านปง เป็นวัดที่มีสถาปัตยกรรมแบบปราสาทโลหะที่สวยงามและโดดเด่น",
       en: "Also known as Phra That Si Mueang Pong. A stunning white temple considered the 2nd metal castle in Thailand and 4th in the world.",
       zh: "又称 Phra That Si Mueang Pong，是泰国第二座金属城堡式寺庙，外观洁白壮观。"
     },

@@ -4,11 +4,14 @@ export const restaurantData: Restaurant[] = [
     {
         id: 'r1', 
         slug: 'Tong-Tem-Toh', 
-        image: 'https://f.ptcdn.info/566/082/000/s5a2t263uvf0T1FebJR7-o.png', 
+        image: 'https://f.ptcdn.info/566/082/000/s5a2t263uvf0T1FebJR7-o.png',
+        gallery: [
+            "https://img.wongnai.com/p/1920x0/2022/03/11/a583270965dd49668c76c9f3694dbe69.jpg",
+            "https://img.wongnai.com/p/400x0/2024/01/09/545095e9437e4cdf82a56deb45888cac.jpg"
+        ],
         mapLink: 'https://www.google.com/maps/place/ต๋องเต็มโต๊ะ+ซอย+17/@18.7960567,98.96462,17z/data=!4m10!1m2!2m1!1z4LiV4LmL4Lit4LiH4LmA4LiV4LmH4Lih4LmC4LiV4LmK4Liw!3m6!1s0x30da3beb273b0405:0x6c823a3eb6f90cd3!8m2!3d18.7954627!4d98.9666633!15sCiTguJXguYvguK3guIfguYDguJXguYfguKHguYLguJXguYrguLBaKSIn4LiV4LmLIOC4reC4hyDguYDguJXguYfguKEg4LmC4LiV4LmK4LiwkgEPdGhhaV9yZXN0YXVyYW504AEA!16s%2Fg%2F11scv1870t?entry=ttu&g_ep=EgoyMDI2MDUwNi4wIKXMDSoASAFQAw%3D%3D', 
         coords: { lat: 18.7957519708061 , lng: 98.96663166636775 },
         rating: 4.5, 
-        priceLevel: '฿฿',
         openHours: '11:00 - 21:00',
         tel: '053-894-701',
         locales: {
@@ -38,11 +41,14 @@ export const restaurantData: Restaurant[] = [
     {
         id: 'r2', 
         slug: 'Khao-Soi-Samer-Jai', 
-        image: 'https://www.lemon8-app.com/seo/image?item_id=7589899127882842632&index=1&sign=5cfb4ec0869e87ffa9772623709a830f', 
-        mapLink: 'https://www.google.com/maps/search/?api=1&query=ข้าวซอยเสมอใจ+ฟ้าฮ่าม', 
+        image: 'https://www.lemon8-app.com/seo/image?item_id=7589899127882842632&index=1&sign=5cfb4ec0869e87ffa9772623709a830f',
+        gallery: [
+            "https://img.wongnai.com/p/1920x0/2018/06/24/55f3c0c1e95b457a9f3922f7f1d3588d.jpg",
+            "https://img.wongnai.com/p/1920x0/2022/08/28/77548b0345404203b2fb8c5a3062df3c.jpg"
+        ],
+        mapLink: 'https://www.google.com/maps/search/?api=1&query=ข้าวซอยเสมอใจ+ฟ้าฮ่าม',
         coords: { lat: 18.804855391646264 , lng: 99.00550604907475 },
         rating: 4.2,
-        priceLevel: '฿',
         openHours: '08:00 - 17:00',
         tel: '081-884-3659',
         locales: {
@@ -72,11 +78,14 @@ export const restaurantData: Restaurant[] = [
     {
         id: 'r3', 
         slug: 'Huen-Tueng-Chiang-Mai', 
-        image: 'https://img.wongnai.com/p/1920x0/2022/04/16/cc2ef175eb3f4dba959b04f9dc5e35a7.jpg', 
+        image: 'https://img.wongnai.com/p/1920x0/2022/04/16/cc2ef175eb3f4dba959b04f9dc5e35a7.jpg',
+        gallery: [
+            "https://img.wongnai.com/p/1920x0/2020/02/18/4170f41fac6c4e7f9a8082ff23ab8e0a.jpg",
+            "https://img.wongnai.com/p/400x0/2019/12/11/5ff88b219d0442d58509781f5d6d9fc2.jpg"
+        ],
         mapLink: 'https://www.google.com/maps/search/?api=1&query=ฮ้านถึงเจียงใหม่',
         coords: { lat: 18.78916514208597 , lng: 98.95482093743256 },
         rating: 4.4,
-        priceLevel: '฿฿',
         openHours: '09:00 - 21:00',
         tel: '083-204-6334',
         locales: {
@@ -106,11 +115,14 @@ export const restaurantData: Restaurant[] = [
     {
         id: 'r4', 
         slug: 'Huen-Phen', 
-        image: 'https://img.wongnai.com/p/400x0/2022/12/23/6e493a0f00b049a6b391ea48962c3e9b.jpg', 
-        mapLink: 'https://www.google.com/maps/search/?api=1&query=เฮือนเพ็ญ+เชียงใหม่', 
+        image: 'https://img.wongnai.com/p/400x0/2022/12/23/6e493a0f00b049a6b391ea48962c3e9b.jpg',
+        gallery: [
+            "https://img.wongnai.com/p/1920x0/2022/03/18/c64254714f5f40dfb181ebf1319147a2.jpg",
+            "https://www.chiangmaitouring.com/wp-content/uploads/2019/12/%E0%B9%80%E0%B8%AE%E0%B8%B7%E0%B8%AD%E0%B8%99%E0%B9%80%E0%B8%9E%E0%B9%87%E0%B8%8D_9.jpg"
+        ],
+        mapLink: 'https://www.google.com/maps/search/?api=1&query=เฮือนเพ็ญ+เชียงใหม่',
         coords: { lat: 18.787127890129845 , lng: 98.98605410443376 },
         rating: 4.0,
-        priceLevel: '฿฿',
         openHours: '08:30 - 16:00 / 17:00 - 22:00',
         tel: '053-814-548',
         locales: {
@@ -140,11 +152,14 @@ export const restaurantData: Restaurant[] = [
     {
         id: 'r5', 
         slug: 'Khao-Soi-Mae-Sai', 
-        image: 'https://pbs.twimg.com/media/D2FI0QlUwAAR5Rv.jpg', 
+        image: 'https://pbs.twimg.com/media/D2FI0QlUwAAR5Rv.jpg',
+        gallery: [
+            "https://img.wongnai.com/p/1920x0/2021/12/04/14bc0b9ff79a43e2ae15bfb729d5654c.jpg",
+            "https://ungsriwong.s3.ap-southeast-1.amazonaws.com/wp-content/uploads/2019/05/03210437/KhaoSoiMaeSai_13-768x1024.jpg"
+        ],
         mapLink: 'https://www.google.com/maps/search/?api=1&query=ข้าวซอยแม่สาย+สันติธรรม',
         coords: { lat: 18.79977155987976 , lng: 98.97528323743258 },
         rating: 4.5,
-        priceLevel: '฿',
         openHours: '08:00 - 16:00',
         tel: '053-213-284',
         locales: {
@@ -174,11 +189,14 @@ export const restaurantData: Restaurant[] = [
     {
         id: 'r6', 
         slug: 'Kua-Kai-Nimman', 
-        image: 'https://cms.dmpcdn.com/travel/2018/05/09/da8cc785-fc27-4201-a5a3-f8314065f897.jpg', 
+        image: 'https://cms.dmpcdn.com/travel/2018/05/09/da8cc785-fc27-4201-a5a3-f8314065f897.jpg',
+        gallery: [
+            "https://img.wongnai.com/p/1920x0/2019/11/30/ac42f52c2417410f9c7ed11b3a1f7999.jpg",
+            "https://img.wongnai.com/p/1920x0/2013/12/15/d5ea8720b95847349fbe2030a374f137.jpg"
+        ], 
         mapLink: 'https://www.google.com/maps/search/?api=1&query=คั่วไก่นิมมาน',
         coords: { lat: 18.794475222100882 , lng: 98.96947613743258 },
         rating: 4.3,
-        priceLevel: '฿฿',
         openHours: '09:00 - 21:00',
         tel: '082-180-1177',
         locales: {
@@ -208,11 +226,14 @@ export const restaurantData: Restaurant[] = [
     {
         id: 'r7', 
         slug: 'Kai-Yang-Cherng-Doi', 
-        image: 'https://img.wongnai.com/p/400x0/2014/10/23/7541572782324809813b87b96e384065.jpg', 
+        image: 'https://img.wongnai.com/p/400x0/2014/10/23/7541572782324809813b87b96e384065.jpg',
+        gallery: [
+            "https://img.wongnai.com/p/1920x0/2015/09/01/e2c16fd7cee94518863a64865bd8b44e.jpg",
+            "https://img.wongnai.com/p/400x0/2016/12/21/3a39867e3a654ffe961462fe7e24b978.jpg"
+        ],
         mapLink: 'https://www.google.com/maps/search/?api=1&query=ไก่ย่างเชิงดอย',
         coords: { lat: 18.799330595409415 , lng: 98.96609759325368 },
         rating: 4.4,
-        priceLevel: '฿฿',
         openHours: '11:00 - 20:00 (ปิดวันจันทร์)',
         tel: '081-881-1407',
         locales: {
@@ -242,11 +263,14 @@ export const restaurantData: Restaurant[] = [
     {
         id: 'r8', 
         slug: 'Ohkajhu', 
-        image: 'https://api.tourismthailand.org/upload/live/business_content_thumbnail/14394/P08012273.jpeg', 
+        image: 'https://api.tourismthailand.org/upload/live/business_content_thumbnail/14394/P08012273.jpeg',
+        gallery: [
+            "https://img.salehere.co.th/p/1200x0/2024/08/28/jrhdxio9ud6d.jpg",
+            "https://img.salehere.co.th/p/1200x0/2024/08/28/jrhdxio9ud6d.jpg"
+        ],
         mapLink: 'https://www.google.com/maps/search/?api=1&query=โอ้กะจู๋+สันทราย',
         coords: { lat: 18.84073157181133, lng: 99.0245854914032 },
         rating: 4.6,
-        priceLevel: '฿฿฿',
         openHours: '09:30 - 21:30',
         tel: '052-080-744',
         locales: {
@@ -276,11 +300,14 @@ export const restaurantData: Restaurant[] = [
     {
         id: 'r9', 
         slug: 'Pongyang-Angdoi', 
-        image: 'https://media-cdn.tripadvisor.com/media/photo-s/0e/6e/3b/2d/signage-in-front-of-pongyang.jpg', 
+        image: 'https://media-cdn.tripadvisor.com/media/photo-s/0e/6e/3b/2d/signage-in-front-of-pongyang.jpg',
+        gallery: [
+            "https://img.wongnai.com/p/1920x0/2020/02/21/11e0266ac6bc403b8f5db7b22c44d844.jpg",
+            "https://www.bloggang.com/data/c/cheunmeun/picture/1517533933.jpg"
+        ],
         mapLink: 'https://www.google.com/maps/search/?api=1&query=โป่งแยงแอ่งดอย',
         coords: { lat: 18.89836165647252, lng: 98.85447022579041 },
         rating: 4.3,
-        priceLevel: '฿฿฿',
         openHours: '10:30 - 20:30',
         tel: '085-618-8885',
         locales: {
@@ -310,11 +337,14 @@ export const restaurantData: Restaurant[] = [
     {
         id: 'r10', 
         slug: 'Anchan-Noodle', 
-        image: 'https://api.tourismthailand.org/upload/live/business_content_thumbnail/14098/P08001939.jpeg', 
+        image: 'https://api.tourismthailand.org/upload/live/business_content_thumbnail/14098/P08001939.jpeg',
+        gallery: [
+            "https://img.wongnai.com/p/1920x0/2014/09/20/aadeb4a9bfb645e4bdd67669cec9797b.jpg",
+            "https://img.wongnai.com/p/1920x0/2014/09/20/aadeb4a9bfb645e4bdd67669cec9797b.jpg"
+        ],
         mapLink: 'https://www.google.com/maps/search/?api=1&query=ก๋วยเตี๋ยวอัญชัน+เชียงใหม่',
         coords: { lat: 18.79439135181284 , lng: 98.97258099325367 },
         rating: 4.3,
-        priceLevel: '฿',
         openHours: '08:00 - 16:00',
         tel: '084-949-2828',
         locales: {
@@ -344,11 +374,14 @@ export const restaurantData: Restaurant[] = [
     {
         id: 'r11', 
         slug: 'Palaad-Tawanron', 
-        image: 'https://cdn-th.orstatic.com/userphoto/doorphoto/2/223/00EMU40CBD94ECF2935670lv.jpg', 
+        image: 'https://cdn-th.orstatic.com/userphoto/doorphoto/2/223/00EMU40CBD94ECF2935670lv.jpg',
+        gallery: [
+            "https://img.wongnai.com/p/1920x0/2018/08/11/2d43ded8dbbb4400ac8c088440adef61.jpg",
+            "https://img.wongnai.com/p/1920x0/2018/09/14/cb72ca7e419448d9b7ed9357b7de5cee.jpg"
+        ],
         mapLink: 'https://www.google.com/maps/search/?api=1&query=ผาลาดตะวันรอน',
         coords: { lat: 18.801151447920553, lng: 98.94226991784916 },
         rating: 4.1,
-        priceLevel: '฿฿฿',
         openHours: '11:30 - 23:00',
         tel: '053-216-039',
         locales: {
@@ -378,11 +411,14 @@ export const restaurantData: Restaurant[] = [
     {
         id: 'r12', 
         slug: 'Meena-Rice-Based-Cuisine', 
-        image: 'https://www.chillpainai.com/src/wewakeup/scoop/img_scoop/Hits/rote/Jan59/meena/mn06.jpg', 
+        image: 'https://www.chillpainai.com/src/wewakeup/scoop/img_scoop/Hits/rote/Jan59/meena/mn06.jpg',
+        gallery: [
+            "https://img.wongnai.com/p/1920x0/2019/05/09/8e0672cdcd0f461ba45104010b2d1058.jpg",
+            "https://img.wongnai.com/p/400x0/2021/01/08/4f8097a54560420aafc38be58a912229.jpg"
+        ],
         mapLink: 'https://www.google.com/maps/search/?api=1&query=มีนามีข้าว+สันกำแพง',
         coords: { lat: 18.784889634091584, lng: 99.04589676441788 },
         rating: 4.5,
-        priceLevel: '฿฿',
         openHours: '10:00 - 17:00 (ปิดวันพุธ)',
         tel: '087-177-0523',
         locales: {
@@ -412,11 +448,14 @@ export const restaurantData: Restaurant[] = [
     {
         id: 'r13', 
         slug: 'Khanom-Jeen-San-Pa-Khoi', 
-        image: 'https://www.hungryfatguy.com/wp-content/uploads/2016/03/4fe56ed013f84b668dbd867f1f842345.jpg', 
+        image: 'https://www.hungryfatguy.com/wp-content/uploads/2016/03/4fe56ed013f84b668dbd867f1f842345.jpg',
+        gallery: [
+            "https://img.wongnai.com/p/1920x0/2021/03/23/115095ba2521488bb205b9ae00d8b2ab.jpg",
+            "https://www.menuinthai.com/wp-content/uploads/2023/04/sanpakoi-02.jpg"
+        ],
         mapLink: 'https://www.google.com/maps/search/?api=1&query=ขนมจีนสันป่าข่อย',
         coords: { lat: 18.78605117730895, lng: 99.00849737606008 },
         rating: 4.4,
-        priceLevel: '฿',
         openHours: '11:00 - 23:00 (ปิดวันอาทิตย์)',
         tel: '089-192-3264',
         locales: {
@@ -446,11 +485,14 @@ export const restaurantData: Restaurant[] = [
     {
         id: 'r14', 
         slug: 'Ajarn-Saiyud-Kitchen', 
-        image: 'https://pratuneung.com/storage/%E0%B8%84%E0%B8%A3%E0%B8%B1%E0%B8%A7%E0%B8%AA%E0%B8%B2%E0%B8%A2%E0%B8%AB%E0%B8%A2%E0%B8%B8%E0%B8%94/%E0%B8%AD%E0%B8%B2%E0%B8%88%E0%B8%B2%E0%B8%A3%E0%B8%A2%E0%B9%8C%E0%B8%AA%E0%B8%B2%E0%B8%A2%E0%B8%AB%E0%B8%A2%E0%B8%B8%E0xB8%942.jpg', 
+        image: 'https://scontent.fcnx3-1.fna.fbcdn.net/v/t1.6435-9/83892309_3898956333478925_4621318646524805120_n.jpg?stp=dst-jpg_p180x540_tt6&_nc_cat=103&ccb=1-7&_nc_sid=127cfc&_nc_ohc=lHrhrZItxYoQ7kNvwFXCbXN&_nc_oc=Adqedo8luto5XX68CtAT_FVvcTq5nc1S6DpCLRBAY0NuEtsxwfQum8g5Q6-picqfnoKCqUnEdzssjIug6PFy2hQc&_nc_zt=23&_nc_ht=scontent.fcnx3-1.fna&_nc_gid=aMYVqM7U4qXLHP5fPtxSHg&_nc_ss=7b2a8&oh=00_Af7FwbmYP3ovOOb-M5JW57gwXmCv-jvPCwtAFkvAulDobA&oe=6A2D44C4',
+        gallery: [
+            "https://img.wongnai.com/p/1920x0/2022/03/30/563d2721895d48e99fbe55571ab5fd0b.jpg",
+            "https://img.wongnai.com/p/1920x0/2019/11/12/808758548681420d97c89be3628000ea.jpg"
+        ],
         mapLink: 'https://www.google.com/maps/search/?api=1&query=ครัวอาจารย์สายหยุด',
         coords: { lat: 18.822079375564567 , lng: 98.9875927583271 },
         rating: 4.6,
-        priceLevel: '฿฿฿',
         openHours: '10:30 - 21:00 (ปิดวันพุธ)',
         tel: '081-530-1172',
         locales: {
@@ -480,11 +522,14 @@ export const restaurantData: Restaurant[] = [
     {
         id: 'r15', 
         slug: 'Suki-Chang-Phueak', 
-        image: 'https://f.ptcdn.info/579/044/000/oapj97fbiU9DWrN6ZQA-o.jpg', 
+        image: 'https://f.ptcdn.info/579/044/000/oapj97fbiU9DWrN6ZQA-o.jpg',
+        gallery: [
+            "https://img.wongnai.com/p/1920x0/2021/04/15/b81d4c4ecf9f45a1aeec91277c3028ae.jpg",
+            "https://img.wongnai.com/p/1920x0/2023/02/05/fa15a7e4e15f4fc8a12c5bac89a149d9.jpg"
+        ],
         mapLink: 'https://www.google.com/maps/search/?api=1&query=สุกี้ช้างเผือก',
         coords: { lat: 18.811649778457912, lng: 99.01950928587266 },
         rating: 4.4,
-        priceLevel: '฿',
         openHours: '17:30 - 23:30',
         tel: '086-420-5232',
         locales: {
@@ -514,11 +559,14 @@ export const restaurantData: Restaurant[] = [
     {
         id: 'r16', 
         slug: 'Midnight-Fried-Chicken', 
-        image: 'https://down-th.img.susercontent.com/file/de81de560cb50898bf0b94e5ba171cec', 
+        image: 'https://down-th.img.susercontent.com/file/de81de560cb50898bf0b94e5ba171cec',
+        gallery: [
+            "https://img.wongnai.com/p/1920x0/2020/07/29/27e6d56c2aea492f8a80f8803517a982.jpg",
+            "https://img.wongnai.com/p/1920x0/2015/07/14/d3ca0e1e61ca4a2f839cc5f9c192a3df.jpg"
+        ],
         mapLink: 'https://www.google.com/maps/search/?api=1&query=หมูทอดเที่ยงคืน+กำแพงดิน',
         coords: { lat: 18.780168325897183, lng: 98.99806093373165 },
         rating: 4.2,
-        priceLevel: '฿฿',
         openHours: '21:00 - 05:00',
         tel: '081-882-3161',
         locales: {
@@ -548,11 +596,14 @@ export const restaurantData: Restaurant[] = [
     {
         id: 'r17', 
         slug: 'Mont-Nomsod', 
-        image: 'https://www.chillpainai.com/src/wewakeup/scoop/images/599ff1bf4cbc57a22179a8a6848904ce63ee5daa.jpg', 
+        image: 'https://www.chillpainai.com/src/wewakeup/scoop/images/599ff1bf4cbc57a22179a8a6848904ce63ee5daa.jpg',
+        gallery: [
+            "https://img.wongnai.com/p/1920x0/2016/03/21/aaa7bbf1b38d4b5abfe087b42c8698b4.jpg",
+            "https://img.wongnai.com/p/1920x0/2015/10/28/199add51ac584750aa782630cdbde55d.jpg"
+        ],
         mapLink: 'https://www.google.com/maps/search/?api=1&query=มนต์นมสด+เชียงใหม่',
         coords: { lat: 18.798123018139346, lng: 98.96668199140318 },
         rating: 4.3,
-        priceLevel: '฿',
         openHours: '15:00 - 23:00',
         tel: '053-214-410',
         locales: {
@@ -582,11 +633,14 @@ export const restaurantData: Restaurant[] = [
     {
         id: 'r19', 
         slug: 'The-Good-View', 
-        image: 'https://www.hungryfatguy.com/wp-content/uploads/2022/01/DSC05616.jpg', 
+        image: 'https://www.hungryfatguy.com/wp-content/uploads/2022/01/DSC05616.jpg',
+        gallery: [
+            "https://img.wongnai.com/p/1920x0/2022/01/25/0057a4473a5641ec90d80ff6055ce62b.jpg",
+            "https://lh5.googleusercontent.com/proxy/Br3ipH53UEANsdWC7klXgBzcce-TBzVI4_9O1zPSZKXGLuajvEZuuRTPimhy68Lgr1Fv9czMVy1rhUkMDRm0bQrmCaXu2vHIJjP427GhSOJdA-t8vuGS-bkgI-CYY1dpPKenLOlgpqIkPSQ"
+        ],
         mapLink: 'https://www.google.com/maps/search/?api=1&query=The+Good+View+เชียงใหม่',
         coords: { lat: 18.790644254345402 , lng: 99.00373389510415 },
         rating: 4.2,
-        priceLevel: '฿฿฿',
         openHours: '17:00 - 01:00',
         tel: '053-241-866',
         locales: {
@@ -616,11 +670,14 @@ export const restaurantData: Restaurant[] = [
     {
         id: 'r20', 
         slug: 'Galae-Restaurant', 
-        image: 'https://ak-d.tripcdn.com/images/1mi3i2234bgvb3r8gB28E_W_640_0_R5_Q80.jpg?proc=source/trip', 
+        image: 'https://ak-d.tripcdn.com/images/1mi3i2234bgvb3r8gB28E_W_640_0_R5_Q80.jpg?proc=source/trip',
+        gallery: [
+            "https://img.wongnai.com/p/1920x0/2019/04/14/5eebc477dd2d458ca28a9d20cc609bcf.jpg",
+            "https://img.wongnai.com/p/1920x0/2017/06/17/bb26764712a2414e88f440989de37a2d.jpg"
+        ],
         mapLink: 'https://www.google.com/maps/search/?api=1&query=ร้านอาหารกาแล+เชียงใหม่',
         coords: { lat: 18.79352470737188 , lng: 98.94568913743258 },
         rating: 4.3,
-        priceLevel: '฿฿',
         openHours: '10:00 - 21:00',
         tel: '053-328-455',
         locales: {

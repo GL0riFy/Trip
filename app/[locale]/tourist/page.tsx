@@ -2,33 +2,41 @@
 
 import { useState, useMemo } from "react";
 import { ChiangMaiData } from "@/src/data/chiangmai";
+import type { LocalizedText } from "@/src/data/chiangmai";
+import { useParams } from "next/navigation";
+import ChiangMaiPreloader from '@/app/perloding/ChiangMaiPreloader';
 
 // ---- Types ----------------------------------------------------------------
-
 
 interface PlaceCard {
   id: string;
   name: string;
   desc: string;
   location: string;
+  lat: number;
+  lng: number;
+  tag: string;
   image: string;
+  gallery: string[];
   price: string;
   hours: string;
 }
 
 // ---- Helper ----------------------------------------------------------------
 
-const LOCALE = "th";
-
-function tripsToCards(trips: any[]): PlaceCard[] {
+function tripsToCards(trips: typeof ChiangMaiData, locale: keyof LocalizedText): PlaceCard[] {
   return trips.map((t) => ({
     id: t.id,
-    name: t.title?.[LOCALE] ?? t.id,
-    desc: t.detail?.[LOCALE] ?? "",
+    name: t.title?.[locale] ?? t.id,
+    desc: t.detail?.[locale] ?? "",
+    tag: t.tag?.[locale] ?? "",
     location: t.detail_more?.location ?? "",
+    lat: t.detail_more?.lat ?? 0,
+    lng: t.detail_more?.lng ?? 0,
     image: t.detail_more?.img ?? "",
-    price: t.price?.[LOCALE] ?? "",
-    hours: t.hours?.[LOCALE] ?? "",
+    gallery: t.detail_more?.gallery ?? [],
+    price: t.price?.[locale] ?? "",
+    hours: t.hours?.[locale] ?? "",
   }));
 }
 
@@ -95,7 +103,7 @@ function PlaceCardItem({
         {place.price && (
           <div className="absolute top-2.5 left-2.5">
             <span className="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700">
-              {place.price}
+              {place.tag}
             </span>
           </div>
         )}
@@ -141,8 +149,10 @@ function StatCard({ num, label }: { num: number; label: string }) {
 // ---- Main Page -------------------------------------------------------------
 
 export default function TouristAttractions() {
+  const { locale } = useParams();
+  const LOCALE = (locale as keyof LocalizedText) ?? "en";
   const allPlaces = useMemo<PlaceCard[]>(
-    () => tripsToCards(ChiangMaiData),
+  () => tripsToCards(ChiangMaiData, LOCALE),
     []
   );
 
@@ -163,8 +173,23 @@ export default function TouristAttractions() {
   const visible = filtered.slice(0, visibleCount);
   const hasMore = visibleCount < filtered.length;
 
+  const [isReady, setIsReady] = useState(false);
+  const [Chiangmai, setChiangmai] = useState(ChiangMaiData);
+  const [dataPromise] = useState<Promise<void>>(
+        () => Promise.resolve().then(() => setChiangmai(ChiangMaiData))
+  );
+  
+  if (!isReady) {
+      return (
+          <ChiangMaiPreloader
+              onComplete={() => setIsReady(true)}
+              dataPromise={dataPromise}
+          />
+      );
+  }
+
   return (
-    <main className="min-h-screen bg-stone-50">
+    <main className="min-h-screen pt-20">
       {/* ── Hero ── */}
       <header className="bg-white border-b border-stone-200/80 px-6 py-8">
         <div className="max-w-5xl mx-auto">
@@ -177,9 +202,6 @@ export default function TouristAttractions() {
           <p className="text-sm text-stone-500 max-w-xl leading-relaxed">
             สำรวจสถานที่ท่องเที่ยว วัด และธรรมชาติในเชียงใหม่ ครบทุกอำเภอ
           </p>
-          <div className="flex gap-3 mt-5 flex-wrap">
-            <StatCard num={allPlaces.length} label="สถานที่ทั้งหมด" />
-          </div>
         </div>
       </header>
 

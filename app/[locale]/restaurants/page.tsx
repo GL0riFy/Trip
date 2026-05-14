@@ -4,6 +4,9 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { restaurantData, tipsData } from '@/src/data/restaurants/food_data';
 import Link from 'next/link';
+import { 
+  MapPin, ChefHat, Lightbulb
+} from 'lucide-react';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
 import ChiangMaiPreloader from '@/app/perloding/ChiangMaiPreloader'; // ← เพิ่ม
 
@@ -151,7 +154,7 @@ export default function ChiangMaiTravelGuide() {
                                     }`}
                             >
                                 <span className="flex items-center gap-4 text-[15px]">
-                                    <span className="text-xl">🍽️</span>
+                                    <span className="text-xl"><ChefHat /></span>
                                     {ui.catRest}
                                 </span>
                                 <span className={`text-sm font-bold ${activeSection === 'restaurant-section' ? 'text-[#16a34a]' : ''}`}>
@@ -166,7 +169,7 @@ export default function ChiangMaiTravelGuide() {
                                     }`}
                             >
                                 <span className="flex items-center gap-4 text-[15px]">
-                                    <span className="text-xl">💡</span>
+                                    <span className="text-xl"><Lightbulb /></span>
                                     {ui.catTips}
                                 </span>
                             </li>
@@ -215,7 +218,7 @@ export default function ChiangMaiTravelGuide() {
                                                 </div>
                                                 <div className="mt-5">
                                                     <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-600 max-w-full">
-                                                        <span className="text-red-500 text-xs">📍</span>
+                                                        <span className="text-red-500 text-xs"><MapPin /></span>
                                                         <span className="truncate font-medium">{rest.locales[locale].location}</span>
                                                     </div>
                                                 </div>
