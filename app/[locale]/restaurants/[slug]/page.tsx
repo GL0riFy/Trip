@@ -8,7 +8,7 @@ import {
     Star, MapPin, Clock, Phone, ChevronLeft, 
     UtensilsCrossed, ExternalLink, DollarSign
 } from 'lucide-react';
-import { restaurantData, Restaurant } from '@/src/data/restaurants/food_data';
+import { restaurantData } from '@/src/data/restaurants/food_data';
 
 type Locale = 'th' | 'en' | 'zh';
 
@@ -45,7 +45,7 @@ export default function RestaurantDetail() {
     const locale = (params.locale as Locale) || 'th';
     const slug = params.slug as string;
 
-    const restaurant = restaurantData.find((r: Restaurant) => r.slug === slug);
+    const restaurant = restaurantData.find((r: typeof restaurantData[0]) => r.slug === slug);
 
     const uiMap = {
         th: { label: "Recommended", open: "เวลาเปิดทำการ", tel: "เบอร์โทรศัพท์", menu: "เมนูแนะนำ" },
