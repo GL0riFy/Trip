@@ -12,13 +12,15 @@ export default function ReviewPage() {
     const [dataPromise] = useState<Promise<void>>( // ← เพิ่ม
         () => Promise.resolve() // data เป็น static import อยู่แล้ว ไม่ต้อง fetch
     );
+    const [isAddCommentOpen, setIsAddCommentOpen] = useState(false);
+    const [newCommentForm, setNewCommentForm] = useState({ name: '', rating: 5, text: '' });
 
     // แบบใช้ api
-//     const [dataPromise] = useState<Promise<void>>(() =>
-//     fetch('/api/your-endpoint')
-//       .then(r => r.json())
-//       .then(result => setData(result))
-//   );
+    //     const [dataPromise] = useState<Promise<void>>(() =>
+    //     fetch('/api/your-endpoint')
+    //       .then(r => r.json())
+    //       .then(result => setData(result))
+    //   );
 
     // ฟังก์ชันวาดดาว
     const renderStars = (count: number) => {
@@ -119,32 +121,49 @@ export default function ReviewPage() {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                        {reviewsData.map((review) => (
-                            <div key={review.id} className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex flex-col h-full hover:shadow-md transition-all-300">
-                                <div className="flex items-center gap-3.5 mb-4">
-                                    <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold overflow-hidden shadow-inner">
-                                        <img src={review.image} alt="" className="w-full h-full object-cover" />
-                                    </div>
-                                    <div className="flex-1">
-                                        <h4 className="font-semibold text-gray-800 text-base">{review.name}</h4>
-                                        <p className="text-xs text-gray-400">{review.date}</p>
-                                    </div>
-                                    <div className="flex shrink-0">
-                                        {renderStars(review.rating)}
-                                    </div>
-                                </div>
-                                <p className="text-gray-700 text-[15px] leading-relaxed flex-grow line-clamp-4">
-                                    "{review.text}"
-                                </p>
-                                <div className="mt-5 flex flex-wrap gap-2.5 pt-4 border-t border-gray-100">
-                                    {review.tags.map((tag, idx) => (
-                                        <span key={idx} className="px-4 py-1.5 bg-red-50 text-red-500 text-xs font-medium rounded-full border border-red-100 shadow-inner">
-                                            {tag}
-                                        </span>
-                                    ))}
-                                </div>
+                        {/* ปุ่มเพิ่มคอมเมนต์ */}
+                        <div
+                            className="bg-white p-6 rounded-3xl shadow-sm border-2 border-dashed border-orange-300 flex flex-col h-full hover:shadow-md transition-all-300 cursor-pointer justify-center items-center group"
+                            onClick={() => setIsAddCommentOpen(true)}
+                        >
+                            <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center text-orange-500 mb-4 group-hover:scale-110 transition-transform duration-300">
+                                <span className="text-3xl">➕</span>
                             </div>
-                        ))}
+                            <h3 className="text-lg font-bold text-gray-800">เพิ่มคอมเมนต์ของคุณ</h3>
+                            <p className="text-sm text-gray-500 mt-2 text-center">แบ่งปันประสบการณ์ของคุณกับเรา</p>
+                        </div>
+
+                        {reviewsData.map((review, index) => {
+                            const faceIcons = ["🐷", "🐟", "🐔", "🦆", "🐰", "🐶", "🐱", "🐼", "🐨", "🐸", "🐧", "🦉"];
+                            const faceIcon = faceIcons[index % faceIcons.length];
+
+                            return (
+                                <div key={review.id} className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex flex-col h-full hover:shadow-md transition-all-300">
+                                    <div className="flex items-center gap-3.5 mb-4">
+                                        <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-2xl overflow-hidden shadow-inner">
+                                            {faceIcon}
+                                        </div>
+                                        <div className="flex-1">
+                                            <h4 className="font-semibold text-gray-800 text-base">{review.name}</h4>
+                                            <p className="text-xs text-gray-400">{review.date}</p>
+                                        </div>
+                                        <div className="flex shrink-0">
+                                            {renderStars(review.rating)}
+                                        </div>
+                                    </div>
+                                    <p className="text-gray-700 text-[15px] leading-relaxed flex-grow line-clamp-4">
+                                        "{review.text}"
+                                    </p>
+                                    <div className="mt-5 flex flex-wrap gap-2.5 pt-4 border-t border-gray-100">
+                                        {review.tags.map((tag, idx) => (
+                                            <span key={idx} className="px-4 py-1.5 bg-red-50 text-red-500 text-xs font-medium rounded-full border border-red-100 shadow-inner">
+                                                {tag}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+                            );
+                        })}
                     </div>
                 </div>
             </div>
@@ -202,6 +221,83 @@ export default function ReviewPage() {
                                         {tag}
                                     </span>
                                 ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Modal เพิ่มคอมเมนต์ */}
+            {isAddCommentOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-5 sm:p-8">
+                    <div className="absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity" onClick={() => setIsAddCommentOpen(false)}></div>
+                    <div className="relative bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col w-full max-w-lg modal-enter border border-gray-100 p-8">
+                        <button
+                            className="absolute top-5 right-5 w-10 h-10 flex items-center justify-center bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-full transition-colors transition-all-300"
+                            onClick={() => setIsAddCommentOpen(false)}
+                        >
+                            ✕
+                        </button>
+
+                        <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                            <span className="text-3xl">✍️</span> เพิ่มคอมเมนต์ใหม่
+                        </h3>
+
+                        <div className="space-y-5">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">ชื่อเล่นของคุณ</label>
+                                <input
+                                    type="text"
+                                    placeholder="พิมพ์ชื่อของคุณที่นี่..."
+                                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-shadow text-gray-800"
+                                    value={newCommentForm.name}
+                                    onChange={(e) => setNewCommentForm({ ...newCommentForm, name: e.target.value })}
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">ให้คะแนนประสบการณ์</label>
+                                <div className="flex gap-2">
+                                    {[1, 2, 3, 4, 5].map((star) => (
+                                        <button
+                                            key={star}
+                                            className={`text-3xl transition-transform hover:scale-110 ${newCommentForm.rating >= star ? 'text-yellow-400' : 'text-gray-300'}`}
+                                            onClick={() => setNewCommentForm({ ...newCommentForm, rating: star })}
+                                        >
+                                            ★
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">ความคิดเห็น</label>
+                                <textarea
+                                    rows={4}
+                                    placeholder="เล่าประสบการณ์ของคุณให้เราฟัง..."
+                                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-shadow resize-none text-gray-800"
+                                    value={newCommentForm.text}
+                                    onChange={(e) => setNewCommentForm({ ...newCommentForm, text: e.target.value })}
+                                ></textarea>
+                            </div>
+
+                            <div className="flex justify-end gap-3 pt-4 mt-2 border-t border-gray-100">
+                                <button
+                                    className="px-6 py-2.5 rounded-xl border border-gray-200 text-gray-600 font-medium hover:bg-gray-50 transition-colors"
+                                    onClick={() => setIsAddCommentOpen(false)}
+                                >
+                                    ยกเลิก
+                                </button>
+                                <button
+                                    className="px-6 py-2.5 rounded-xl bg-orange-500 text-white font-medium hover:bg-orange-600 shadow-md hover:shadow-lg transition-all"
+                                    onClick={() => {
+                                        setIsAddCommentOpen(false);
+                                        setNewCommentForm({ name: '', rating: 5, text: '' });
+                                        alert("ขอบคุณสำหรับความคิดเห็นของคุณ!");
+                                    }}
+                                >
+                                    เพิ่มคอมเมนต์
+                                </button>
                             </div>
                         </div>
                     </div>
