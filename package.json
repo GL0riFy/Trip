@@ -13,7 +13,7 @@
     "@turf/turf": "^7.3.5",
     "@upstash/redis": "^1.36.1",
     "@vercel/kv": "^3.0.0",
-    "dotenv": "^17.3.1",
+    "dotenv": "^17.4.2",
     "framer-motion": "^12.23.26",
     "ioredis": "^5.10.1",
     "leaflet": "^1.9.4",

@@ -1,69 +1,124 @@
 "use client";
 
-import React, { useState } from "react";
-
-import { reviewsData, Review } from "@/src/data/reviews";
+import React, { useEffect, useState } from "react";
 import ChiangMaiPreloader from '@/app/perloding/ChiangMaiPreloader';
+// ดึงข้อมูลรีวิวรูปภาพ (Gallery) มาจาก src/data/review
+import { reviewsData } from "@/src/data/reviews"; 
+
+// กำหนด Interface สำหรับรีวิวที่เป็นข้อความ (จาก Redis และ Form) เพื่อไม่ให้ติด Type Error
+interface UserReview {
+    id: string | number;
+    name: string;
+    rating: number;
+    comment?: string;
+    createdAt?: string;
+    tags: string[];
+    image?: string;
+}
 
 export default function ReviewPage() {
-    // State สำหรับจัดการการเปิด/ปิด Popup
-    const [selectedReview, setSelectedReview] = useState<Review | null>(null);
-    const [isReady, setIsReady] = useState(false); // ← เพิ่ม
-    const [dataPromise] = useState<Promise<void>>( // ← เพิ่ม
-        () => Promise.resolve() // data เป็น static import อยู่แล้ว ไม่ต้อง fetch
-    );
+    // เปลี่ยนมาใช้ UserReview เพื่อรองรับโครงสร้างข้อมูลจาก Redis
+    const [reviews, setReviews] = useState<UserReview[]>([]);
+    const [name, setName] = useState('');
+    const [rating, setRating] = useState(5);
+    const [comment, setComment] = useState('');
+    const [tags, setTags] = useState<string[]>(["ลูกค้าจริง", "ประทับใจ"]);
     const [isAddCommentOpen, setIsAddCommentOpen] = useState(false);
-    const [newCommentForm, setNewCommentForm] = useState({ name: '', rating: 5, text: '' });
+    const [selectedReview, setSelectedReview] = useState<UserReview | null>(null);
+    const [isReady, setIsReady] = useState(false);
+    const [dataPromise, setDataPromise] = useState<Promise<void> | null>(null);
 
-    // แบบใช้ api
-    //     const [dataPromise] = useState<Promise<void>>(() =>
-    //     fetch('/api/your-endpoint')
-    //       .then(r => r.json())
-    //       .then(result => setData(result))
-    //   );
+    useEffect(() => {
+        const promise = fetch('/api/review')
+            .then((res) => res.json())
+            .then((data) => {
+                if (Array.isArray(data)) {
+                    setReviews(data);
+                }
+            })
+            .catch((err) => console.error("Fetch error:", err));
 
-    // ฟังก์ชันวาดดาว
+        setDataPromise(promise);
+    }, []);
+
     const renderStars = (count: number) => {
         return Array.from({ length: 5 }).map((_, i) => (
-            <svg key={i} className={`w-5 h-5 ${i < count ? "text-yellow-400" : "text-gray-300"}`} fill="currentColor" viewBox="0 0 20 20">
+            <svg 
+                key={i} 
+                className={`w-5 h-5 ${i < count ? "text-yellow-400" : "text-gray-300"}`} 
+                fill="currentColor" 
+                viewBox="0 0 20 20"
+            >
                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
             </svg>
         ));
     };
 
     if (!isReady) {
-        return (
+        return dataPromise ? (
             <ChiangMaiPreloader
                 onComplete={() => setIsReady(true)}
                 dataPromise={dataPromise}
             />
-        );
+        ) : null; // หรือใส่ Loading เล็กๆ ไว้ก็ได้ครับ
     }
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        const res = await fetch('/api/review', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ name, rating, comment, tags }),
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+            const newReview: UserReview = {
+                id: data.insertedId || String(Date.now()),
+                name: name,
+                rating: rating,
+                comment: comment,
+                tags: tags,
+                createdAt: new Date().toISOString(),
+            };
+            
+            setReviews((prev) => [newReview, ...prev]);
+
+            setName('');
+            setRating(5);
+            setComment('');
+            setIsAddCommentOpen(false);
+
+            alert('Thanks for review!');
+        }
+    };
 
     return (
         <div className="min-h-screen bg-gray-50 pb-20">
-            {/* แทรก CSS สำหรับแอนิเมชันลอยขึ้นลง และ Modal transition */}
             <style dangerouslySetInnerHTML={{
                 __html: `
-        @keyframes float {
-          0% { transform: translateY(0px); }
-          50% { transform: translateY(-8px); }
-          100% { transform: translateY(0px); }
-        }
-        .animate-float {
-          animation: float 2.5s ease-in-out infinite;
-        }
-        .modal-enter {
-          animation: scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-        @keyframes scaleUp {
-          from { opacity: 0; transform: scale(0.95); }
-          to { opacity: 1; transform: scale(1); }
-        }
-        /* CSS เพิ่มเติมสำหรับการตกแต่งทั่วไป */
+        @keyframes float {
+          0% { transform: translateY(0px); }
+          50% { transform: translateY(-8px); }
+          100% { transform: translateY(0px); }
+        }
+        .animate-float {
+          animation: float 2.5s ease-in-out infinite;
+        }
+        .modal-enter {
+          animation: scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes scaleUp {
+          from { opacity: 0; transform: scale(0.95); }
+          to { opacity: 1; transform: scale(1); }
+        }
         .shadow-soft { box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
         .transition-all-300 { transition: all 300ms ease; }
-      `}} />
+      `}} />
 
             {/* Hero Section */}
             <div
@@ -87,24 +142,20 @@ export default function ReviewPage() {
                         <h2 className="text-4xl font-bold text-gray-800">แกลลอรี่รีวิว</h2>
                         <span className="text-4xl">📸</span>
                     </div>
-                    <p className="text-gray-500 mb-8 text-sm pl-1">คลิกที่รูปภาพเพื่อดูข้อมูลเพิ่มเติม</p>
+                    <p className="text-gray-500 mb-8 text-sm pl-1">รูปภาพรีวิวความประทับใจจากลูกค้าของเรา</p>
 
-                    {/* Masonry Layout สำหรับรูปภาพ (ดีไซน์แบบ Masonry คล้ายๆ กันด้วยการใช้ grid และ custom spans) */}
-                    {/* เราจะใช้ CSS columns เพื่อสร้าง Masonry Layout ที่สวยงามและตอบสนองได้ดี */}
                     <div className="columns-2 md:columns-3 lg:columns-4 gap-5 space-y-5">
-                        {reviewsData.map((review) => ( // แสดงผล 12 ภาพ
+                        {reviewsData.map((review) => (
                             <div
                                 key={review.id}
-                                className="break-inside-avoid relative group cursor-pointer overflow-hidden rounded-2xl shadow-sm hover:shadow-lg transition-all-300"
-                                onClick={() => setSelectedReview(review)}
+                                className="break-inside-avoid relative group overflow-hidden rounded-2xl shadow-sm hover:shadow-lg transition-all-300"
                             >
                                 <img
                                     src={review.image}
-                                    alt={`Review by ${review.name}`}
+                                    alt="Customer Review Gallery" 
                                     className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500 block"
                                 />
                                 <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-15 transition-opacity duration-300"></div>
-                                {/* ไอคอนหัวใจลอยได้ */}
                                 <div className="absolute top-4 right-4 animate-float drop-shadow-md">
                                     <span className="text-3xl opacity-90">💖</span>
                                 </div>
@@ -133,29 +184,50 @@ export default function ReviewPage() {
                             <p className="text-sm text-gray-500 mt-2 text-center">แบ่งปันประสบการณ์ของคุณกับเรา</p>
                         </div>
 
-                        {reviewsData.map((review, index) => {
+                        {/* แสดงผลรีวิวข้อความจาก Redis */}
+                        {reviews.map((review: any, index) => {
                             const faceIcons = ["🐷", "🐟", "🐔", "🦆", "🐰", "🐶", "🐱", "🐼", "🐨", "🐸", "🐧", "🦉"];
                             const faceIcon = faceIcons[index % faceIcons.length];
 
+                            const reviewName = review.name || "ผู้ใช้ทั่วไป";
+                            const reviewRating = Number(review.rating) || 5;
+                            const reviewComment = review.comment || review.text || ""; 
+                            const reviewTags = review.tags || ["ลูกค้าจริง", "ประทับใจ"]; 
+
+                            let reviewDate = "รีวิวเมื่อเร็วๆ นี้";
+                            if (review.createdAt) {
+                                try {
+                                    reviewDate = new Date(review.createdAt).toLocaleDateString('th-TH', {
+                                        year: 'numeric',
+                                        month: 'short',
+                                        day: 'numeric',
+                                    });
+                                } catch (e) {
+                                    console.error(e);
+                                }
+                            } else if (review.date) {
+                                reviewDate = review.date;
+                            }
+
                             return (
-                                <div key={review.id} className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex flex-col h-full hover:shadow-md transition-all-300">
+                                <div key={`redis-review-${index}`} className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex flex-col h-full hover:shadow-md transition-all-300">
                                     <div className="flex items-center gap-3.5 mb-4">
                                         <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-2xl overflow-hidden shadow-inner">
                                             {faceIcon}
                                         </div>
                                         <div className="flex-1">
-                                            <h4 className="font-semibold text-gray-800 text-base">{review.name}</h4>
-                                            <p className="text-xs text-gray-400">{review.date}</p>
+                                            <h4 className="font-semibold text-gray-800 text-base">{reviewName}</h4>
+                                            <p className="text-xs text-gray-400">{reviewDate}</p>
                                         </div>
                                         <div className="flex shrink-0">
-                                            {renderStars(review.rating)}
+                                            {renderStars(reviewRating)}
                                         </div>
                                     </div>
                                     <p className="text-gray-700 text-[15px] leading-relaxed flex-grow line-clamp-4">
-                                        "{review.text}"
+                                        "{reviewComment}"
                                     </p>
                                     <div className="mt-5 flex flex-wrap gap-2.5 pt-4 border-t border-gray-100">
-                                        {review.tags.map((tag, idx) => (
+                                        {reviewTags.map((tag: string, idx: number) => (
                                             <span key={idx} className="px-4 py-1.5 bg-red-50 text-red-500 text-xs font-medium rounded-full border border-red-100 shadow-inner">
                                                 {tag}
                                             </span>
@@ -171,15 +243,8 @@ export default function ReviewPage() {
             {/* Modal / Popup Component */}
             {selectedReview && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-5 sm:p-8">
-                    {/* Backdrop */}
-                    <div
-                        className="absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity"
-                        onClick={() => setSelectedReview(null)}
-                    ></div>
-
-                    {/* Modal Content */}
+                    <div className="absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity" onClick={() => setSelectedReview(null)}></div>
                     <div className="relative bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row w-full max-w-5xl max-h-[90vh] modal-enter border border-gray-100">
-                        {/* ปุ่มปิด */}
                         <button
                             className="absolute top-5 right-5 z-10 w-10 h-10 flex items-center justify-center bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-full transition-colors transition-all-300"
                             onClick={() => setSelectedReview(null)}
@@ -187,16 +252,10 @@ export default function ReviewPage() {
                             ✕
                         </button>
 
-                        {/* รูปภาพฝั่งซ้าย */}
                         <div className="md:w-1/2 bg-gray-100 h-80 md:h-auto">
-                            <img
-                                src={selectedReview.image}
-                                alt={selectedReview.name}
-                                className="w-full h-full object-cover"
-                            />
+                            <img src={selectedReview.image} alt={selectedReview.name} className="w-full h-full object-cover" />
                         </div>
 
-                        {/* ข้อมูลฝั่งขวา */}
                         <div className="md:w-1/2 p-8 md:p-12 flex flex-col justify-center overflow-y-auto">
                             <div className="flex mb-6 shrink-0">
                                 {renderStars(selectedReview.rating)}
@@ -205,18 +264,17 @@ export default function ReviewPage() {
                             <h3 className="text-3xl font-extrabold text-gray-800 mb-2 flex items-center gap-2.5">
                                 {selectedReview.name} 🌸
                             </h3>
-                            <p className="text-base text-gray-500 mb-8 pl-1">{selectedReview.date}</p>
+                            <p className="text-base text-gray-500 mb-8 pl-1">{selectedReview.createdAt}</p>
 
                             <div className="bg-gray-50 p-7 rounded-2xl border border-gray-100 relative shadow-inner">
-                                {/* เครื่องหมายคำพูดตกแต่ง */}
                                 <span className="absolute top-2 left-2 text-5xl text-gray-200">"</span>
                                 <p className="text-gray-700 leading-relaxed relative z-10 text-lg">
-                                    {selectedReview.text}
+                                    {selectedReview.comment}
                                 </p>
                             </div>
 
                             <div className="mt-10 flex gap-2.5 flex-wrap pt-6 border-t border-gray-100">
-                                {selectedReview.tags.map((tag, idx) => (
+                                {selectedReview.tags && selectedReview.tags.map((tag, idx) => (
                                     <span key={idx} className="px-5 py-2.5 bg-green-100 text-green-700 text-sm font-semibold rounded-full shadow-inner border border-green-200 transition-all-300">
                                         {tag}
                                     </span>
@@ -229,10 +287,11 @@ export default function ReviewPage() {
 
             {/* Modal เพิ่มคอมเมนต์ */}
             {isAddCommentOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-5 sm:p-8">
+                <form onSubmit={handleSubmit} className="fixed inset-0 z-50 flex items-center justify-center p-5 sm:p-8">
                     <div className="absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity" onClick={() => setIsAddCommentOpen(false)}></div>
                     <div className="relative bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col w-full max-w-lg modal-enter border border-gray-100 p-8">
                         <button
+                            type="button"
                             className="absolute top-5 right-5 w-10 h-10 flex items-center justify-center bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-full transition-colors transition-all-300"
                             onClick={() => setIsAddCommentOpen(false)}
                         >
@@ -250,8 +309,9 @@ export default function ReviewPage() {
                                     type="text"
                                     placeholder="พิมพ์ชื่อของคุณที่นี่..."
                                     className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-shadow text-gray-800"
-                                    value={newCommentForm.name}
-                                    onChange={(e) => setNewCommentForm({ ...newCommentForm, name: e.target.value })}
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                    required
                                 />
                             </div>
 
@@ -261,8 +321,9 @@ export default function ReviewPage() {
                                     {[1, 2, 3, 4, 5].map((star) => (
                                         <button
                                             key={star}
-                                            className={`text-3xl transition-transform hover:scale-110 ${newCommentForm.rating >= star ? 'text-yellow-400' : 'text-gray-300'}`}
-                                            onClick={() => setNewCommentForm({ ...newCommentForm, rating: star })}
+                                            type="button"
+                                            onClick={() => setRating(star)}
+                                            className={`text-3xl transition-transform hover:scale-110 ${rating >= star ? 'text-yellow-400' : 'text-gray-300'}`}
                                         >
                                             ★
                                         </button>
@@ -276,32 +337,30 @@ export default function ReviewPage() {
                                     rows={4}
                                     placeholder="เล่าประสบการณ์ของคุณให้เราฟัง..."
                                     className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-shadow resize-none text-gray-800"
-                                    value={newCommentForm.text}
-                                    onChange={(e) => setNewCommentForm({ ...newCommentForm, text: e.target.value })}
+                                    value={comment}
+                                    onChange={(e) => setComment(e.target.value)}
+                                    required
                                 ></textarea>
                             </div>
 
                             <div className="flex justify-end gap-3 pt-4 mt-2 border-t border-gray-100">
                                 <button
+                                    type="button"
                                     className="px-6 py-2.5 rounded-xl border border-gray-200 text-gray-600 font-medium hover:bg-gray-50 transition-colors"
                                     onClick={() => setIsAddCommentOpen(false)}
                                 >
                                     ยกเลิก
                                 </button>
                                 <button
+                                    type="submit"
                                     className="px-6 py-2.5 rounded-xl bg-orange-500 text-white font-medium hover:bg-orange-600 shadow-md hover:shadow-lg transition-all"
-                                    onClick={() => {
-                                        setIsAddCommentOpen(false);
-                                        setNewCommentForm({ name: '', rating: 5, text: '' });
-                                        alert("ขอบคุณสำหรับความคิดเห็นของคุณ!");
-                                    }}
                                 >
                                     เพิ่มคอมเมนต์
                                 </button>
                             </div>
                         </div>
                     </div>
-                </div>
+                </form>
             )}
         </div>
     );
