@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import { ChiangMaiData } from "@/src/data/chiangmai";
 import type { LocalizedText } from "@/src/data/chiangmai";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import ChiangMaiPreloader from '@/app/perloding/ChiangMaiPreloader';
 
 // ---- Types ----------------------------------------------------------------
@@ -150,6 +150,7 @@ function StatCard({ num, label }: { num: number; label: string }) {
 
 export default function TouristAttractions() {
   const { locale } = useParams();
+  const router = useRouter();
   const LOCALE = (locale as keyof LocalizedText) ?? "en";
   const allPlaces = useMemo<PlaceCard[]>(
   () => tripsToCards(ChiangMaiData, LOCALE),
@@ -262,7 +263,7 @@ export default function TouristAttractions() {
                 <PlaceCardItem
                   key={place.id}
                   place={place}
-                  onClick={(p) => console.log("Selected:", p)}
+                  onClick={(p) => router.push(`/${locale}/tourist/${p.id}`)}
                 />
               ))}
             </div>
