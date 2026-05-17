@@ -27,6 +27,7 @@ export const MueangChiangMaiTrips = [
       zh: "寺庙"
     },
     detail_more: {
+      maplink: "https://www.google.com/maps/place/วัดพระธาตุดอยสุเทพราชวรวิหาร/@18.8049889,98.9190534,17z/data=!3m1!4b1!4m6!3m5!1s0x30da39b5dff1ddb5:0x9d864c5caec57e21!8m2!3d18.8049889!4d98.9216337!16zL20vMGNmd3M2?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
       location: "ตำบลสุเทพ อำเภอเมืองเชียงใหม่ เชียงใหม่ 50200",
       lat: 18.804853662014455, 
       lng: 98.92143680296009,
@@ -67,6 +68,7 @@ export const MueangChiangMaiTrips = [
       zh: "寺庙"
     },
     detail_more: {
+      maplink: "https://www.google.com/maps/place/วัดเจดีย์หลวงวรวิหาร/@18.7869693,98.9840001,17z/data=!3m1!4b1!4m6!3m5!1s0x30da3a9933111415:0x5cf7709a044ba8ba!8m2!3d18.7869693!4d98.9865804!16zL20vMDNyd2Zn?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
       location: "QXPP+QCQ 103 ถ. พระปกเกล้า ตำบลศรีภูมิ อำเภอเมืองเชียงใหม่ เชียงใหม่ 50200",
       lat: 18.786983036298537, 
       lng: 98.98745453580554,
@@ -107,6 +109,7 @@ export const MueangChiangMaiTrips = [
       zh: "寺庙"
     },
     detail_more: {
+      maplink: "https://www.google.com/maps/place/วัดพระสิงห์วรมหาวิหาร/@18.7885802,98.9801269,18z/data=!3m1!4b1!4m6!3m5!1s0x30da3a9b6e4a246f:0x9656d9e717cd54e9!8m2!3d18.7885265!4d98.9819946!16s%2Fm%2F076w26w?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
       location: "2 ถนน สามล้าน ตำบลศรีภูมิ อำเภอเมืองเชียงใหม่ เชียงใหม่ 50200",
       lat: 18.78852212145972, 
       lng: 98.98221548603019,
@@ -147,6 +150,7 @@ export const MueangChiangMaiTrips = [
       zh: "建筑"
     },
     detail_more: {
+      maplink: "https://www.google.com/maps/place/ประตูท่าแพ/@18.7860229,98.9914223,18z/data=!4m10!1m2!2m1!1z4Lib4Lij4Liw4LiV4Li54LiX4LmI4Liy4LmB4Lie!3m6!1s0x30da3aa23421c875:0x9d3b8fabe43926f6!8m2!3d18.7877413!4d98.993369!15sCh7guJvguKPguLDguJXguLnguJfguYjguLLguYHguJ5aISIf4Lib4Lij4Liw4LiV4Li5IOC4l-C5iOC4suC5geC4npIBE2hpc3RvcmljYWxfbGFuZG1hcmuaAURDaTlEUVVsUlFVTnZaRU5vZEhsalJqbHZUMnhXZVZJd1draFBWbWcxVjI1c2NVMHdaRzFhVlVWM1lrWlNlbFJXUlJBQuABAPoBBAgAECI!16s%2Fg%2F122rvzhk?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
       location: "ถ. ท่าแพ ตำบลช้างคลาน อำเภอเมืองเชียงใหม่ เชียงใหม่ 50200",
       lat: 18.787723059580635, 
       lng: 98.9934398090893,
@@ -187,6 +191,7 @@ export const MueangChiangMaiTrips = [
       zh: "市场"
     },
     detail_more: {
+      maplink: "https://www.google.com/maps/place/ไนท์บาซาร์เชียงใหม่/@18.7860229,98.9875465,16z/data=!4m10!1m2!2m1!1z4LmA4LiK4Li14Lii4LiH4LmD4Lir4Lih4LmI4LmE4LiZ4LiX4LmM4Lia4Liy4LiL4LmI4Liy4Lij4LmM!3m6!1s0x30da3aa60ca74a5b:0xb2ef5007f26b01d!8m2!3d18.7852244!4d99.0002986!15sCjzguYDguIrguLXguKLguIfguYPguKvguKHguYjguYTguJnguJfguYzguJrguLLguIvguYjguLLguKPguYxaQyJB4LmA4LiK4Li14Lii4LiH4LmD4Lir4Lih4LmIIOC5hOC4mSDguJfguYwg4Lia4LiyIOC4i-C5iOC4siDguKPguYySAQxuaWdodF9tYXJrZXSaAURDaTlEUVVsUlFVTnZaRU5vZEhsalJqbHZUMjF3WmxGWFVubFJWVkV4VG0xR2JGbFhkRWhWZWxaNlVWVTVOR0pHUlJBQuABAPoBBAgAED0!16s%2Fm%2F05c54fn?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
       location: "ถ. ช้างคลาน ตำบล ช้างม่อย อำเภอเมืองเชียงใหม่ เชียงใหม่ 50100",
       lat: 18.785197080467, 
       lng: 99.00038438802805,
@@ -227,6 +232,7 @@ export const MueangChiangMaiTrips = [
       zh: "建筑"
     },
     detail_more: {
+      maplink: "https://www.google.com/maps/place/พระบรมราชานุสาวรีย์สามกษัตริย์/@18.7902317,98.9847725,17z/data=!3m1!4b1!4m6!3m5!1s0x30da3a99aea090bf:0xd27733ba3bc943d2!8m2!3d18.7902317!4d98.9873528!16s%2Fg%2F1hb_d7476?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
       location: "QXRP+3WX ถ. พระปกเกล้า ตำบลศรีภูมิ อำเภอเมืองเชียงใหม่ เชียงใหม่ 50200",
       lat: 18.79023847080222, 
       lng: 98.98750143372312,

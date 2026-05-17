@@ -29,6 +29,7 @@ export const FangTrips = [
       zh: "自然"
     },
     detail_more: {
+      maplink: "https://www.google.com/maps/place/อุทยานแห่งชาติดอยผ้าห่มปก/@19.9966004,99.1417447,17z/data=!3m1!4b1!4m6!3m5!1s0x30d0d305833241c1:0x6a62de06b50561d9!8m2!3d19.9966004!4d99.144325!16s%2Fm%2F0j29l00?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
       location: "224 ตำบล โป่งน้ำร้อน อำเภอ ฝาง เชียงใหม่ 50110",
       lat: 20.0321111,
       lng: 99.145329,
@@ -69,6 +70,7 @@ export const FangTrips = [
       zh: "自然"
     },
     detail_more: {
+      maplink: "https://www.google.com/maps/place/บ่อน้ำพุร้อนฝาง/@19.965911,99.1516827,17z/data=!3m1!4b1!4m6!3m5!1s0x30d0d30fab5603b3:0xd5809d7a8f49a5a9!8m2!3d19.965911!4d99.154263!16s%2Fg%2F11b699l8_v?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
       location: "X583+9P6 Chiangmai 4050 Road อำเภอ ฝาง เชียงใหม่ 50110",
       lat: 19.9656768,
       lng: 99.1546307,
@@ -109,6 +111,7 @@ export const FangTrips = [
       zh: "自然"
     },
     detail_more: {
+      maplink: "https://www.google.com/maps/place/ดอยอ่างขาง/@19.8697216,99.0446788,15z/data=!3m1!4b1!4m6!3m5!1s0x30d0cfacf1e64487:0x580102e676e4e485!8m2!3d19.8697222!4d99.055!16s%2Fm%2F0wkwfr_?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
       location: "ตำบล แม่สูน อำเภอ ฝาง เชียงใหม่ 50320",
       lat: 19.8702668,
       lng: 99.0526599,
@@ -149,6 +152,7 @@ export const FangTrips = [
       zh: "寺庙"
     },
     detail_more: {
+      maplink: "https://www.google.com/maps/place/วัดพระธาตุเฉลิมพระเกียรติ(เวียงนางคำเอ้ย)/@19.9061798,99.1485286,17z/data=!3m1!4b1!4m6!3m5!1s0x30d0d33c3bb3fd65:0x50a1870b69f43440!8m2!3d19.9061798!4d99.1511089!16s%2Fg%2F11hdzrxr5j?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
       location: "W542+FCH Unnamed Road ตำบล สันทราย อำเภอ ฝาง เชียงใหม่ 50110",
       lat: 19.9061412,
       lng: 99.1508336,

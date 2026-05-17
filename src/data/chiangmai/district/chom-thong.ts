@@ -29,6 +29,7 @@ export const ChomThongTrips = [
       zh: "自然"
     },
     detail_more: {
+      maplink: "https://www.google.com/maps/place/อุทยานแห่งชาติดอยอินทนนท์/@18.5356262,98.5195436,17z/data=!3m1!4b1!4m6!3m5!1s0x30dbab95555461ff:0x54e343c4fa33975b!8m2!3d18.5356262!4d98.5221239!16s%2Fm%2F0h7l50t?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
       location: "119 ตำบลบ้านหลวง อำเภอจอมทอง เชียงใหม่ 50160",
       lat: 18.5902719,
       lng: 98.4863298,
@@ -69,6 +70,7 @@ export const ChomThongTrips = [
       zh: "自然"
     },
     detail_more: {
+      maplink: "https://www.google.com/maps/place/น้ำตกแม่ยะ/@18.4404625,98.5900846,17z/data=!3m1!4b1!4m6!3m5!1s0x30dbaf43bd171d47:0xcc0c05d6c71c2389!8m2!3d18.4404625!4d98.5926649!16s%2Fg%2F11b69czx6t?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
       location: "Highway 1009 , Ban Luang , 50160 Chom Thong , Chiang Mai",
       lat: 18.4396776,
       lng: 98.5979932,
@@ -108,6 +110,7 @@ export const ChomThongTrips = [
       en: "nature",
     },
     detail_more: {
+      maplink: "https://www.google.com/maps/place/น้ำตกแม่เตี๊ยะ/@18.3989196,98.5977714,17z/data=!3m1!4b1!4m6!3m5!1s0x30dba5d6bb12709f:0xe588e27aeab1a197!8m2!3d18.3989196!4d98.6003517!16s%2Fg%2F11d_wq94jw?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
       location: "น้ำตกแม่เตี๊ยะ ตำบล ดอยแก้ว อำเภอจอมทอง เชียงใหม่ 50160",
       lat: 18.3989196,
       lng: 98.6003517,

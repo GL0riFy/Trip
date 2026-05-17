@@ -5,6 +5,7 @@ export type LocalizedText = {
 };
 
 export type TripDetailMore = {
+  mapLink: string;
   location: string;
   lat: number;
   lng: number;

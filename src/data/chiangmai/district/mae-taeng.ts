@@ -27,6 +27,7 @@ export const MaeTaengTrips = [
         zh: "寺庙"
       },
       detail_more: {
+        maplink: "https://www.google.com/maps/place/วัดเด่นสะหลีศรีเมืองแกน+(วัดบ้านเด่น)%E2%80%8B/@19.1574663,98.9764549,17z/data=!4m10!1m2!2m1!1z4Lin4Lix4LiU4Lia4LmJ4Liy4LiZ4LmA4LiU4LmI4LiZ!3m6!1s0x30da1028229e1e93:0xf4ddaafe98cc4d0f!8m2!3d19.1577357!4d98.9784843!15sCiHguKfguLHguJTguJrguYnguLLguJnguYDguJTguYjguJlaJSIj4Lin4Lix4LiUIOC4muC5ieC4suC4mSDguYDguJTguYjguJmSAQ9idWRkaGlzdF90ZW1wbGXgAQA!16s%2Fg%2F1hd_8z15y?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
         location: "5X4H+VRG, Unnamed Road, ตำบล อินทขิล อำเภอแม่แตง เชียงใหม่ 50150",
         lat: 19.15719643270193, 
         lng: 98.97910659375854,
@@ -67,6 +68,7 @@ export const MaeTaengTrips = [
         zh: "动物"
       },
       detail_more: {
+        maplink: "https://www.google.com/maps/place/ปางช้างแม่แตง/@19.1983554,98.8846046,17z/data=!4m10!1m2!2m1!1z4Lib4Liy4LiH4LiK4LmJ4Liy4LiH4LmB4Lih4LmI4LmB4LiV4LiH!3m6!1s0x30da11e80e6c2e61:0x5490fe518c9bae1a!8m2!3d19.1982516!4d98.8867013!15sCifguJvguLLguIfguIrguYnguLLguIfguYHguKHguYjguYHguJXguIdaKyIp4Lib4Liy4LiHIOC4iuC5ieC4suC4hyDguYHguKHguYjguYHguJXguIeSARJ0b3VyaXN0X2F0dHJhY3Rpb27gAQA!16s%2Fg%2F1hc39hdjb?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
         location: "99 1 ตำบล กื้ดช้าง อำเภอแม่แตง เชียงใหม่ 50100",
         lat: 19.198354647225006, 
         lng: 98.88676236905197,
@@ -107,6 +109,7 @@ export const MaeTaengTrips = [
         zh: "花园"
       },
       detail_more: {
+        maplink: "https://www.google.com/maps/place/ไร่ชาลุงเดช/@19.2054826,98.79321,17z/data=!4m10!1m2!2m1!1z4LmE4Lij4LmI4LiK4Liy4Lil4Li44LiH4LmA4LiU4LiK!3m6!1s0x30da72f8f94d8e6f:0xd7181649b5aed20d!8m2!3d19.205949!4d98.7948903!15sCiHguYTguKPguYjguIrguLLguKXguLjguIfguYDguJTguIpaJiIk4LmE4Lij4LmIIOC4iuC4siDguKXguLjguIcg4LmA4LiU4LiKkgEHbG9kZ2luZ-ABAA!16s%2Fg%2F11bzsfmjt6?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
         location: "6Q4V+9XC ไร่ชาลุงเดช ตำบล เมืองก๋าย อำเภอแม่แตง เชียงใหม่ 50150",
         lat: 19.205944028665904, 
         lng: 98.79501477192387,
@@ -147,6 +150,7 @@ export const MaeTaengTrips = [
         zh: "自然"
       },
       detail_more: {
+        maplink: "https://www.google.com/maps/place/น้ำตกบัวตอง/@19.0685497,99.0767774,17z/data=!4m10!1m2!2m1!1z4LiZ4LmJ4Liz4LiV4LiB4Lia4Lix4Lin4LiV4Lit4LiH!3m6!1s0x30da1b006e65e405:0xdf8e5ac15cb648c0!8m2!3d19.0676548!4d99.0796423!15sCiHguJnguYnguLPguJXguIHguJrguLHguKfguJXguK3guIdaJSIj4LiZ4LmJ4Liz4LiV4LiBIOC4muC4seC4pyDguJXguK3guIeSAQRwYXJr4AEA!16s%2Fg%2F11vm85l9nz?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
         location: "ตำบล แม่หอพระ อำเภอแม่แตง เชียงใหม่ 50150",
         lat: 19.069613132484648, 
         lng: 99.07936673423258,
@@ -187,6 +191,7 @@ export const MaeTaengTrips = [
         zh: "自然"
       },
       detail_more: {
+        maplink: "https://www.google.com/maps/place/ห้วยกุ๊บกั๊บ+ตำบล+กื้ดช้าง+อำเภอแม่แตง+เชียงใหม่+50150/@19.2416582,98.8291796,17z/data=!3m1!4b1!4m6!3m5!1s0x30da734c05ade979:0xf586d1576a9f12e3!8m2!3d19.2421081!4d98.830858!16s%2Fg%2F11b777kjl3?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
         location: "ตำบล กื้ดช้าง อำเภอแม่แตง เชียงใหม่ 50150",
         lat: 19.243009827722947, 
         lng: 98.83001228756605,
@@ -227,6 +232,7 @@ export const MaeTaengTrips = [
         zh: "自然"
       },
       detail_more: {
+        maplink: "https://www.google.com/maps/place/เเดนเทวดา/@19.1232017,98.9394769,17z/data=!3m1!4b1!4m6!3m5!1s0x30da116f82befd11:0x4525a6a260d70204!8m2!3d19.1232017!4d98.9420572!16s%2Fg%2F11kdhhg9pv?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
         location: "288 ตำบล สันมหาพน อำเภอแม่แตง เชียงใหม่ 50150",
         lat: 19.12317529773727, 
         lng: 98.94201856625949,

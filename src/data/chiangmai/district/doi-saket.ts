@@ -30,6 +30,7 @@ export const DoiSaketTrips = [
       zh: "寺庙"
     },
     detail_more: {
+      maplink: "https://www.google.com/maps/place/วัดพระธาตุดอยสะเก็ด/@18.8725775,99.1374235,17z/data=!3m1!4b1!4m6!3m5!1s0x30da212b986ea429:0xdeafdb7f55771a4d!8m2!3d18.8725775!4d99.1400038!16s%2Fg%2F1hf4jzb5f?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
       location: "5 118 ตำบล เชิงดอย อำเภอดอยสะเก็ด เชียงใหม่ 50220",
       lat: 18.8725775,
       lng: 99.1400038,
@@ -70,6 +71,7 @@ export const DoiSaketTrips = [
       zh: "咖啡馆"
     },
     detail_more: {
+      maplink: "https://www.google.com/maps/place/Take+a+Walk/@18.9120152,99.2420108,14.5z/data=!4m6!3m5!1s0x30d98b9bd95cce93:0x947765006bebebf6!8m2!3d18.9088281!4d99.2486855!16s%2Fg%2F11jmx9_0lc?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
       location: "98 Baan Pongsamaki, ตำบล ป่าเมี่ยง อำเภอดอยสะเก็ด เชียงใหม่ 50220",
       lat: 18.9088281,
       lng: 99.2486855,
@@ -110,6 +112,7 @@ export const DoiSaketTrips = [
       zh: "花园"
     },
     detail_more: {
+      maplink: "https://www.google.com/maps/place/สวนพฤกษศาสตร์ทวีชล+Tweechol+Botanic+Garden/@18.857584,99.0956517,17z/data=!3m1!4b1!4m6!3m5!1s0x30da241cd1531911:0x434a823c65ec68ce!8m2!3d18.857584!4d99.098232!16s%2Fg%2F1hm42t61q?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
       location: "118 Chiang Mai , Route 118, ตำบล เชิงดอย อำเภอดอยสะเก็ด เชียงใหม่ 50220",
       lat: 18.857584,
       lng: 99.098232,
@@ -150,6 +153,7 @@ export const DoiSaketTrips = [
       zh: "自然"
     },
     detail_more: {
+      maplink: "https://www.google.com/maps/place/เขื่อนแม่กวงอุดมธารา/@18.9284232,99.1252378,17z/data=!3m1!4b1!4m6!3m5!1s0x30da21bcbf20c857:0x7f949a9562b5c652!8m2!3d18.9284232!4d99.1278181!16s%2Fg%2F11cs3q0rz6?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
       location: "W4HH+948 ตำบล ลวงเหนือ อำเภอดอยสะเก็ด เชียงใหม่ 50220",
       lat: 18.9284858,
       lng: 99.1233071,
@@ -190,6 +194,7 @@ export const DoiSaketTrips = [
       zh: "咖啡馆"
     },
     detail_more: {
+      maplink: "https://www.google.com/maps/place/ปางแฟน/@19.0113876,99.2931693,17z/data=!4m10!3m9!1s0x30d9f3999333a969:0x9627d8f9b02078c7!5m3!1s2026-05-20!4m1!1i2!8m2!3d19.0113876!4d99.2957496!16s%2Fg%2F11c3_9fglp?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
       location: "116 ตำบล ป่าเมี่ยง อำเภอดอยสะเก็ด เชียงใหม่ 50200",
       lat: 19.0113876,
       lng: 99.2957496,

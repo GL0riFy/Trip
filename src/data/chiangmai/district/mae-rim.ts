@@ -27,6 +27,7 @@ export const MaeRimTrips = [
       zh: "自然"
     },
     detail_more: {
+      maplink: "https://www.google.com/maps/place/น้ำตกแม่สา/@18.9021479,98.8676913,15z/data=!4m10!1m2!2m1!1z4LiZ4LmJ4Liz4LiV4LiB4LmB4Lih4LmI4Liq4Liy!3m6!1s0x30da3ebfd945892d:0x8c4e44c982e8c308!8m2!3d18.906237!4d98.8971545!15sCh7guJnguYnguLPguJXguIHguYHguKHguYjguKrguLJaIiIg4LiZ4LmJ4Liz4LiV4LiBIOC5geC4oeC5iCDguKrguLKSARJ0b3VyaXN0X2F0dHJhY3Rpb27gAQA!16s%2Fg%2F11b67hd5nk?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
       location: "WV4X+H63 ซอย น้ำตกแม่สา 4 ตำบล แม่แรม อำเภอแม่ริม เชียงใหม่ 50180",
       lat: 18.9061569, 
       lng: 98.8960827,
@@ -67,6 +68,7 @@ export const MaeRimTrips = [
       zh: "动物"
     },
     detail_more: {
+      maplink: "https://www.google.com/maps/place/ปางช้างแม่สา/@18.8997824,98.8729627,17z/data=!3m1!4b1!4m6!3m5!1s0x30d9f539621ebfa5:0xf328561b82980487!8m2!3d18.8997824!4d98.875543!16s%2Fg%2F1tq139py?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
       location: "101 ตำบล แม่แรม อำเภอแม่ริม เชียงใหม่ 50230",
       lat: 18.8998083, 
       lng: 98.8754329,
@@ -107,6 +109,7 @@ export const MaeRimTrips = [
       zh: "活动"
     },
     detail_more: {
+      maplink: "https://www.google.com/maps/place/โป่งแยง+จังเกิ้ล+โคสเตอร์+%26+ซิปไลน์/@18.9168336,98.8189487,17z/data=!3m1!4b1!4m6!3m5!1s0x30da4091b95159a3:0xe8da70ac951426ac!8m2!3d18.9168336!4d98.821529!16s%2Fg%2F11cm9tjpn9?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
       location: "99 9 ตำบล โป่งแยง อำเภอแม่ริม เชียงใหม่ 50180",
       lat: 18.9167205, 
       lng: 98.8216974,
@@ -147,6 +150,7 @@ export const MaeRimTrips = [
       zh: "动物"
     },
     detail_more: {
+      maplink: "https://www.google.com/maps/place/คุ้มเสือ+แม่ริม/@18.9246445,98.9294514,17z/data=!3m1!4b1!4m6!3m5!1s0x30da3c2cd7ac2945:0x988b3163b1015f8!8m2!3d18.9246445!4d98.9320317!16s%2Fg%2F1tdv8tb5?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
       location: "51/1 หมู่ที่ 7 ถนน แม่ริม - สะเมิง ตำบล ริมใต้ อำเภอแม่ริม เชียงใหม่ 50180",
       lat: 18.9249445, 
       lng: 98.9318453,
@@ -187,6 +191,7 @@ export const MaeRimTrips = [
       zh: "寺庙"
     },
     detail_more: {
+      maplink: "https://www.google.com/maps/place/วัดป่าดาราภิรมย์+พระอารามหลวง/@18.9246445,98.9294514,17z/data=!4m6!3m5!1s0x30da3c48ffffffff:0xf65471ea1ed7a6b3!8m2!3d18.9107217!4d98.9412655!16s%2Fm%2F0472j2k?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
       location: "WW6R+7GJ ตำบล ริมใต้ อำเภอแม่ริม เชียงใหม่ 50180",
       lat: 18.911194, 
       lng: 98.941194,
@@ -227,6 +232,7 @@ export const MaeRimTrips = [
       zh: "自然"
     },
     detail_more: {
+      maplink: "https://www.google.com/maps/place/อ่างเก็บน้ำห้วยตึงเฒ่า/@18.8665946,98.9423031,17z/data=!3m1!4b1!4m6!3m5!1s0x30da3bf29990390f:0xc6977ce7f51682ab!8m2!3d18.8665946!4d98.9448834!16s%2Fg%2F12h_d__3h?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
       location: "ตำบล ดอนแก้ว อำเภอแม่ริม เชียงใหม่ 50180",
       lat: 18.8675364, 
       lng: 98.9387502,
@@ -267,6 +273,7 @@ export const MaeRimTrips = [
       zh: "活动"
     },
     detail_more: {
+      maplink: "https://www.google.com/maps/place/อุทยานดาราศาสตร์สิรินธร/@18.8529292,98.9550386,17z/data=!3m1!4b1!4m6!3m5!1s0x30da3b62f2df85d3:0xe4197e853fc8b453!8m2!3d18.8529292!4d98.9576189!16s%2Fg%2F11gjk1t1v1?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
       location: "260 อำเภอแ ม่ริม ตำบล ดอนแก้ว อำเภอแม่ริม เชียงใหม่ 50180",
       lat: 18.8527479, 
       lng: 98.9572773,

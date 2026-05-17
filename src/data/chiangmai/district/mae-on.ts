@@ -29,6 +29,7 @@ export const MaeOnTrips = [
       zh: "社区"
     },
     detail_more: {
+      maplink: "https://www.google.com/maps/place/หมู่บ้านแม่กำปอง/@18.8655073,99.3484043,17z/data=!3m1!4b1!4m6!3m5!1s0x30d98daae0d4efab:0xfdb15823a3d37b6d!8m2!3d18.8655073!4d99.3509846!16s%2Fg%2F11m2jhnz4g?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
       location: "V982+695 ตำบล ห้วยแก้ว อำเภอ แม่ออน เชียงใหม่ 50130",
       lat: 18.8653706, 
       lng: 99.3512625,
@@ -69,6 +70,7 @@ export const MaeOnTrips = [
       zh: "自然"
     },
     detail_more: {
+      maplink: "https://www.google.com/maps/place/น้ำพุร้อนสันกำแพง+อ.แม่ออน/@18.8145004,99.2268462,17z/data=!3m1!4b1!4m6!3m5!1s0x30d98854987dcf85:0x89e41e534a24aa8f!8m2!3d18.8145004!4d99.2294265!16s%2Fg%2F120s1vqq?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
       location: "1 ตำบล บ้านสหกรณ์ อำเภอ แม่ออน เชียงใหม่ 50130",
       lat: 18.8145004, 
       lng: 99.2294265,
@@ -109,6 +111,7 @@ export const MaeOnTrips = [
       zh: "自然"
     },
     detail_more: {
+      maplink: "https://www.google.com/maps/place/จุดชมวิว/@18.8544981,99.3674352,17.5z/data=!4m10!1m2!2m1!1z4LiI4Li44LiU4LiK4Lih4Lin4Li04Lin4LiB4Li04LmI4Lin4Lid4Li04LmI4LiZ!3m6!1s0x30d991ffac7108a3:0x4020dcebde0a0758!8m2!3d18.8535565!4d99.3697051!15sCjDguIjguLjguJTguIrguKHguKfguLTguKfguIHguLTguYjguKfguJ3guLTguYjguJlaNiI04LiI4Li44LiUIOC4iuC4oSDguKfguLTguKcg4LiB4Li04LmI4LinIOC4neC4tOC5iOC4mZIBBHBhcmuaAURDaTlEUVVsUlFVTnZaRU5vZEhsalJqbHZUMnhrV2xGc1NqSmFSMjk2VjFoc01WVkhWa3hrVmxaTVdUSk9SMWRzUlJBQuABAPoBBAgAEBs!16s%2Fg%2F11b7hjxr5f?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
       location: "อุทยานแห่งชาติแจ้ซ้อน ตำบล แจ้ซ้อน อำเภอ เมืองปาน เชียงใหม่ 52240",
       lat: 18.8545595, 
       lng: 99.3685236,
@@ -149,6 +152,7 @@ export const MaeOnTrips = [
       zh: "社区"
     },
     detail_more: {
+      maplink: "https://www.google.com/maps/place/ศูนย์พัฒนาโครงการหลวงตีนตก/@18.8668753,99.319865,17z/data=!3m1!4b1!4m6!3m5!1s0x30d98c2ccea80a17:0xc3fd661df188da96!8m2!3d18.8668753!4d99.3224453!16s%2Fg%2F11b6bcszjb?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
       location: "99/5 หมู่ที่8 ถนน ห้วยแก้ว ตำบล ห้วยแก้ว อำเภอ แม่ออน เชียงใหม่ 50130",
       lat: 18.8669089, 
       lng: 99.3225066,
@@ -189,6 +193,7 @@ export const MaeOnTrips = [
       zh: "自然"
     },
     detail_more: {
+      maplink: "https://www.google.com/maps/place/ถ้ำเมืองออน/@18.7875116,99.2354814,17z/data=!4m10!1m2!2m1!1z4LiW4LmJ4Liz4LmA4Lih4Li34Lit4LiH4Lit4Lit4LiZ!3m6!1s0x30d9888bcf9eb3e1:0x529f02eaeb4d81df!8m2!3d18.7863323!4d99.2380744!15sCiHguJbguYnguLPguYDguKHguLfguK3guIfguK3guK3guJlaJiIk4LiW4LmJ4LizIOC5gOC4oeC4t-C4reC4hyDguK3guK0g4LiZkgESdG91cmlzdF9hdHRyYWN0aW9umgFEQ2k5RFFVbFJRVU52WkVOb2RIbGpSamx2VDJ4YU5rMHdXbmhNVjFKVFVsUk9ibHBFUW5KWWVtTjRWVlJDY1dWdFl4QULgAQD6AQQIABAj!16s%2Fg%2F1thkp3tv?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
       location: "Q6PQ+G6P ตำบล บ้านสหกรณ์ อำเภอ แม่ออน เชียงใหม่ 50130", 
       lat: 18.7863323, 
       lng: 99.2354941,

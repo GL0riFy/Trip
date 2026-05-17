@@ -29,6 +29,7 @@ export const MaeAiTrips = [
         zh: "花园"
       },
       detail_more: {
+        maplink: "https://www.google.com/maps/place/สวนร้อยใจรักษ์/@20.0819467,99.4852637,17z/data=!3m1!4b1!4m6!3m5!1s0x30d6dfa0a0e8e779:0x1b78bcfe521a2db8!8m2!3d20.0819467!4d99.487844!16s%2Fg%2F11sd_jt0_1?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
         location: "888 ตำบล ท่าตอน อำเภอ แม่อาย เชียงใหม่ 50280",
         lat: 20.0819467, 
         lng: 99.487844,
@@ -69,6 +70,7 @@ export const MaeAiTrips = [
         zh: "农场"
       },
       detail_more: {
+        maplink: "https://www.google.com/maps/place/Hompandin+Farm/@20.0741052,99.45965,18z/data=!4m10!1m2!2m1!1z4Lir4Lit4Lih4LmB4Lic4LmI4LiZ4LiU4Li04LiZ!3m6!1s0x30d721f96c22563b:0x909cb299b8316591!8m2!3d20.0759148!4d99.4607919!15sCh7guKvguK3guKHguYHguJzguYjguJnguJTguLTguJlaISIf4Lir4Lit4LihIOC5geC4nOC5iOC4meC4lOC4tOC4mZIBBGZhcm2aASNDaFpEU1VoTk1HOW5TMFZKUTBGblNVUlNhVXRwVWtOUkVBReABAPoBBQjKARBI!16s%2Fg%2F11h7sgzqtg?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
         location: "3FG6+987 320 ตำบล ท่าตอน อำเภอ แม่อาย เชียงใหม่ 50280",
         lat: 20.0759148, 
         lng: 99.4607919,
@@ -109,6 +111,7 @@ export const MaeAiTrips = [
         zh: "寺庙"
       },
       detail_more: {
+        maplink: "https://www.google.com/maps/place/วัดท่าตอน/@20.0605269,99.3571919,17z/data=!3m1!4b1!4m6!3m5!1s0x30d7280cefc7f477:0x5e70ede6a97cb9a6!8m2!3d20.0605269!4d99.3597722!16s%2Fg%2F11cs48mqgb?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
         location: "3965+6W6 ตำบล ท่าตอน อำเภอ แม่อาย เชียงใหม่ 50280",
         lat: 20.060559, 
         lng: 99.359773,
@@ -149,6 +152,7 @@ export const MaeAiTrips = [
         zh: "花园"
       },
       detail_more: {
+        maplink: "https://www.google.com/maps/place/สวนส้มธนาธร+สวนท่าตอน/@20.0173895,99.1712678,12z/data=!4m10!1m2!2m1!1z4Liq4Lin4LiZ4Liq4LmJ4Lih4LiY4LiZ4Liy4LiY4Lij!3m6!1s0x30d0ccbdde17b5d3:0x4e8c9dc6d43df823!8m2!3d20.0531032!4d99.4049796!15sCiHguKrguKfguJnguKrguYnguKHguJjguJnguLLguJjguKOSARJ0b3VyaXN0X2F0dHJhY3Rpb27gAQA!16s%2Fg%2F1thv1pfy?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
         location: "ทางหลวงแผ่นดิน 107 หมู่5 ตำบล ท่าตอน อำเภอ แม่อาย เชียงใหม่ 50280",
         lat: 20.0531032, 
         lng: 99.4049796,
@@ -189,6 +193,7 @@ export const MaeAiTrips = [
         zh: "自然"
       },
       detail_more: {
+        maplink: "https://www.google.com/maps/place/ม่อนดอยลาง/@20.0854876,99.2857845,17z/data=!4m10!1m2!2m1!1z4Lih4LmI4Lit4LiZ4LiU4Lit4Lii4Lil4Liy4LiH!3m6!1s0x30d6d76b725b2c8b:0x49f02c2b733f7b15!8m2!3d20.0862532!4d99.2887485!15sCh7guKHguYjguK3guJnguJTguK3guKLguKXguLLguIeSAQtzY2VuaWNfc3BvdOABAA!16s%2Fg%2F11fjxyvm_v?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
         location: "37PQ+GF5 ตำบล มะลิกา อำเภอ แม่อาย เชียงใหม่ 50280",
         lat: 20.0862532, 
         lng: 99.2887485,

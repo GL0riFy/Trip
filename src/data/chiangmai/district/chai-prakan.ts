@@ -30,6 +30,7 @@ export const ChaiPrakanTrips = [
     },
 
     detail_more: {
+      maplink: "https://www.google.com/maps/place/วัดถ้ำตับเตา/@19.6621708,99.1171757,17z/data=!4m14!1m7!3m6!1s0x30d0b436c8a2a03b:0x2e1ba79f4a58e31!2z4Lin4Lix4LiU4LiW4LmJ4Liz4LiV4Lix4Lia4LmA4LiV4Liy!8m2!3d19.6625934!4d99.1175806!16s%2Fg%2F1tsgh66q!3m5!1s0x30d0b436c8a2a03b:0x2e1ba79f4a58e31!8m2!3d19.6625934!4d99.1175806!16s%2Fg%2F1tsgh66q?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
       location: "M479+22P ตำบล ศรีดงเย็น อำเภอ ไชยปราการ เชียงใหม่ 50320",
       lat: 19.6625934,
       lng: 99.1175806,
@@ -70,6 +71,7 @@ export const ChaiPrakanTrips = [
       zh: "建筑学"
     },
     detail_more: {
+      maplink: "https://www.google.com/maps/place/ฮิโนกิแลนด์/@19.6568129,99.1454052,17z/data=!4m14!1m7!3m6!1s0x30d0b54b3267aead:0xb6897797236c69b4!2z4Liu4Li04LmC4LiZ4LiB4Li04LmB4Lil4LiZ4LiU4LmM!8m2!3d19.6568129!4d99.1479855!16s%2Fg%2F11frj9xxhv!3m5!1s0x30d0b54b3267aead:0xb6897797236c69b4!8m2!3d19.6568129!4d99.1479855!16s%2Fg%2F11frj9xxhv?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
       location: "168 บ้านร้องธาร, ศรีดงเย็น, อำเภอ ไชยปราการ เชียงใหม่ 50320",
       lat: 19.6568129,
       lng: 99.1454106,
@@ -110,6 +112,7 @@ export const ChaiPrakanTrips = [
       zh: "自然"
     },
     detail_more: {
+      maplink: "https://www.google.com/maps/place/อินทผลัมไทย+บ้านสวนโกหลัก/@19.649804,99.1410007,17z/data=!4m14!1m7!3m6!1s0x30d0b58a86032f27:0x8f1d3a5a590a7c24!2z4Lit4Li04LiZ4LiX4Lic4Lil4Lix4Lih4LmE4LiX4LiiIOC4muC5ieC4suC4meC4quC4p-C4meC5guC4geC4q-C4peC4seC4gQ!8m2!3d19.649804!4d99.143581!16s%2Fg%2F11g2wlm54d!3m5!1s0x30d0b58a86032f27:0x8f1d3a5a590a7c24!8m2!3d19.649804!4d99.143581!16s%2Fg%2F11g2wlm54d?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
       location: "91 หมู่ 14 ตำบล ศรีดงเย็น อำเภอ ไชยปราการ เชียงใหม่ 50320",
       lat: 19.6526634,
       lng: 99.1406334,
@@ -150,6 +153,7 @@ export const ChaiPrakanTrips = [
       zh: "自然"
     },
     detail_more: {
+      maplink: "https://www.google.com/maps/place/อุทยานแห่งชาติ+ดอยเวียงผา/@19.6783992,99.1946477,17z/data=!4m7!3m6!1s0x30d74ace5b3ed003:0xe6504d53a8172d6f!4b1!8m2!3d19.6783992!4d99.197228!16s%2Fg%2F121mdtk6?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
       location: "M5HW+9V5 ตำบล ศรีดงเย็น อำเภอ ไชยปราการ เชียงใหม่ 50320",
       lat: 19.6783992,
       lng: 99.197228,

@@ -29,6 +29,7 @@ export const HangDongTrips = [
       zh: "活动"
     },
     detail_more: {
+      maplink: "https://www.google.com/maps/place/สวนน้ำแกรนด์แคนยอน+วอเตอร์พาร์ค/@18.6959737,98.8893783,17z/data=!3m1!4b1!4m6!3m5!1s0x30da36833f49cbf1:0x32a3de31b51e5d3d!8m2!3d18.6959737!4d98.8919586!16s%2Fg%2F11b7w155ym?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
       location: "202 ถนนเลียบคลองชลประทาน น้ำแพร่ อำเภอหางดง เชียงใหม่ 50230",
       lat: 18.6958239, 
       lng: 98.8913324,
@@ -69,6 +70,7 @@ export const HangDongTrips = [
       zh: "自然"
     },
     detail_more: {
+      maplink: "https://www.google.com/maps/place/อุทยานแห่งชาติออบขาน/@18.7230165,98.8189722,17z/data=!4m10!1m2!2m1!1z4Lit4Li44LiX4Lii4Liy4LiZ4LmB4Lir4LmI4LiH4LiK4Liy4LiV4Li04Lit4Lit4Lia4LiC4Liy4LiZ!3m6!1s0x30da49dd4b8a96a3:0xc4cc33f53fb5cc2e!8m2!3d18.7230703!4d98.8215666!15sCjzguK3guLjguJfguKLguLLguJnguYHguKvguYjguIfguIrguLLguJXguLTguK3guK3guJrguILguLLguJlaQSI_4Lit4Li44LiX4Lii4Liy4LiZ4LmB4Lir4LmI4LiH4LiK4Liy4LiV4Li0IOC4rSDguK3guJog4LiC4Liy4LiZkgENbmF0aW9uYWxfcGFya-ABAA!16s%2Fg%2F12187448?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
       location: "น้ำแพร่ อำเภอหางดง เชียงใหม่ 50230",
       lat: 18.7232836, 
       lng: 98.8201689,
@@ -109,6 +111,7 @@ export const HangDongTrips = [
       zh: "寺庙"
     },
     detail_more: {
+      maplink: "https://www.google.com/maps/place/วัดอินทราวาส+(วัดต้นเกว๋น)/@18.7228125,98.9228572,17z/data=!3m1!4b1!4m6!3m5!1s0x30da3132a3414f5b:0x715c4af352507102!8m2!3d18.7228125!4d98.9254375!16s%2Fg%2F1tf4bg55?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
       location: "PWFG+45F บ้านต้นเกว๋น ซอย 3 ตำบล หนองควาย อำเภอหางดง เชียงใหม่ 50230",
       lat: 18.7227136, 
       lng: 98.9254005,
@@ -149,6 +152,7 @@ export const HangDongTrips = [
       zh: "建筑"
     },
     detail_more: {
+      maplink: "https://www.google.com/maps/place/ศูนย์หัตถกรรมบ้านถวาย+โซน+4/@18.687599,98.9428944,17z/data=!4m10!1m2!2m1!1z4Lio4Li54LiZ4Lii4LmM4Lir4Lix4LiV4LiW4LiB4Lij4Lij4Lih4LmE4Lih4LmJ4LmB4LiB4Liw4Liq4Lil4Lix4LiB4Lia4LmJ4Liy4LiZ4LiW4Lin4Liy4Lii!3m6!1s0x30da33dfe5c2e1f5:0xebae924cb6145884!8m2!3d18.687599!4d98.947658!15sCl3guKjguLnguJnguKLguYzguKvguLHguJXguJbguIHguKPguKPguKHguYTguKHguYnguYHguIHguLDguKrguKXguLHguIHguJrguYnguLLguJnguJbguKfguLLguKJaZSJj4Lio4Li54LiZ4Lii4LmMIOC4q-C4seC4leC4luC4geC4o-C4o-C4oSDguYTguKHguYkg4LmB4LiB4LiwIOC4quC4peC4seC4gSDguJrguYnguLLguJkg4LiW4Lin4Liy4LiikgETbGlnaHRpbmdfd2hvbGVzYWxlcpoBI0NoWkRTVWhOTUc5blMwVkpRMEZuU1VObmRWbDJUVlZSRUFF4AEA-gEECAAQJw!16s%2Fg%2F11rrznrr6?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
       location: "MXM2+PG ตำบล ขุนคง อำเภอหางดง เชียงใหม่",
       lat: 18.6846473, 
       lng: 98.9502479,
@@ -189,6 +193,7 @@ export const HangDongTrips = [
       zh: "寺庙"
     },
     detail_more: {
+      maplink: "https://www.google.com/maps/place/วัดอรัญญวาส+(วัดบ้านปง)/@18.7502038,98.8816601,17z/data=!3m1!4b1!4m6!3m5!1s0x30da370f83a41e8f:0xedc09685a7b1421f!8m2!3d18.7502038!4d98.8842404!16s%2Fg%2F1hc5936_n?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
       location: "QV2M+3MQ ตำบล บ้านปง อำเภอหางดง เชียงใหม่ 50230",
       lat: 18.7503332, 
       lng: 98.8842523,

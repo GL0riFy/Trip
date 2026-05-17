@@ -29,6 +29,7 @@ export const ChiangDaoTrips = [
       zh: "自然"
     },
     detail_more: {
+      maplink: "https://www.google.com/maps/place/เขตรักษาพันธุ์สัตว์ป่าเชียงดาว/@19.3997214,98.8663458,15z/data=!3m1!4b1!4m6!3m5!1s0x30d0a1ab30a3f0fb:0x39dbe1fff3ea3fcb!8m2!3d19.399722!4d98.876667!16s%2Fm%2F0j261lw?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
       location: "9VWQ+QXH ถนนอบจ. ชม. 3232 ตำบล เชียงดาว อำเภอเชียงดาว เชียงใหม่ 50170",
       lat: 19.4015466,
       lng: 98.8878756,
@@ -69,6 +70,7 @@ export const ChiangDaoTrips = [
       zh: "寺庙"
     },
     detail_more: {
+      maplink: "https://www.google.com/maps/place/วัดถ้ำเชียงดาว/@19.393704,98.9260107,17z/data=!3m1!4b1!4m6!3m5!1s0x30d0a72bcaac8bb3:0xc70c287f75e3147c!8m2!3d19.393704!4d98.928591!16s%2Fg%2F1tlzrqwm?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
       location: "273 หมู่ 5 ตำบล เชียงดาว อำเภอเชียงดาว เชียงใหม่ 50170",
       lat: 19.390418,
       lng: 98.9111165,
@@ -109,6 +111,7 @@ export const ChiangDaoTrips = [
       zh: "社区"
     },
     detail_more: {
+      maplink: "https://www.google.com/maps/place/เมืองคอง+อำเภอเชียงดาว+เชียงใหม่+50170/@19.364371,98.5718681,12z/data=!4m10!1m2!2m1!1z4LiK4Li44Lih4LiK4LiZ4LmA4Lih4Li34Lit4LiH4LiE4Lit4LiHIG1hcHM!3m6!1s0x30d09d6d6515d479:0xdcdf2ef055b4aed4!8m2!3d19.3827266!4d98.7260927!15sCizguIrguLjguKHguIrguJnguYDguKHguLfguK3guIfguITguK3guIcgbWFwc5IBFGFkbWluaXN0cmF0aXZlX2FyZWEz4AEA!16s%2Fg%2F11kb_qx9g5?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
       location: "9PP8+525 ตำบล เมืองคอง อำเภอเชียงดาว เชียงใหม่",
       lat: 19.385398,
       lng: 98.7125277,
@@ -149,6 +152,7 @@ export const ChiangDaoTrips = [
       zh: "寺庙"
     },
     detail_more: {
+      maplink: "https://www.google.com/maps/place/สำนักสงฆ์ถ้ำผาปล่อง/@19.402207,98.9154385,17z/data=!3m1!4b1!4m6!3m5!1s0x30d0a12c69867bfb:0x881bc72401b137e0!8m2!3d19.402207!4d98.9180188!16s%2Fg%2F11r8zchf4?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
       location: "139 ตำบล เชียงดาว อำเภอเชียงดาว เชียงใหม่ 50170",
       lat: 19.402207,
       lng: 98.9180188,
@@ -189,6 +193,7 @@ export const ChiangDaoTrips = [
       zh: "自然"
     },
     detail_more: {
+      maplink: "https://www.google.com/maps/place/อุทยานแห่งชาติผาแดง/@19.6287778,98.803985,12z/data=!4m10!1m2!2m1!1z4Lit4Li44LiX4Lii4Liy4LiZ4LmB4Lir4LmI4LiH4LiK4Liy4LiV4Li04Lic4Liy4LmB4LiU4LiH!3m6!1s0x30d0bbac68c99255:0xca5f40c85ff16f9a!8m2!3d19.6287778!4d98.9564203!15sCjnguK3guLjguJfguKLguLLguJnguYHguKvguYjguIfguIrguLLguJXguLTguJzguLLguYHguJTguIeSAQ1uYXRpb25hbF9wYXJr4AEA!16s%2Fg%2F11trxc9k29?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
       location: "ตำบล เชียงดาว อำเภอเชียงดาว เชียงใหม่ 50170",
       lat: 19.4733608,
       lng: 98.8293993,

@@ -29,6 +29,7 @@ export const SanKamphaengTrips = [
       zh: "自然"
     },
     detail_more: {
+      maplink: "https://www.google.com/maps/place/อ่างเก็บน้ำห้วยลาน/@18.700555,99.1927344,15z/data=!3m1!4b1!4m6!3m5!1s0x30d987682557c2b9:0xcadb016451602247!8m2!3d18.7005556!4d99.2030556!16s%2Fg%2F12ltd2tgd?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
       location: "P644+CGF, Unnamed Road, ตำบล ออนใต้ อำเภอสันกำแพง เชียงใหม่ 50130",
       lat: 18.705984194983127, 
       lng: 99.20630264732885,
@@ -69,6 +70,7 @@ export const SanKamphaengTrips = [
       zh: "建筑"
     },
     detail_more: {
+      maplink: "https://www.google.com/maps/place/MAIIAM+Contemporary+Art+Museum/@18.7572293,99.0911009,17z/data=!3m1!4b1!4m6!3m5!1s0x30da2f4924ce1f55:0xcfee61526321b541!8m2!3d18.7572293!4d99.0936812!16s%2Fg%2F11b_2cnw0x?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
       location: "122, Moo 7 Tonpao อำเภอสันกำแพง เชียงใหม่ 50130",
       lat: 18.757421868711894, 
       lng: 99.09376045654409,
@@ -109,6 +111,7 @@ export const SanKamphaengTrips = [
       zh: "农场"
     },
     detail_more: {
+      maplink: "https://www.google.com/maps/place/Dutch+Farm/@18.7331969,99.1930283,17z/data=!3m1!4b1!4m6!3m5!1s0x30d987867659662b:0x2d90fe056f90ce83!8m2!3d18.7331969!4d99.1956086!16s%2Fg%2F11bxd85n2w?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D",
       location: "56 หมู่ 5 ตำบล ออนใต้ อำเภอสันกำแพง เชียงใหม่ 50130",
       lat: 18.732934058190533, 
       lng: 99.19539341892028,
