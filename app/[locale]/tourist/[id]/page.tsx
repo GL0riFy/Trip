@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { useParams } from 'next/navigation';
 import { 
-  MapPin, Clock, Star, Info, CheckCircle, Share, Heart, X 
+  MapPin, Clock, Info, Share, Heart, X 
 } from 'lucide-react';
 import { ChiangMaiData } from '@/src/data/chiangmai';
 import MapComponent from './MapComponent';
@@ -217,7 +217,14 @@ const ChiangMaiDetailContent: React.FC<{ data: ChiangMaiUIData, locale: Locale }
                 <div className="mb-8">
                   <h3 className="font-bold text-gray-900 mb-4">{locale === 'th' ? 'ตำแหน่งที่ตั้ง' : 'Location'}</h3>
                   <div className="overflow-hidden rounded-2xl border border-gray-100">
-                    <MapComponent lat={data.coords.lat} lng={data.coords.lng} name={data.name} mapLink={data.mapLink || ''} />
+                    <MapComponent
+                      lat={data.coords.lat}
+                      lng={data.coords.lng}
+                      name={data.name} 
+                      mapLink={data.mapLink || ""} 
+                      category="tourist" 
+                      tags={data.tags}   
+                    />                  
                   </div>
                 </div>
 
@@ -243,11 +250,12 @@ const ChiangMaiDetailContent: React.FC<{ data: ChiangMaiUIData, locale: Locale }
 export default function ChiangMaiDetailPage() {
   const params = useParams();
   const locale = (params.locale as Locale) || 'en';
+  const id = params.id as string;
 
   const t = translations[locale] || translations['en'];
   
-  // ค้นหาสถานที่ท่องเที่ยวผ่าน id ที่ตรงกับ slug จาก URL
-  const chiangMaiItem = ChiangMaiData.find((h) => h.id );
+  // จุดแก้ไขที่ 1: ใส่เงื่อนไขหาคู่เช็ค id กับ slug จาก URL ให้ถูกต้อง
+  const chiangMaiItem = ChiangMaiData.find((h) => h.id === id);
 
   if (!chiangMaiItem) {
     return (
@@ -260,12 +268,10 @@ export default function ChiangMaiDetailPage() {
     );
   }
 
-  // รวมรูปภาพหลัก (img) เข้ากับรูปในคลัง (gallery) ถ้ามี
   const allImages = chiangMaiItem.detail_more?.img 
     ? [chiangMaiItem.detail_more.img, ...(chiangMaiItem.detail_more.gallery || [])]
     : (chiangMaiItem.detail_more?.gallery || []);
 
-  // Map ข้อมูลตามโครงสร้างจริงของคุณเข้าไปที่ uiData
   const uiData: ChiangMaiUIData = {
     name: chiangMaiItem.title?.[locale] || chiangMaiItem.title?.['th'] || "",
     address: chiangMaiItem.detail_more?.location || "",
@@ -281,7 +287,8 @@ export default function ChiangMaiDetailPage() {
       lat: chiangMaiItem.detail_more?.lat || 0, 
       lng: chiangMaiItem.detail_more?.lng || 0 
     },
-    mapLink: chiangMaiItem.detail_more?.maplink,
+    // รองรับ fallback เผื่อพิมพ์พิมพ์เล็ก-ใหญ่ผิดใน mock data (maplink / mapLink)
+    mapLink: chiangMaiItem.detail_more?.maplink || "",
   };
 
   return <ChiangMaiDetailContent data={uiData} locale={locale} />;
