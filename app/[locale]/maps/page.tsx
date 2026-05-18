@@ -1,14 +1,16 @@
 "use client";
 
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import type { ExpressionSpecification } from '@maplibre/maplibre-gl-style-spec';
 import { useTranslations, useLocale } from 'next-intl';
 import * as turf from '@turf/turf';
 import { AnimatePresence, motion } from 'framer-motion';
+// เปลี่ยนชื่อ Map เป็น MapIcon เพื่อไม่ให้ชนกับ JavaScript Map Object
 import {
-    MapPin, Utensils, Hotel, X, Map, Star, Clock, Phone,
+    type LucideIcon,
+    MapPin, Utensils, Hotel, X, Map as MapIcon, Star, Clock, Phone,
     ChevronRight, Waves, Coffee, ShoppingBag, TreePine,
     Mountain, Church, Music, Fish, Soup, Cake, Landmark,
     Wine, Dumbbell, Camera, Ticket, Sun, Zap, UsersRound,
@@ -27,7 +29,6 @@ import type { Restaurant }          from '@/src/data/restaurants/type';
 // ─────────────────────────────────────────────────────────────────────
 type PlaceCategory = 'hotel' | 'restaurant' | 'tourist';
 type Lang = 'th' | 'en' | 'zh';
-type LucideIcon = React.ComponentType<{ size?: number; className?: string }>;
 
 type PlaceFeature = {
     id: string;
@@ -60,42 +61,29 @@ type PlaceFeature = {
 // Tag → Lucide icon map (case-insensitive matching)
 // ─────────────────────────────────────────────────────────────────────
 const TAG_ICON_MAP: Record<string, LucideIcon> = {
-    // restaurant & food tags
-    'อาหารเหนือ': Soup,       'northern thai': Soup,       '泰北菜': Soup,
-    'ข้าวซอย': Soup,           'khao soi': Soup,
-    'อาหารไทย': Utensils,      'thai': Utensils,
-    'อาหารนานาชาติ': Zap,      'international': Zap,
-    'ซีฟู้ด': Fish,            'seafood': Fish,             '海鲜': Fish,
-    'กาแฟ': Coffee,            'coffee': Coffee,            '咖啡': Coffee,
-    'คาเฟ่': Coffee,           'cafe': Coffee,
-    'ของหวาน': Cake,           'dessert': Cake,             '甜品': Cake,
-    'เบเกอรี่': Cake,          'bakery': Cake,
-    'บาร์': Wine,              'bar': Wine,                 '酒吧': Wine,
-    'ดนตรีสด': Music,          'live music': Music,         '现场音乐': Music,
-    'สตรีทฟู้ด': ShoppingBag,  'street food': ShoppingBag,
-    'ตลาด': ShoppingBag,       'market': ShoppingBag,       '市场': ShoppingBag,
-    'ริมน้ำ': Waves,           'riverside': Waves,          '河畔': Waves,
-    // tourist attractions
-    'วัด': Church,           'temple': Church,          '寺庙': Church,
-    'เดินป่า': Mountain,       'hiking': Mountain,          '登山': Mountain,
-    'ภูเขา': Mountain,         'mountain': Mountain,        '山': Mountain,
-    'ปะหาร': Mountain,         
-    'สวนดอกไม้': TreePine,     'flower garden': TreePine,   '花海': TreePine,
-    'ธรรมชาติ': TreePine,      'nature': TreePine,          '自然': TreePine,
-    'จุดชมวิว': Camera,        'viewpoint': Camera,         '观景点': Camera,
-    'วัฒนธรรม': Camera,        'culture': Camera,           '文化': Camera,
-    'ประวัติศาสตร์': Landmark, 'historic': Landmark,        '历史': Landmark,
-    'ผจญภัย': Zap,             'adventure': Zap,            '冒险': Zap,
-    'กีฬา': Dumbbell,          'sports': Dumbbell,          '运动': Dumbbell,
-    'สปา': Dumbbell,           'spa': Dumbbell,             '水疗': Dumbbell,
-    'ครอบครัว': Sun,           'family': Sun,               '家庭': Sun,
-    // additional attractions
-    'สัตว์': Mountain,         'animal': Mountain,          '动物': Mountain,
-    'กิจกรรม': Ticket,         'activity': Ticket,          '活动': Ticket,
-    'สวน': TreePine,           'garden': TreePine,          '花园': TreePine,
-    'ฟาร์ม': TreePine,         'farm': TreePine,            '农场': TreePine,
-    'สถาปัตยกรรม': Landmark,  'architecture': Landmark,    '建筑': Landmark,
+    // โรงแรม
+    'โรงแรม': Hotel,           'hotel': Hotel,          '酒店': Hotel,
+    
+    // ร้านอาหาร (เปลี่ยนตามที่แจ้ง)
+    'ร้านอาหาร': Utensils,      'restaurant': Utensils,  '餐厅': Utensils,
+    
+    // สถานที่ท่องเที่ยว (คัดเฉพาะกลุ่มหลักที่ใช้แยกไอคอน)
+    'วัด': Church,             'temple': Church,          '寺庙': Church,
+    'ธรรมชาติ': TreePine,      'nature': TreePine,        '自然': TreePine,
+    'ภูเขา': Mountain,         'mountain': Mountain,      '山': Mountain,
+    'กิจกรรม': Ticket,         'activity': Ticket,        '活动': Ticket,
+    'สถาปัตยกรรม': Landmark,    'architecture': Landmark,  '建筑': Landmark,
+    'ชุมชน': UsersRound,       'community': UsersRound,   '社区': UsersRound,
 };
+
+const PIN_COLORS: Record<PlaceCategory, { bg: string; ring: string }> = {
+    hotel:      { bg: '#1E3A5F', ring: '#5B9BD5' },
+    restaurant: { bg: '#7C2D12', ring: '#FB923C' },
+    tourist:    { bg: '#5B21B6', ring: '#A78BFA' },
+};
+
+// ปรับให้เหลือเฉพาะไอคอนหลักของร้านอาหาร
+const RESTAURANT_ICONS = new Set<LucideIcon>([Utensils]);
 
 function getTagIcon(tags: string[]): LucideIcon {
     for (const tag of tags) {
@@ -107,18 +95,8 @@ function getTagIcon(tags: string[]): LucideIcon {
     return MapPin;
 }
 
-// ─────────────────────────────────────────────────────────────────────
-// Pin colours per category
-// ─────────────────────────────────────────────────────────────────────
-const PIN_COLORS: Record<PlaceCategory, { bg: string; ring: string }> = {
-    hotel:      { bg: '#1E3A5F', ring: '#5B9BD5' },
-    restaurant: { bg: '#7C2D12', ring: '#FB923C' },
-    tourist:    { bg: '#5B21B6', ring: '#A78BFA' },
-};
-
 // Inline SVG for pin body icon (avoids ReactDOM in DOM context)
 function getPinBodySVG(category: PlaceCategory, tags: string[], size: number): string {
-    // กำหนดค่าเริ่มต้นเป็น MapPin ในกรณีที่ไม่เข้าเงื่อนไขใด ๆ เลย
     let IconComponent: LucideIcon = MapPin;
     
     if (category === 'hotel') {
@@ -131,11 +109,9 @@ function getPinBodySVG(category: PlaceCategory, tags: string[], size: number): s
         if (tags.length > 0) {
             const tag = tags[0].toLowerCase();
             
-            // วัด / Temple
             if (tag.includes('วัด') || tag === 'temple' || tag === '寺庙') {
                 IconComponent = Church;
             }
-            // ธรรมชาติ / Nature / สวน / Farm / ฟาร์ม
             else if (
                 tag.includes('ธรรมชาติ') || tag === 'nature' || tag === '自然' || 
                 tag.includes('สวน') || tag === 'garden' || tag === '花园' ||
@@ -143,29 +119,22 @@ function getPinBodySVG(category: PlaceCategory, tags: string[], size: number): s
             ) {
                 IconComponent = TreePine;
             }
-            // เดินป่า / Hiking / ภูเขา / Mountain
             else if (
                 tag.includes('เดินป่า') || tag === 'hiking' || tag === '登山' ||
-                tag.includes('ภูเขา') || tag === 'mountain' || tag === '山'
+                tag.includes('ภูเขา') || tag === 'mountain' || tag === '山' ||
+                tag.includes('สัตว์') || tag === 'animal' || tag === '动物'
             ) {
                 IconComponent = Mountain;
             }
-            // สัตว์ / Animal
-            else if (tag.includes('สัตว์') || tag === 'animal' || tag === '动物') {
-                IconComponent = Mountain; // อ้างอิงตาม TAG_ICON_MAP เดิมของคุณที่ใช้ Mountain
-            }
-            // กิจกรรม / Activity
             else if (tag.includes('กิจกรรม') || tag === 'activity' || tag === '活动') {
                 IconComponent = Ticket;
             }
-            // สถาปัตยกรรม / Architecture
             else if (tag.includes('สถาปัตยกรรม') || tag === 'architecture' || tag === '建筑') {
                 IconComponent = Landmark;
             }
             else if (tag.includes('ชุมชน') || tag.includes('community') || tag.includes('社区')) {
                 IconComponent = UsersRound;
             }
-            // Default สำหรับสถานที่ท่องเที่ยวอื่น ๆ (ใช้ไอคอน Clock ตามโครงสร้าง SVG เดิมของคุณ)
             else {
                 IconComponent = Clock;
             }
@@ -174,7 +143,6 @@ function getPinBodySVG(category: PlaceCategory, tags: string[], size: number): s
         }
     }
 
-    // แปลง Lucide Component ให้กลายเป็น SVG String เพื่อส่งไปใช้งานกับ innerHTML
     return renderToString(<IconComponent size={size} className='text-white' />);
 }
 
@@ -187,11 +155,9 @@ function createMarkerEl(category: PlaceCategory, tags: string[], selected: boole
     const tailH       = selected ? 10 : 8;
     const tailW       = selected ? 7  : 5;
 
-    // 1. กล่องนอกสุด (ให้ MapLibre คุม Translate ห้ามใส่ Transition ตรงนี้)
     const wrap = document.createElement('div');
     wrap.style.cssText = `cursor:pointer;`; 
 
-    // 2. กล่องด้านใน (ให้เราคุม Scale และ Transition)
     const inner = document.createElement('div');
     inner.style.cssText = `display:flex;flex-direction:column;align-items:center;
         transition:transform .15s ease;transform-origin:bottom center;`;
@@ -207,12 +173,10 @@ function createMarkerEl(category: PlaceCategory, tags: string[], selected: boole
         border-left:${tailW}px solid transparent;border-right:${tailW}px solid transparent;
         border-top:${tailH}px solid ${bg};`;
 
-    // ประกอบร่าง
     inner.appendChild(circle);
     inner.appendChild(tail);
     wrap.appendChild(inner);
 
-    // ทำ Event Listener โดยสั่ง Scale ไปที่กล่อง "inner" แทน
     if (!selected) {
         wrap.addEventListener('mouseenter', () => { inner.style.transform = 'scale(1.18)'; });
         wrap.addEventListener('mouseleave', () => { inner.style.transform = 'scale(1)'; });
@@ -253,7 +217,6 @@ function buildPlaces(lang: Lang): PlaceFeature[] {
         });
     }
 
-    // Add tourist attractions from ChiangMai data
     for (const trip of ChiangMaiData) {
         const titleData = trip.title as Record<'en' | 'th' | 'zh', string>;
         const detailData = trip.detail as Record<'en' | 'th' | 'zh', string>;
@@ -261,7 +224,6 @@ function buildPlaces(lang: Lang): PlaceFeature[] {
         const hoursData = trip.hours as Record<'en' | 'th' | 'zh', string>;
         const tagData = trip.tag as Record<'en' | 'th' | 'zh', string>;
 
-        // ดึง tag ที่เหมาะสม
         const tagValue = tagData[lang] ?? tagData['th'];
         const tags = tagValue ? [tagValue] : [];
 
@@ -334,9 +296,6 @@ const L = {
     recommend: { th:'เมนูแนะนำ',          en:'Recommended',     zh:'推荐菜品' },
 } as const;
 
-// ─────────────────────────────────────────────────────────────────────
-// Stars component
-// ─────────────────────────────────────────────────────────────────────
 function Stars({ n }: { n: number }) {
     return (
         <span className="flex gap-0.5">
@@ -374,8 +333,6 @@ function PlacePanel({ place, nearby, lang, onClose, onSelect, isMobile }: PanelP
 
     return (
         <div className="flex flex-col h-full overflow-hidden font-kanit">
-
-            {/* ── Hero image ── */}
             <div className="relative flex-shrink-0" style={{ height: isMobile ? '185px' : '215px' }}>
                 <AnimatePresence mode="wait">
                     <motion.img key={imgIdx} src={images[imgIdx]} alt={place.name}
@@ -384,10 +341,8 @@ function PlacePanel({ place, nearby, lang, onClose, onSelect, isMobile }: PanelP
                         transition={{ duration: 0.28 }} />
                 </AnimatePresence>
 
-                {/* gradient */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
 
-                {/* dots */}
                 {images.length > 1 && (
                     <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5 z-10">
                         {images.map((_, i) => (
@@ -397,23 +352,18 @@ function PlacePanel({ place, nearby, lang, onClose, onSelect, isMobile }: PanelP
                     </div>
                 )}
 
-                {/* category badge */}
                 <div className={`absolute top-3 left-3 z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold text-white backdrop-blur-sm border ${catRing}`}>
                     <TagIcon size={11} />
                     {CAT_LABEL[place.category][lang]}
                 </div>
 
-                {/* close */}
                 <button onClick={onClose}
                     className="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-black/50 backdrop-blur-sm text-white flex items-center justify-center hover:bg-black/70 transition">
                     <X size={15} />
                 </button>
             </div>
 
-            {/* ── Body ── */}
             <div className="flex-1 overflow-y-auto overscroll-contain p-4 space-y-3.5">
-
-                {/* name + location */}
                 <div>
                     <h2 className="text-[17px] font-bold text-slate-800 leading-tight">{place.name}</h2>
                     <p className="mt-0.5 text-sm text-slate-400 flex items-center gap-1">
@@ -421,11 +371,9 @@ function PlacePanel({ place, nearby, lang, onClose, onSelect, isMobile }: PanelP
                     </p>
                 </div>
 
-                {/* tags */}
                 {place.tags.length > 0 && (
                     <div className="flex flex-wrap gap-1.5">
                         {place.tags.map(tag => {
-                            // ค้นหา icon ที่เหมาะสมจาก TAG_ICON_MAP (case-insensitive)
                             let TI: LucideIcon | undefined;
                             const lowerTag = tag.toLowerCase();
                             for (const [key, icon] of Object.entries(TAG_ICON_MAP)) {
@@ -444,15 +392,12 @@ function PlacePanel({ place, nearby, lang, onClose, onSelect, isMobile }: PanelP
                     </div>
                 )}
 
-                {/* desc */}
                 <p className="text-sm text-slate-600 leading-relaxed">{place.desc}</p>
 
-                {/* meta */}
                 <div className="space-y-1.5 text-sm text-slate-500">
                     {place.hours && (
                         <div className="flex items-center gap-2">
                             {(() => {
-                                // ใช้ icon ที่เหมาะสมกับประเภท แทน generic Clock icon
                                 const TagIcon = getTagIcon(place.tags);
                                 return <TagIcon size={14} className="text-slate-400 flex-shrink-0" />;
                             })()}
@@ -492,7 +437,6 @@ function PlacePanel({ place, nearby, lang, onClose, onSelect, isMobile }: PanelP
                     )}
                 </div>
 
-                {/* recommended dishes */}
                 {place.recommended && place.recommended.length > 0 && (
                     <div>
                         <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
@@ -509,11 +453,10 @@ function PlacePanel({ place, nearby, lang, onClose, onSelect, isMobile }: PanelP
                     </div>
                 )}
 
-                {/* open maps CTA */}
                 <a href={place.mapLink} target="_blank" rel="noopener noreferrer"
                     className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-semibold text-white
                         bg-gradient-to-r from-blue-600 to-indigo-600 hover:brightness-110 transition shadow-sm">
-                    <Map size={15} />{L.openMaps[lang]}
+                    <MapIcon size={15} />{L.openMaps[lang]}
                 </a>
                 <div className="h-4" />
             </div>
@@ -539,13 +482,35 @@ export default function MapsPage() {
     const [nearby,          setNearby]          = useState<PlaceFeature[]>([]);
     const [filter,          setFilter]          = useState<Record<PlaceCategory, boolean>>({ hotel: true, restaurant: true, tourist: true });
     const [mapReady,        setMapReady]        = useState(false);
+    
+    // เพิ่ม State สำหรับคุมการ เปิด-ปิด คำอธิบายสัญลักษณ์บนมือถือ
+    const [isMobileLegendOpen, setIsMobileLegendOpen] = useState(false);
 
     const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
 
-    // build places on lang change
+    // สกัดเอาไอคอนที่ไม่ซ้ำออกมาจัดการด้วย useMemo เพื่อแก้ปัญหาเรื่อง Type Error และ Performance
+    const legendItems = useMemo(() => {
+        type LegendData = { label: string; Icon: LucideIcon; bg: string; ring: string };
+        const uniqueIcons = new Map<LucideIcon, LegendData>();
+
+        Object.entries(TAG_ICON_MAP).forEach(([label, Icon]) => {
+            if (lang === 'th' && !/[ก-๙]/.test(label)) return;
+            if (lang === 'zh' && !/[\u4E00-\u9FFF]/.test(label)) return;
+            if (lang === 'en' && !/^[a-zA-Z\s]+$/.test(label)) return;
+
+            const category: PlaceCategory = RESTAURANT_ICONS.has(Icon) ? 'restaurant' : 'tourist';
+            const { bg, ring } = PIN_COLORS[category];
+
+            if (!uniqueIcons.has(Icon)) {
+                uniqueIcons.set(Icon, { label, Icon, bg, ring });
+            }
+        });
+
+        return Array.from(uniqueIcons.values());
+    }, [lang]);
+
     useEffect(() => { placesRef.current = buildPlaces(lang); }, [lang]);
 
-    // open place modal + fly to
     const openPlace = useCallback((place: PlaceFeature) => {
         setSelectedPlace(place);
         const nb = placesRef.current
@@ -559,7 +524,6 @@ export default function MapsPage() {
         });
     }, [isMobile]);
 
-    // re-render all markers
     const refreshMarkers = useCallback(() => {
         if (!map.current) return;
         markersRef.current.forEach(m => m.remove());
@@ -578,7 +542,6 @@ export default function MapsPage() {
         });
     }, [filter, selectedPlace, openPlace]);
 
-    // init map (runs once)
     useEffect(() => {
         if (map.current || !mapContainer.current) return;
 
@@ -598,7 +561,6 @@ export default function MapsPage() {
             if (!map.current) return;
             map.current.setMinZoom(map.current.getZoom());
 
-            // districts
             map.current.addSource('chiangmai-districts', {
                 type: 'geojson', data: '/Maps/Chiang_mai_Geo.geojson', generateId: true,
             });
@@ -623,7 +585,6 @@ export default function MapsPage() {
                 paint: { 'line-color': '#FFFFFF', 'line-width': 1.5 },
             });
 
-            // decorations
             await Promise.all(DECORATIONS.map(d => loadSvgImage(map.current!, d.id, d.url, d.size)));
             map.current.addSource('decorations', {
                 type: 'geojson',
@@ -642,7 +603,6 @@ export default function MapsPage() {
                 },
             });
 
-            // district hover
             let hId: string | number | null = null;
             map.current.on('mousemove', 'districts-fill', e => {
                 const f = e.features?.[0] as maplibregl.MapGeoJSONFeature | undefined;
@@ -671,24 +631,12 @@ export default function MapsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    // re-draw markers whenever filter / selection / map readiness changes
     useEffect(() => { if (mapReady) refreshMarkers(); }, [mapReady, filter, selectedPlace, refreshMarkers]);
 
-    // ── filter bar items ──────────────────────────────────────────────
-    const FILTER_ITEMS: { key: PlaceCategory; labelTh: string; labelEn: string; labelZh: string; Icon: LucideIcon }[] = [
-        { key: 'hotel',      labelTh:'โรงแรม', labelEn:'Hotels',     labelZh:'酒店', Icon: Hotel },
-        { key: 'restaurant', labelTh:'อาหาร',  labelEn:'Restaurants', labelZh:'餐厅', Icon: Utensils },
-        { key: 'tourist',    labelTh:'ที่ท่องเที่ยว', labelEn:'Attractions', labelZh:'景点', Icon: Camera },
-    ];
-    const getLabel = (item: typeof FILTER_ITEMS[0]) =>
-        lang === 'th' ? item.labelTh : lang === 'zh' ? item.labelZh : item.labelEn;
-
-    // ── render ────────────────────────────────────────────────────────
     return (
         <div className="relative w-full h-[calc(100vh-80px)] font-kanit overflow-hidden bg-slate-50">
             <div ref={mapContainer} className="absolute inset-0 w-full h-full" />
 
-            {/* District tooltip */}
             <AnimatePresence>
                 {hoveredDistrict && !selectedPlace && (
                     <motion.div key="tt"
@@ -700,19 +648,17 @@ export default function MapsPage() {
                     </motion.div>
                 )}
             </AnimatePresence>
-            {/* Desktop – side panel */}
+
             {!isMobile && (
                 <AnimatePresence>
                     {selectedPlace && (
                         <div className="absolute inset-0 z-30 pl-10 flex items-center pointer-events-none">
                             <motion.div 
                                 key="side"
-                                /* 2. ปรับ Animation ให้เหมาะกับการอยู่ตรงกลาง (ขยายขึ้น + จางเข้า) */
                                 initial={{ scale: 0.92, opacity: 0 }} 
                                 animate={{ scale: 1, opacity: 1 }} 
                                 exit={{ scale: 0.92, opacity: 0 }}
                                 transition={{ type: 'spring', damping: 26, stiffness: 290 }}
-                                /* 3. ปรับ Class ของตัวการ์ด: เอา left, top, bottom ออก แล้วเติม pointer-events-auto */
                                 className="pointer-events-auto w-[320px] h-[600px] bg-white rounded-2xl shadow-2xl overflow-hidden border border-slate-100"
                             >
                                 <PlacePanel 
@@ -724,13 +670,11 @@ export default function MapsPage() {
                                     isMobile={false} 
                                 />
                             </motion.div>
-
                         </div>
                     )}
                 </AnimatePresence>
             )}
 
-            {/* Mobile – bottom sheet */}
             {isMobile && (
                 <AnimatePresence>
                     {selectedPlace && (
@@ -747,6 +691,104 @@ export default function MapsPage() {
                         </motion.div>
                     )}
                 </AnimatePresence>
+            )}
+
+            {/* ── Legend UI Logic ── */}
+            {isMobile ? (
+                // กรณีที่เป็นจอมือถือ (Mobile)
+                <AnimatePresence>
+                    {/* ซ่อนปุ่มสัญลักษณ์ทั้งหมดเมื่อผู้ใช้เปิดการ์ดสถานที่ เพื่อเคลียร์หน้าจอ */}
+                    {!selectedPlace && (
+                        <>
+                            {!isMobileLegendOpen ? (
+                                // 1. ปุ่มลอยจิ๋ว (Floating Toggle Trigger)
+                                <motion.button
+                                    key="legend-trigger-btn"
+                                    initial={{ scale: 0.8, opacity: 0 }}
+                                    animate={{ scale: 1, opacity: 1 }}
+                                    exit={{ scale: 0.8, opacity: 0 }}
+                                    onClick={() => setIsMobileLegendOpen(true)}
+                                    className="absolute bottom-6 left-4 z-20 bg-white/95 backdrop-blur-xl border border-slate-100 shadow-[0_4px_20px_rgba(0,0,0,0.12)] px-4 py-2.5 rounded-2xl flex items-center gap-2 text-[12px] font-semibold text-slate-700 active:scale-95 transition-transform"
+                                >
+                                    <div className="w-5 h-5 rounded-full bg-indigo-50 flex items-center justify-center">
+                                        <MapIcon size={11} className="text-indigo-500" />
+                                    </div>
+                                    <span>คำอธิบายสัญลักษณ์</span>
+                                </motion.button>
+                            ) : (
+                                // 2. แผงคำอธิบายตอนกางออก (จัดระเบียบใหม่เป็นสไลด์บอร์ดแบบ Grid 2 คอลัมน์)
+                                <motion.div
+                                    key="mobile-legend-sheet"
+                                    initial={{ y: '100%', opacity: 0 }}
+                                    animate={{ y: 0, opacity: 1 }}
+                                    exit={{ y: '100%', opacity: 0 }}
+                                    transition={{ type: 'spring', damping: 25, stiffness: 220 }}
+                                    className="absolute bottom-0 left-0 right-0 z-40 bg-white/98 backdrop-blur-xl rounded-t-3xl shadow-[0_-8px_40px_rgba(0,0,0,0.10)] border-t border-slate-100 p-5 max-h-[45vh] overflow-y-auto"
+                                >
+                                    {/* Drag Handle */}
+                                    <div className="flex justify-center mb-4">
+                                        <div className="w-9 h-1 rounded-full bg-slate-200" />
+                                    </div>
+
+                                    <div className="flex items-center justify-between mb-4">
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-7 h-7 rounded-xl bg-indigo-50 flex items-center justify-center">
+                                                <MapIcon size={14} className="text-indigo-500" />
+                                            </div>
+                                            <span className="text-[13px] font-bold text-slate-800 tracking-tight">คำอธิบายสัญลักษณ์</span>
+                                        </div>
+                                        <button 
+                                            onClick={() => setIsMobileLegendOpen(false)}
+                                            className="w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 hover:bg-slate-200 transition"
+                                        >
+                                            <X size={13} />
+                                        </button>
+                                    </div>
+
+                                    <div className="grid grid-cols-2 gap-x-3 gap-y-3">
+                                        {legendItems.map(({ label, Icon, bg, ring }) => (
+                                            <div key={label} className="flex items-center gap-2.5 min-w-0 bg-slate-50/80 rounded-xl px-2.5 py-2 border border-slate-100">
+                                                <div
+                                                    className="flex items-center justify-center rounded-full shadow-sm flex-shrink-0"
+                                                    style={{ width: 28, height: 28, backgroundColor: bg, outline: `2px solid ${ring}`, outlineOffset: 1 }}
+                                                >
+                                                    <Icon size={12} className="text-white" />
+                                                </div>
+                                                <span className="text-slate-700 font-medium text-[11.5px] truncate capitalize leading-tight">
+                                                    {label}
+                                                </span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </motion.div>
+                            )}
+                        </>
+                    )}
+                </AnimatePresence>
+            ) : (
+                // กรณีที่เป็นหน้าจอคอมพิวเตอร์ (Desktop Layer แบบเดิม)
+            <div className="absolute z-20 bottom-6 left-4 max-h-[420px] w-[220px] px-3.5 py-3.5 bg-white/95 backdrop-blur-xl border border-slate-100 shadow-[0_8px_32px_rgba(0,0,0,0.10)] rounded-2xl overflow-y-auto">
+                {/* Header */}
+                <div className="flex items-center gap-2 mb-3 pb-2.5 border-b border-slate-100">
+                    <MapIcon size={13} className="text-indigo-500" />
+                    <span className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">สัญลักษณ์</span>
+                </div>
+                <div className="flex flex-col gap-2.5">
+                    {legendItems.map(({ label, Icon, bg, ring }) => (
+                        <div key={label} className="flex items-center gap-3 group">
+                            <div
+                                className="flex items-center justify-center rounded-full flex-shrink-0 shadow-sm ring-2 ring-offset-1 transition-transform group-hover:scale-110"
+                                style={{ width: 32, height: 32, backgroundColor: bg, outline: `2px solid ${ring}`, outlineOffset: '1px' }}
+                            >
+                                <Icon size={14} className="text-white" />
+                            </div>
+                            <span className="text-slate-600 font-medium text-[12.5px] capitalize leading-none">
+                                {label}
+                            </span>
+                        </div>
+                    ))}
+                </div>
+            </div>
             )}
         </div>
     );
