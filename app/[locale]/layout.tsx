@@ -7,6 +7,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { notFound } from "next/navigation";
 import WelcomePopup from "../components/WelcomePopup";
 import '../globals.css';
+import { Toaster } from 'react-hot-toast';
 
 export function generateStaticParams() {
   return [{ locale: "en" }, { locale: "zh" }, { locale: "th" }];
@@ -61,6 +62,22 @@ export default async function LocaleLayout({
         <NextIntlClientProvider locale={locale} messages={messages}>
           <WelcomePopup />
           <div className="min-h-screen flex flex-col">
+
+        <Toaster
+          position="top-center"
+          reverseOrder={false}
+          toastOptions={{
+            duration: 3000,
+            style: {
+              background: '#fff',
+              color: '#333',
+              borderRadius: '14px',
+              padding: '14px 18px',
+              fontSize: '14px',
+              boxShadow: '0 8px 30px rgba(0,0,0,0.12)',
+            },
+          }}
+        />
             <Navigation />
             {children}
             <Footer />
