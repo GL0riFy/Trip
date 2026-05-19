@@ -4,9 +4,10 @@ import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react'
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import type { ExpressionSpecification } from '@maplibre/maplibre-gl-style-spec';
-import { useTranslations, useLocale } from 'next-intl';
+import { useTranslations, useLocale, Locale } from 'next-intl';
 import * as turf from '@turf/turf';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useParams } from 'next/navigation';
 // เปลี่ยนชื่อ Map เป็น MapIcon เพื่อไม่ให้ชนกับ JavaScript Map Object
 import {
     type LucideIcon,
@@ -470,7 +471,14 @@ function PlacePanel({ place, nearby, lang, onClose, onSelect, isMobile }: PanelP
 export default function MapsPage() {
     const t = useTranslations('District');
     const locale = useLocale();
-    const lang = (['th','en','zh'].includes(locale) ? locale : 'th') as Lang;
+    const lang = (['th','en','zh'].includes(locale) ? locale : 'en') as Lang;
+
+    const translations = {
+        th: { Symbol: "สัญลักษณ์", SymbolDes: "คำอธิบายสัญลักษณ์" },
+        en: { Symbol: "Symbol",    SymbolDes: "Symbol description"  },
+        zh: { Symbol: "象征",       SymbolDes: "符号说明"            }
+    } as const;
+    const tMap = translations[lang];
 
     const mapContainer  = useRef<HTMLDivElement>(null);
     const map           = useRef<maplibregl.Map | null>(null);
@@ -735,7 +743,7 @@ export default function MapsPage() {
                                             <div className="w-7 h-7 rounded-xl bg-indigo-50 flex items-center justify-center">
                                                 <MapIcon size={14} className="text-indigo-500" />
                                             </div>
-                                            <span className="text-[13px] font-bold text-slate-800 tracking-tight">คำอธิบายสัญลักษณ์</span>
+                                            <span className="text-[13px] font-bold text-slate-800 tracking-tight">{tMap.SymbolDes}</span>
                                         </div>
                                         <button 
                                             onClick={() => setIsMobileLegendOpen(false)}
@@ -771,7 +779,7 @@ export default function MapsPage() {
                 {/* Header */}
                 <div className="flex items-center gap-2 mb-3 pb-2.5 border-b border-slate-100">
                     <MapIcon size={13} className="text-indigo-500" />
-                    <span className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">สัญลักษณ์</span>
+                    <span className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">{tMap.Symbol}</span>
                 </div>
                 <div className="flex flex-col gap-2.5">
                     {legendItems.map(({ label, Icon, bg, ring }) => (
