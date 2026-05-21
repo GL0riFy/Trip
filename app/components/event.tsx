@@ -41,7 +41,7 @@ export default function TimelineLayout() {
 
           {EVENTS_DATA.map((event) => (
             <div key={event.id}>
-              <Link href={`/${currentLocale}${event.href}`} className="group block">
+              <div className="group block">
                 <div className="flex flex-col md:flex-row gap-4 sm:gap-6 md:gap-8 items-center py-2">
                   
                   {/* 1. Date Block */}
@@ -77,7 +77,7 @@ export default function TimelineLayout() {
                   </div>
                   
                 </div>
-              </Link>
+              </div>
 
               <div className="flex flex-row gap-4 sm:gap-6 md:gap-8 my-4 sm:my-6">
                 <div className="grow h-2.5 bg-gray-100 rounded-full" />
