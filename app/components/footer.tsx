@@ -10,7 +10,7 @@ import { MapPin, Phone, Mail, Facebook, MessageCircle, BarChart2 } from 'lucide-
   const Footer = () => {
     const [visitorCount, setVisitorCount] = useState<number | null>(null);
     const locale = useLocale();
-    const t = useTranslations('Footer'); // เรียกใช้ namespace 'Footer'
+    const t = useTranslations('Footer');
 
   useEffect(() => {
     fetch('/api/visitors') 
@@ -54,8 +54,8 @@ import { MapPin, Phone, Mail, Facebook, MessageCircle, BarChart2 } from 'lucide-
         <div className="md:col-span-3 flex flex-col gap-4">
           <h3 className="text-lg font-semibold text-white">{t('menuTitle')}</h3>
           <ul className="flex flex-col gap-2.5 text-sm text-slate-400">
-            <li><Link href={`/${locale}/places`} className="hover:text-white transition-colors">{t('menuPlaces')}</Link></li>
-            <li><Link href={`/${locale}/events`} className="hover:text-white transition-colors">{t('menuEvents')}</Link></li>
+            <li><Link href={`/${locale}/tourist`} className="hover:text-white transition-colors">{t('menuPlaces')}</Link></li>
+            <li><Link href={`/${locale}/events`} className="hover:text-white transition-colors">{t('menuOtops')}</Link></li>
             <li><Link href={`/${locale}/maps`} className="hover:text-white transition-colors">{t('menuMaps')}</Link></li>
           </ul>
         </div>
