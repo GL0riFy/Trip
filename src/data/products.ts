@@ -14,7 +14,15 @@ export const products = [
     icon: "☂️",
     description: "A charming miniature Lanna umbrella keychain reflecting Chiang Mai's rich artistic heritage. This classic, easy-to-carry souvenir comes with a scannable CMTC QR code, making it a perfect and memorable gift.",
     descriptionCN: "迷人的微型兰纳纸伞钥匙扣，展现了清迈丰富的艺术遗产。这款经典且易于携带的纪念品附带可扫描的 CMTC 二维码，是馈赠亲友的完美礼物。",
-    descriptionTH: "พวงกุญแจร่มล้านนาจิ๋ว ดีไซน์สะท้อนเอกลักษณ์ศิลปะเชียงใหม่แบบดั้งเดิม เป็นของที่ระลึกสุดคลาสสิกที่พกพาง่าย มาพร้อม QR Code ของ CMTC ให้สแกนเพื่อรับข้อมูลเพิ่มเติม เหมาะสำหรับเป็นของฝากที่น่าประทับใจและทรงคุณค่า"
+    descriptionTH: "พวงกุญแจร่มล้านนาจิ๋ว ดีไซน์สะท้อนเอกลักษณ์ศิลปะเชียงใหม่แบบดั้งเดิม เป็นของที่ระลึกสุดคลาสสิกที่พกพาง่าย มาพร้อม QR Code ของ CMTC ให้สแกนเพื่อรับข้อมูลเพิ่มเติม เหมาะสำหรับเป็นของฝากที่น่าประทับใจและทรงคุณค่า",
+    shopName: "Chiang Mai Technical College",
+    shopNameCN: "清迈技术学院",
+    shopNameTH: "วิทยาลัยเทคนิคเชียงใหม่",
+    phone: "053-217-708",
+    address: "9 Wiang Kaew Rd, Sri Phum, Mueang Chiang Mai, Chiang Mai 50200",
+    addressCN: "9 Wiang Kaew Rd, Sri Phum, Mueang Chiang Mai, Chiang Mai 50200",
+    addressTH: "9 ถนนเวียงแก้ว ตำบลศรีภูมิ อำเภอเมืองเชียงใหม่ จังหวัดเชียงใหม่ 50200",
+    mapsQuery: "https://www.google.com/maps/search/?api=1&query=วิทยาลัยเทคนิคเชียงใหม่"
   },
   {
     id: 2,
@@ -30,7 +38,15 @@ export const products = [
     icon: "💃",
     description: "An exquisitely detailed keychain featuring a Thai dancer in traditional Northern attire holding a lantern. Celebrating the beauty of Lanna culture, it includes a CMTC QR code and makes for a culturally rich souvenir.",
     descriptionCN: "细节精致的钥匙扣，展示了身着传统泰北服饰、手持灯笼的泰国舞者。它颂扬了兰纳文化之美，并附带 CMTC 二维码，是一件极具文化底蕴的纪念品。",
-    descriptionTH: "พวงกุญแจตุ๊กตานางรำในชุดไทยล้านนาถือโคมสุดประณีต เก็บรายละเอียดความงดงามของวัฒนธรรมภาคเหนือได้อย่างลงตัว มาพร้อม QR Code ของ CMTC เป็นของฝากที่สื่อถึงเสน่ห์ความเป็นไทยได้อย่างสมบูรณ์แบบ"
+    descriptionTH: "พวงกุญแจตุ๊กตานางรำในชุดไทยล้านนาถือโคมสุดประณีต เก็บรายละเอียดความงดงามของวัฒนธรรมภาคเหนือได้อย่างลงตัว มาพร้อม QR Code ของ CMTC เป็นของฝากที่สื่อถึงเสน่ห์ความเป็นไทยได้อย่างสมบูรณ์แบบ",
+    shopName: "Chiang Mai Technical College",
+    shopNameCN: "清迈技术学院",
+    shopNameTH: "วิทยาลัยเทคนิคเชียงใหม่",
+    phone: "053-217-708",
+    address: "9 Wiang Kaew Rd, Sri Phum, Mueang Chiang Mai, Chiang Mai 50200",
+    addressCN: "9 Wiang Kaew Rd, Sri Phum, Mueang Chiang Mai, Chiang Mai 50200",
+    addressTH: "9 ถนนเวียงแก้ว ตำบลศรีภูมิ อำเภอเมืองเชียงใหม่ จังหวัดเชียงใหม่ 50200",
+    mapsQuery: "https://www.google.com/maps/search/?api=1&query=วิทยาลัยเทคนิคเชียงใหม่"
   },
   {
     id: 3,
@@ -46,7 +62,15 @@ export const products = [
     icon: "🐘",
     description: "An adorable cartoon elephant keychain adorned with intricate Lanna patterns. The elephant, a beloved symbol of Thailand, makes this a must-have souvenir. Features a CMTC QR code for travelers.",
     descriptionCN: "可爱的卡通大象钥匙扣，饰有精致的兰纳图案。大象是泰国深受喜爱的象征，这使其成为必买的纪念品。带有供旅客扫描的 CMTC 二维码。",
-    descriptionTH: "พวงกุญแจช้างน้อยสุดน่ารัก ประดับด้วยลวดลายสไตล์ล้านนาที่วิจิตรบรรจง ช้างเป็นสัญลักษณ์คู่บ้านคู่เมืองที่ใครเห็นก็ต้องหลงรัก มาพร้อม QR Code ของ CMTC สำหรับนักท่องเที่ยว ซื้อฝากใครก็ประทับใจแน่นอน"
+    descriptionTH: "พวงกุญแจช้างน้อยสุดน่ารัก ประดับด้วยลวดลายสไตล์ล้านนาที่วิจิตรบรรจง ช้างเป็นสัญลักษณ์คู่บ้านคู่เมืองที่ใครเห็นก็ต้องหลงรัก มาพร้อม QR Code ของ CMTC สำหรับนักท่องเที่ยว ซื้อฝากใครก็ประทับใจแน่นอน",
+    shopName: "Chiang Mai Technical College",
+    shopNameCN: "清迈技术学院",
+    shopNameTH: "วิทยาลัยเทคนิคเชียงใหม่",
+    phone: "053-217-708",
+    address: "9 Wiang Kaew Rd, Sri Phum, Mueang Chiang Mai, Chiang Mai 50200",
+    addressCN: "9 Wiang Kaew Rd, Sri Phum, Mueang Chiang Mai, Chiang Mai 50200",
+    addressTH: "9 ถนนเวียงแก้ว ตำบลศรีภูมิ อำเภอเมืองเชียงใหม่ จังหวัดเชียงใหม่ 50200",
+    mapsQuery: "https://www.google.com/maps/search/?api=1&query=วิทยาลัยเทคนิคเชียงใหม่"
   },
   {
     id: 51,
@@ -62,7 +86,15 @@ export const products = [
     icon: "🔑",
     description: "Our premiere handcrafted keychain, designed with meticulous attention to detail. Reflecting elegance and style, it serves as a unique accessory for your bag or a sophisticated souvenir.",
     descriptionCN: "我们首款精美的纯手工钥匙扣，注重每一个细节。它彰显优雅与格调，是包包的独特配饰，也是一份别致的纪念品。",
-    descriptionTH: "พวงกุญแจงานคราฟต์ดีไซน์ชิ้นแรกสุดพิเศษ ออกแบบด้วยความใส่ใจในทุกรายละเอียด สะท้อนความเรียบหรูและมีสไตล์ เหมาะสำหรับห้อยกระเป๋าหรือเป็นของที่ระลึกชิ้นเก๋ที่ไม่ซ้ำใคร ซื้อใช้เองก็ดูดี ซื้อฝากก็ดูพรีเมียม"
+    descriptionTH: "พวงกุญแจงานคราฟต์ดีไซน์ชิ้นแรกสุดพิเศษ ออกแบบด้วยความใส่ใจในทุกรายละเอียด สะท้อนความเรียบหรูและมีสไตล์ เหมาะสำหรับห้อยกระเป๋าหรือเป็นของที่ระลึกชิ้นเก๋ที่ไม่ซ้ำใคร ซื้อใช้เองก็ดูดี ซื้อฝากก็ดูพรีเมียม",
+    shopName: "Chiang Mai Technical College",
+    shopNameCN: "清迈技术学院",
+    shopNameTH: "วิทยาลัยเทคนิคเชียงใหม่",
+    phone: "053-217-708",
+    address: "9 Wiang Kaew Rd, Sri Phum, Mueang Chiang Mai, Chiang Mai 50200",
+    addressCN: "9 Wiang Kaew Rd, Sri Phum, Mueang Chiang Mai, Chiang Mai 50200",
+    addressTH: "9 ถนนเวียงแก้ว ตำบลศรีภูมิ อำเภอเมืองเชียงใหม่ จังหวัดเชียงใหม่ 50200",
+    mapsQuery: "https://www.google.com/maps/search/?api=1&query=วิทยาลัยเทคนิคเชียงใหม่"
   },
   {
     id: 52,
@@ -78,7 +110,15 @@ export const products = [
     icon: "🔑",
     description: "An elegant keychain featuring a timeless traditional design. This meticulously crafted piece exudes a classic charm, making it a wonderful and heartfelt gift for travelers and loved ones.",
     descriptionCN: "采用经典传统设计的优雅钥匙扣。这件精心制作的作品散发着永恒的魅力，是送给旅行者和亲朋好友的绝佳礼物。",
-    descriptionTH: "พวงกุญแจดีไซน์ดั้งเดิมที่ผสานความสง่างามเหนือกาลเวลา ชิ้นงานประณีตที่สะท้อนถึงกลิ่นอายความคลาสสิก เหมาะอย่างยิ่งสำหรับเป็นของขวัญแทนใจให้แก่นักเดินทางและคนที่คุณรัก พกพาง่ายและมีความหมาย"
+    descriptionTH: "พวงกุญแจดีไซน์ดั้งเดิมที่ผสานความสง่างามเหนือกาลเวลา ชิ้นงานประณีตที่สะท้อนถึงกลิ่นอายความคลาสสิก เหมาะอย่างยิ่งสำหรับเป็นของขวัญแทนใจให้แก่นักเดินทางและคนที่คุณรัก พกพาง่ายและมีความหมาย",
+    shopName: "Chiang Mai Technical College",
+    shopNameCN: "清迈技术学院",
+    shopNameTH: "วิทยาลัยเทคนิคเชียงใหม่",
+    phone: "053-217-708",
+    address: "9 Wiang Kaew Rd, Sri Phum, Mueang Chiang Mai, Chiang Mai 50200",
+    addressCN: "9 Wiang Kaew Rd, Sri Phum, Mueang Chiang Mai, Chiang Mai 50200",
+    addressTH: "9 ถนนเวียงแก้ว ตำบลศรีภูมิ อำเภอเมืองเชียงใหม่ จังหวัดเชียงใหม่ 50200",
+    mapsQuery: "https://www.google.com/maps/search/?api=1&query=วิทยาลัยเทคนิคเชียงใหม่"
   },
   {
     id: 53,
@@ -94,7 +134,15 @@ export const products = [
     icon: "🔑",
     description: "A charming keychain inspired by the unique beauty of Chiang Mai, featuring intricate details. It's a pocket-sized piece of art that perfectly expresses a distinctive and stylish personality.",
     descriptionCN: "灵感源自清迈独特之美的迷人钥匙扣，细节繁复精致。这是一件可以随身携带的袖珍艺术品，完美彰显您的与众不同与时尚品味。",
-    descriptionTH: "พวงกุญแจที่ดึงเอาเสน่ห์และแรงบันดาลใจจากเมืองเชียงใหม่มาถ่ายทอดลงบนลวดลายสุดวิจิตร เป็นผลงานศิลปะชิ้นเล็กๆ ที่พกติดตัวได้ตลอดเวลา บ่งบอกถึงสไตล์ที่โดดเด่นไม่เหมือนใคร งานละเอียดที่คุ้มค่าทุกราคา"
+    descriptionTH: "พวงกุญแจที่ดึงเอาเสน่ห์และแรงบันดาลใจจากเมืองเชียงใหม่มาถ่ายทอดลงบนลวดลายสุดวิจิตร เป็นผลงานศิลปะชิ้นเล็กๆ ที่พกติดตัวได้ตลอดเวลา บ่งบอกถึงสไตล์ที่โดดเด่นไม่เหมือนใคร งานละเอียดที่คุ้มค่าทุกราคา",
+    shopName: "Chiang Mai Technical College",
+    shopNameCN: "清迈技术学院",
+    shopNameTH: "วิทยาลัยเทคนิคเชียงใหม่",
+    phone: "053-217-708",
+    address: "9 Wiang Kaew Rd, Sri Phum, Mueang Chiang Mai, Chiang Mai 50200",
+    addressCN: "9 Wiang Kaew Rd, Sri Phum, Mueang Chiang Mai, Chiang Mai 50200",
+    addressTH: "9 ถนนเวียงแก้ว ตำบลศรีภูมิ อำเภอเมืองเชียงใหม่ จังหวัดเชียงใหม่ 50200",
+    mapsQuery: "https://www.google.com/maps/search/?api=1&query=วิทยาลัยเทคนิคเชียงใหม่"
   },
   {
     id: 54,
@@ -110,7 +158,15 @@ export const products = [
     icon: "🔑",
     description: "The masterwork and final piece in our exclusive keychain collection. Combining perfect craftsmanship with premium design, this is an ultimate collector's item and a must-have souvenir.",
     descriptionCN: "我们独家钥匙扣系列中的巅峰之作。完美融合了精湛工艺与高级设计，是终极的收藏品，也是不可错过的绝佳纪念品。",
-    descriptionTH: "ผลงานชิ้นเอกตระกูลพวงกุญแจคอลเลกชันพิเศษสุดเอ็กซ์คลูซีฟ ดีไซน์ส่งท้ายที่รวบรวมความสมบูรณ์แบบไว้ในชิ้นเดียว เป็นไอเทมของสะสมและของฝากระดับพรีเมียมที่คุณไม่ควรพลาด เป็นเจ้าของความหรูหราในราคาเบาๆ"
+    descriptionTH: "ผลงานชิ้นเอกตระกูลพวงกุญแจคอลเลกชันพิเศษสุดเอ็กซ์คลูซีฟ ดีไซน์ส่งท้ายที่รวบรวมความสมบูรณ์แบบไว้ในชิ้นเดียว เป็นไอเทมของสะสมและของฝากระดับพรีเมียมที่คุณไม่ควรพลาด เป็นเจ้าของความหรูหราในราคาเบาๆ",
+    shopName: "Chiang Mai Technical College",
+    shopNameCN: "清迈技术学院",
+    shopNameTH: "วิทยาลัยเทคนิคเชียงใหม่",
+    phone: "053-217-708",
+    address: "9 Wiang Kaew Rd, Sri Phum, Mueang Chiang Mai, Chiang Mai 50200",
+    addressCN: "9 Wiang Kaew Rd, Sri Phum, Mueang Chiang Mai, Chiang Mai 50200",
+    addressTH: "9 ถนนเวียงแก้ว ตำบลศรีภูมิ อำเภอเมืองเชียงใหม่ จังหวัดเชียงใหม่ 50200",
+    mapsQuery: "https://www.google.com/maps/search/?api=1&query=วิทยาลัยเทคนิคเชียงใหม่"
   },
   {
     id: 4,

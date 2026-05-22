@@ -4,8 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { restaurantData, tipsData } from '@/src/data/restaurants/food_data';
 import Link from 'next/link';
-import { 
-  MapPin, ChefHat, Lightbulb
+import {
+    MapPin, ChefHat, Lightbulb
 } from 'lucide-react';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
 import ChiangMaiPreloader from '@/app/perloding/ChiangMaiPreloader'; // ← เพิ่ม
@@ -20,6 +20,55 @@ const cardVariants: Variants = {
         transition: { duration: 0.4, ease: "easeOut" }
     },
     exit: { opacity: 0, scale: 0.95, transition: { duration: 0.2 } }
+};
+
+const heroImageVariants: Variants = {
+    hidden: { opacity: 0, scale: 1.15 },
+    visible: {
+        opacity: 0.8,
+        scale: 1,
+        transition: { duration: 1.8, ease: "easeOut" }
+    }
+};
+
+const heroContainerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.25,
+            delayChildren: 0.3
+        }
+    }
+};
+
+const heroTextVariants: Variants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: { duration: 0.8, ease: "easeOut" }
+    }
+};
+
+const mainContentVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.15,
+            delayChildren: 0.5
+        }
+    }
+};
+
+const fadeUpVariants: Variants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: { duration: 0.8, ease: "easeOut" }
+    }
 };
 
 export default function ChiangMaiTravelGuide() {
@@ -122,26 +171,41 @@ export default function ChiangMaiTravelGuide() {
     };
 
     return (
-        <div className="font-sans text-gray-800 bg-[#fbfbfb] min-h-screen">
+        <motion.div
+            initial="hidden"
+            animate="visible"
+            className="font-sans text-gray-800 bg-[#fbfbfb] min-h-screen"
+        >
 
             {/* --- HERO SECTION --- */}
             <div className="relative h-screen w-full bg-black overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1559314809-0d155014e29e?auto=format&fit=crop&w=1920&q=80" alt="Northern Thai Food" className="w-full h-full object-cover opacity-80" />
+                <motion.img
+                    variants={heroImageVariants}
+                    src="/Food/Hero2.png"
+                    alt="Northern Thai Food"
+                    className="w-full h-full object-cover opacity-80"
+                />
                 <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"></div>
-                <div className="absolute top-1/2 left-[10%] md:left-[15%] transform -translate-y-1/2 border-l-4 border-yellow-500 pl-6 md:pl-8 max-w-2xl z-10">
-                    <h1 className="text-white leading-tight">
+                <motion.div
+                    variants={heroContainerVariants}
+                    className="absolute top-1/2 left-[10%] md:left-[15%] transform -translate-y-1/2 border-l-4 border-yellow-500 pl-6 md:pl-8 max-w-2xl z-10"
+                >
+                    <motion.h1 variants={heroTextVariants} className="text-white leading-tight">
                         <span className="block text-2xl md:text-3xl font-medium mb-1 tracking-wide text-gray-200">{ui.heroSub}</span>
                         <span className="block text-5xl md:text-7xl font-extrabold text-yellow-400 mb-2 mt-2">{ui.heroTitle}</span>
                         <span className="block text-3xl md:text-5xl font-bold">{ui.heroCity}</span>
-                    </h1>
-                    <p className="mt-6 text-gray-200 text-sm md:text-base lg:text-lg leading-relaxed font-light max-w-xl">{ui.heroDesc}</p>
-                </div>
+                    </motion.h1>
+                    <motion.p variants={heroTextVariants} className="mt-6 text-gray-200 text-sm md:text-base lg:text-lg leading-relaxed font-light max-w-xl">{ui.heroDesc}</motion.p>
+                </motion.div>
             </div>
 
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 flex flex-col md:flex-row gap-12 relative">
+            <motion.div
+                variants={mainContentVariants}
+                className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 flex flex-col md:flex-row gap-12 relative"
+            >
 
                 {/* --- SIDEBAR: นำ md:order-last ออก เพื่อให้กลับมาอยู่ซ้ายมือเหมือนเดิม --- */}
-                <div className="w-full md:w-1/4">
+                <motion.div variants={fadeUpVariants} className="w-full md:w-1/4">
                     <div className="sticky top-20 self-start">
                         <h3 className="text-xl font-bold mb-6 text-gray-700 px-4">{ui.catTitle}</h3>
                         <ul className="space-y-2 font-medium">
@@ -175,10 +239,10 @@ export default function ChiangMaiTravelGuide() {
                             </li>
                         </ul>
                     </div>
-                </div>
+                </motion.div>
 
                 {/* --- MAIN CONTENT --- */}
-                <div className="w-full md:w-3/4">
+                <motion.div variants={fadeUpVariants} className="w-full md:w-3/4">
 
                     {/* Section 1: Restaurants */}
                     <div id="restaurant-section" className="mb-24 pt-8">
@@ -199,7 +263,8 @@ export default function ChiangMaiTravelGuide() {
                                         layout
                                         variants={cardVariants}
                                         initial="hidden"
-                                        animate="visible"
+                                        whileInView="visible"
+                                        viewport={{ once: true, margin: "-50px" }}
                                         exit="exit"
                                         transition={{ delay: index > 8 ? (index - 9) * 0.05 : 0 }}
                                     >
@@ -251,7 +316,14 @@ export default function ChiangMaiTravelGuide() {
 
                         <div className="relative pl-6 md:pl-10 ml-2 md:ml-4 border-l border-gray-300 space-y-12">
                             {tipsData.map((tip) => (
-                                <div key={tip.id} className="relative flex flex-col md:flex-row items-start md:items-center">
+                                <motion.div
+                                    key={tip.id}
+                                    variants={cardVariants}
+                                    initial="hidden"
+                                    whileInView="visible"
+                                    viewport={{ once: true, margin: "-50px" }}
+                                    className="relative flex flex-col md:flex-row items-start md:items-center"
+                                >
                                     <div className="absolute -left-[30px] md:-left-[46px] top-1/2 transform -translate-y-1/2 flex items-center justify-center w-5 h-5 bg-white border-4 border-gray-400 rounded-full shadow-sm z-10">
                                         <div className="w-2 h-2 bg-gray-300 rounded-full"></div>
                                     </div>
@@ -262,13 +334,13 @@ export default function ChiangMaiTravelGuide() {
                                             <p className="text-sm text-gray-500">{tip.locales[locale].desc}</p>
                                         </div>
                                     </div>
-                                </div>
+                                </motion.div>
                             ))}
                         </div>
                     </div>
 
-                </div>
-            </div>
-        </div>
+                </motion.div>
+            </motion.div>
+        </motion.div>
     );
 }

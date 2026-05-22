@@ -5,12 +5,28 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Prompt } from 'next/font/google';
 import { EVENTS_DATA, type Locale } from '@/src/data/events/events';
+import { motion, Variants } from 'framer-motion';
 
 const promptFont = Prompt({
   subsets: ['thai', 'latin'],
   weight: ['300', '400', '500', '600', '700'],
   display: 'swap',
 });
+
+const fadeUpVariants: Variants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } },
+};
+
+const staggerContainer: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.15,
+    },
+  },
+};
 
 export default function TimelineLayout() {
   const t = useTranslations('Events'); // ดึงจาก namespace 'Events' ในไฟล์ json
@@ -21,7 +37,13 @@ export default function TimelineLayout() {
       <div className="max-w-5xl mx-auto">
         
         {/* Header Section */}
-        <div className="mb-5 sm:mb-8">
+        <motion.div 
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={fadeUpVariants}
+          className="mb-5 sm:mb-8"
+        >
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-2 sm:mb-3">
             {t('titlePrefix')}
             <br className="block min-[540px]:hidden" />
@@ -30,7 +52,7 @@ export default function TimelineLayout() {
           <p className="text-gray-600 text-xs sm:text-sm md:text-base max-w-2xl leading-relaxed">
             {t('description')}
           </p>
-        </div>
+        </motion.div>
 
         {/* Timeline List Section */}
         <div className="flex flex-col">
@@ -40,7 +62,13 @@ export default function TimelineLayout() {
           </div>
 
           {EVENTS_DATA.map((event) => (
-            <div key={event.id}>
+            <motion.div 
+              key={event.id}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-80px" }}
+              variants={fadeUpVariants}
+            >
               <div className="group block">
                 <div className="flex flex-col md:flex-row gap-4 sm:gap-6 md:gap-8 items-center py-2">
                   
@@ -83,7 +111,7 @@ export default function TimelineLayout() {
                 <div className="grow h-2.5 bg-gray-100 rounded-full" />
                 <div className="w-full md:w-[280px] shrink-0 hidden md:block" />
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
         

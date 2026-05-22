@@ -144,10 +144,12 @@ export default function RefactoredProductShowcase() {
 
   const phoneHref = selectedProduct?.phone ? `tel:${selectedProduct.phone.replace(/\s+/g, "")}` : "#";
   const mapSearchText = selectedProduct
-    ? selectedProduct.mapsQuery || displayAddr(selectedProduct) || ""
+    ? selectedProduct.shopName === "Chiang Mai OTOP Center"
+      ? "https://maps.app.goo.gl/K3MX1sz5jCsz96zh7"
+      : (selectedProduct.mapsQuery || displayAddr(selectedProduct) || "")
     : "";
   const mapHref = mapSearchText
-    ? mapSearchText.startsWith("http") ? mapSearchText : `http://googleusercontent.com/maps.google.com/?q=${encodeURIComponent(mapSearchText)}`
+    ? mapSearchText.startsWith("http") ? mapSearchText : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapSearchText)}`
     : "#";
 
   const featuredProduct = productsWithVerifiedLocations[0];

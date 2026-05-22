@@ -5,6 +5,7 @@ import ChiangMaiPreloader from '@/app/perloding/ChiangMaiPreloader';
 import { useParams } from 'next/navigation';
 import { reviewsData } from "@/src/data/reviews";
 import toast from 'react-hot-toast';
+import { motion, AnimatePresence, Variants } from "framer-motion";
 
 type Locale = 'th' | 'en' | 'zh';
 
@@ -17,6 +18,57 @@ interface UserReview {
     tags: string[];
     image?: string;
 }
+
+const heroTextVariants: Variants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] }
+    }
+};
+
+const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.1,
+            delayChildren: 0.2
+        }
+    }
+};
+
+const itemVariants: Variants = {
+    hidden: { opacity: 0, y: 35 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] }
+    }
+};
+
+const modalBackdropVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { duration: 0.3 } },
+    exit: { opacity: 0, transition: { duration: 0.2 } }
+};
+
+const modalContentVariants: Variants = {
+    hidden: { opacity: 0, scale: 0.95, y: 20 },
+    visible: {
+        opacity: 1,
+        scale: 1,
+        y: 0,
+        transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] }
+    },
+    exit: {
+        opacity: 0,
+        scale: 0.95,
+        y: 15,
+        transition: { duration: 0.25, ease: "easeIn" }
+    }
+};
 
 export default function ReviewPage() {
     const params = useParams();
@@ -122,10 +174,10 @@ export default function ReviewPage() {
 
     const renderStars = (count: number) => {
         return Array.from({ length: 5 }).map((_, i) => (
-            <svg 
-                key={i} 
-                className={`w-5 h-5 ${i < count ? "text-yellow-400" : "text-gray-300"}`} 
-                fill="currentColor" 
+            <svg
+                key={i}
+                className={`w-5 h-5 ${i < count ? "text-yellow-400" : "text-gray-300"}`}
+                fill="currentColor"
                 viewBox="0 0 20 20"
             >
                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
@@ -183,7 +235,11 @@ export default function ReviewPage() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 pb-20">
+        <motion.div
+            initial="hidden"
+            animate="visible"
+            className="min-h-screen bg-gray-50 pb-20"
+        >
             <style dangerouslySetInnerHTML={{
                 __html: `
         @keyframes float {
@@ -194,71 +250,114 @@ export default function ReviewPage() {
         .animate-float {
           animation: float 2.5s ease-in-out infinite;
         }
-        .modal-enter {
-          animation: scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-        @keyframes scaleUp {
-          from { opacity: 0; transform: scale(0.95); }
-          to { opacity: 1; transform: scale(1); }
-        }
         .shadow-soft { box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
         .transition-all-300 { transition: all 300ms ease; }
       `}} />
 
             {/* Hero Section */}
             <div
-                className="relative h-72 md:h-[400px] bg-cover bg-center flex items-center justify-center mb-16 shadow-soft"
-                style={{ backgroundImage: "url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80')" }}
+                className="relative h-72 md:h-[400px] bg-cover bg-center flex items-center justify-center mb-16 shadow-soft overflow-hidden"
             >
-                <div className="absolute inset-0 bg-black/40"></div>
-                <div className="relative z-10 text-center text-white px-6">
+                <motion.div
+                    initial={{ scale: 1.12, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ duration: 1.6, ease: "easeOut" }}
+                    className="absolute inset-0 bg-cover bg-center"
+                    style={{ backgroundImage: "url('/review/Hero2.png')" }}
+                />
+                <div className="absolute inset-0 bg-black/45"></div>
+                <motion.div
+                    variants={heroTextVariants}
+                    className="relative z-10 text-center text-white px-6"
+                >
                     <h1 className="text-4xl md:text-6xl font-bold mb-5 drop-shadow-lg leading-tight">
                         {t.heroTitle1}<span className="text-red-500">{t.heroTitle2}</span> {t.heroTitle3}
                     </h1>
                     <h2 className="hidden md:block text-5xl font-extrabold drop-shadow-lg">{t.heroTitle4}</h2>
                     <p className="hidden md:block text-white/90 text-xl mt-6">{t.heroSubtitle}</p>
-                </div>
+                </motion.div>
             </div>
 
             <div className="max-w-7xl mx-auto px-6 mt-12">
                 {/* Gallery Section */}
-                <div className="mb-20">
-                    <div className="flex items-center gap-3 mb-3 border-b-4 border-orange-500 pb-3 inline-flex">
+                <motion.div
+                    variants={containerVariants}
+                    className="mb-20"
+                >
+                    <motion.div
+                        variants={itemVariants}
+                        className="flex items-center gap-3 mb-3 border-b-4 border-orange-500 pb-3 inline-flex"
+                    >
                         <h2 className="text-4xl font-bold text-gray-800">{t.gallery}</h2>
                         <span className="text-4xl">📸</span>
-                    </div>
-                    <p className="text-gray-500 mb-8 text-sm pl-1">{t.gallerySubtitle}</p>
+                    </motion.div>
+                    <motion.p variants={itemVariants} className="text-gray-500 mb-8 text-sm pl-1">{t.gallerySubtitle}</motion.p>
 
-                    <div className="columns-2 md:columns-3 lg:columns-4 gap-5 space-y-5">
+                    <motion.div
+                        variants={containerVariants}
+                        className="columns-2 md:columns-3 lg:columns-4 gap-5 space-y-5"
+                    >
                         {reviewsData.map((review) => (
-                            <div
+                            <motion.div
                                 key={review.id}
-                                className="break-inside-avoid relative group overflow-hidden rounded-2xl shadow-sm hover:shadow-lg transition-all-300"
+                                variants={itemVariants}
+                                whileHover={{
+                                    scale: 1.03,
+                                    y: -6,
+                                    transition: { duration: 0.3 }
+                                }}
+                                className="break-inside-avoid relative group overflow-hidden rounded-2xl shadow-sm hover:shadow-lg transition-all-300 cursor-pointer"
+                                onClick={() => setSelectedReview({
+                                    id: review.id,
+                                    image: review.image,
+                                    name: t.gallery,
+                                    rating: 5,
+                                    comment: t.gallerySubtitle,
+                                    tags: ["Gallery", "ลูกค้าจริง"]
+                                })}
                             >
                                 <img
                                     src={review.image}
-                                    alt="Customer Review Gallery" 
+                                    alt="Customer Review Gallery"
                                     className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500 block"
                                 />
                                 <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-15 transition-opacity duration-300"></div>
-                                <div className="absolute top-4 right-4 animate-float drop-shadow-md">
+                                <motion.div
+                                    whileHover={{ scale: 1.25, rotate: [0, -10, 10, -10, 10, 0] }}
+                                    className="absolute top-4 right-4 animate-float drop-shadow-md cursor-pointer"
+                                >
                                     <span className="text-3xl opacity-90">💖</span>
-                                </div>
-                            </div>
+                                </motion.div>
+                            </motion.div>
                         ))}
-                    </div>
-                </div>
+                    </motion.div>
+                </motion.div>
 
                 {/* Text Review Section */}
-                <div>
-                    <div className="flex items-center gap-3 mb-10 border-b-4 border-orange-500 pb-3 inline-flex">
+                <motion.div
+                    variants={containerVariants}
+                    className="mb-20"
+                >
+                    <motion.div
+                        variants={itemVariants}
+                        className="flex items-center gap-3 mb-10 border-b-4 border-orange-500 pb-3 inline-flex"
+                    >
                         <h2 className="text-4xl font-bold text-gray-800">{t.review}</h2>
                         <span className="text-4xl text-gray-300">💬</span>
-                    </div>
+                    </motion.div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <motion.div
+                        variants={containerVariants}
+                        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
+                    >
                         {/* ปุ่มเพิ่มคอมเมนต์ */}
-                        <div
+                        <motion.div
+                            variants={itemVariants}
+                            whileHover={{
+                                scale: 1.03,
+                                y: -6,
+                                transition: { duration: 0.3 }
+                            }}
                             className="bg-white p-6 rounded-3xl shadow-sm border-2 border-dashed border-orange-300 flex flex-col h-full hover:shadow-md transition-all-300 cursor-pointer justify-center items-center group"
                             onClick={() => setIsAddCommentOpen(true)}
                         >
@@ -267,7 +366,7 @@ export default function ReviewPage() {
                             </div>
                             <h3 className="text-lg font-bold text-gray-800">{t.addCommentTitle}</h3>
                             <p className="text-sm text-gray-500 mt-2 text-center">{t.addCommentDesc}</p>
-                        </div>
+                        </motion.div>
 
                         {/* แสดงผลรีวิวข้อความจาก Redis */}
                         {reviews.map((review: any, index) => {
@@ -285,8 +384,8 @@ export default function ReviewPage() {
 
                             const reviewName = review.name || "ผู้ใช้ทั่วไป";
                             const reviewRating = Number(review.rating) || 5;
-                            const reviewComment = review.comment || review.text || ""; 
-                            const reviewTags = review.tags || ["ลูกค้าจริง", "ประทับใจ"]; 
+                            const reviewComment = review.comment || review.text || "";
+                            const reviewTags = review.tags || ["ลูกค้าจริง", "ประทับใจ"];
 
                             let reviewDate = "รีวิวเมื่อเร็วๆ นี้";
                             if (review.createdAt) {
@@ -304,7 +403,26 @@ export default function ReviewPage() {
                             }
 
                             return (
-                                <div key={`redis-review-${index}`} className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex flex-col h-full hover:shadow-md transition-all-300">
+                                <motion.div
+                                    key={`redis-review-${index}`}
+                                    variants={itemVariants}
+                                    whileHover={{
+                                        scale: 1.03,
+                                        y: -6,
+                                        boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.08)",
+                                        transition: { duration: 0.3 }
+                                    }}
+                                    onClick={() => setSelectedReview({
+                                        id: parsedReview.id || index,
+                                        name: reviewName,
+                                        rating: reviewRating,
+                                        comment: reviewComment,
+                                        tags: reviewTags,
+                                        createdAt: reviewDate,
+                                        image: parsedReview.image
+                                    })}
+                                    className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex flex-col h-full hover:shadow-md transition-all-300 cursor-pointer"
+                                >
                                     <div className="flex items-center gap-3.5 mb-4">
                                         <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-2xl overflow-hidden shadow-inner">
                                             {faceIcon}
@@ -327,135 +445,168 @@ export default function ReviewPage() {
                                             </span>
                                         ))}
                                     </div>
-                                </div>
+                                </motion.div>
                             );
                         })}
-                    </div>
-                </div>
+                    </motion.div>
+                </motion.div>
             </div>
 
             {/* Modal / Popup Component */}
-            {selectedReview && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-5 sm:p-8">
-                    <div className="absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity" onClick={() => setSelectedReview(null)}></div>
-                    <div className="relative bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row w-full max-w-5xl max-h-[90vh] modal-enter border border-gray-100">
-                        <button
-                            className="absolute top-5 right-5 z-10 w-10 h-10 flex items-center justify-center bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-full transition-colors transition-all-300"
+            <AnimatePresence>
+                {selectedReview && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-5 sm:p-8">
+                        <motion.div
+                            variants={modalBackdropVariants}
+                            initial="hidden"
+                            animate="visible"
+                            exit="exit"
+                            className="absolute inset-0 bg-black/70 backdrop-blur-sm"
                             onClick={() => setSelectedReview(null)}
+                        />
+                        <motion.div
+                            variants={modalContentVariants}
+                            initial="hidden"
+                            animate="visible"
+                            exit="exit"
+                            className="relative bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row w-full max-w-4xl max-h-[90vh] border border-gray-100 z-10"
                         >
-                            ✕
-                        </button>
+                            <button
+                                className="absolute top-5 right-5 z-10 w-10 h-10 flex items-center justify-center bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-full transition-colors transition-all-300"
+                                onClick={() => setSelectedReview(null)}
+                            >
+                                ✕
+                            </button>
 
-                        <div className="md:w-1/2 bg-gray-100 h-80 md:h-auto">
-                            <img src={selectedReview.image} alt={selectedReview.name} className="w-full h-full object-cover" />
-                        </div>
+                            {selectedReview.image && (
+                                <div className="md:w-1/2 bg-gray-100 h-80 md:h-auto">
+                                    <img src={selectedReview.image} alt={selectedReview.name} className="w-full h-full object-cover" />
+                                </div>
+                            )}
 
-                        <div className="md:w-1/2 p-8 md:p-12 flex flex-col justify-center overflow-y-auto">
-                            <div className="flex mb-6 shrink-0">
-                                {renderStars(selectedReview.rating)}
-                            </div>
+                            <div className={`${selectedReview.image ? 'md:w-1/2' : 'w-full'} p-8 md:p-12 flex flex-col justify-center overflow-y-auto`}>
+                                <div className="flex mb-6 shrink-0">
+                                    {renderStars(selectedReview.rating)}
+                                </div>
 
-                            <h3 className="text-3xl font-extrabold text-gray-800 mb-2 flex items-center gap-2.5">
-                                {selectedReview.name} 🌸
-                            </h3>
-                            <p className="text-base text-gray-500 mb-8 pl-1">{selectedReview.createdAt}</p>
+                                <h3 className="text-3xl font-extrabold text-gray-800 mb-2 flex items-center gap-2.5">
+                                    {selectedReview.name} 🌸
+                                </h3>
+                                <p className="text-base text-gray-500 mb-8 pl-1">{selectedReview.createdAt}</p>
 
-                            <div className="bg-gray-50 p-7 rounded-2xl border border-gray-100 relative shadow-inner">
-                                <span className="absolute top-2 left-2 text-5xl text-gray-200">"</span>
-                                <p className="text-gray-700 leading-relaxed relative z-10 text-lg">
-                                    {selectedReview.comment}
-                                </p>
-                            </div>
+                                <div className="bg-gray-50 p-7 rounded-2xl border border-gray-100 relative shadow-inner">
+                                    <span className="absolute top-2 left-2 text-5xl text-gray-200">"</span>
+                                    <p className="text-gray-700 leading-relaxed relative z-10 text-lg">
+                                        {selectedReview.comment}
+                                    </p>
+                                </div>
 
-                            <div className="mt-10 flex gap-2.5 flex-wrap pt-6 border-t border-gray-100">
-                                {selectedReview.tags && selectedReview.tags.map((tag, idx) => (
-                                    <span key={idx} className="px-5 py-2.5 bg-green-100 text-green-700 text-sm font-semibold rounded-full shadow-inner border border-green-200 transition-all-300">
-                                        {tag}
-                                    </span>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {/* Modal เพิ่มคอมเมนต์ */}
-            {isAddCommentOpen && (
-                <form onSubmit={handleSubmit} className="fixed inset-0 z-50 flex items-center justify-center p-5 sm:p-8">
-                    <div className="absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity" onClick={() => setIsAddCommentOpen(false)}></div>
-                    <div className="relative bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col w-full max-w-lg modal-enter border border-gray-100 p-8">
-                        <button
-                            type="button"
-                            className="absolute top-5 right-5 w-10 h-10 flex items-center justify-center bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-full transition-colors transition-all-300"
-                            onClick={() => setIsAddCommentOpen(false)}
-                        >
-                            ✕
-                        </button>
-
-                        <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-                            <span className="text-3xl">✍️</span> {t.addReview}
-                        </h3>
-
-                        <div className="space-y-5">
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">{t.nickname}</label>
-                                <input
-                                    type="text"
-                                    placeholder={t.nicknamePlaceholder}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
-                                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-shadow text-gray-800"
-                                    value={name}
-                                    onChange={(e) => setName(e.target.value)}
-                                    required
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">{t.ratingLabel}</label>
-                                <div className="flex gap-2">
-                                    {[1, 2, 3, 4, 5].map((star) => (
-                                        <button
-                                            key={star}
-                                            type="button"
-                                            onClick={() => setRating(star)}
-                                            className={`text-3xl transition-transform hover:scale-110 ${rating >= star ? 'text-yellow-400' : 'text-gray-300'}`}
-                                        >
-                                            ★
-                                        </button>
+                                <div className="mt-10 flex gap-2.5 flex-wrap pt-6 border-t border-gray-100">
+                                    {selectedReview.tags && selectedReview.tags.map((tag, idx) => (
+                                        <span key={idx} className="px-5 py-2.5 bg-green-100 text-green-700 text-sm font-semibold rounded-full shadow-inner border border-green-200 transition-all-300">
+                                            {tag}
+                                        </span>
                                     ))}
                                 </div>
                             </div>
-
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">{t.commentLabel}</label>
-                                <textarea
-                                    rows={4}
-                                    placeholder={t.commentPlaceholder}
-                                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-shadow resize-none text-gray-800"
-                                    value={comment}
-                                    onChange={(e) => setComment(e.target.value)}
-                                    required
-                                ></textarea>
-                            </div>
-
-                            <div className="flex justify-end gap-3 pt-4 mt-2 border-t border-gray-100">
-                                <button
-                                    type="button"
-                                    className="px-6 py-2.5 rounded-xl border border-gray-200 text-gray-600 font-medium hover:bg-gray-50 transition-colors"
-                                    onClick={() => setIsAddCommentOpen(false)}
-                                >
-                                    {t.cancel}
-                                </button>
-                                <button
-                                    type="submit"
-                                    className="px-6 py-2.5 rounded-xl bg-orange-500 text-white font-medium hover:bg-orange-600 shadow-md hover:shadow-lg transition-all"
-                                >
-                                    {t.submit}
-                                </button>
-                            </div>
-                        </div>
+                        </motion.div>
                     </div>
-                </form>
-            )}
-        </div>
+                )}
+            </AnimatePresence>
+
+            {/* Modal เพิ่มคอมเมนต์ */}
+            <AnimatePresence>
+                {isAddCommentOpen && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-5 sm:p-8">
+                        <motion.div
+                            variants={modalBackdropVariants}
+                            initial="hidden"
+                            animate="visible"
+                            exit="exit"
+                            className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+                            onClick={() => setIsAddCommentOpen(false)}
+                        />
+                        <motion.form
+                            onSubmit={handleSubmit}
+                            variants={modalContentVariants}
+                            initial="hidden"
+                            animate="visible"
+                            exit="exit"
+                            className="relative bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col w-full max-w-lg border border-gray-100 p-8 z-10"
+                        >
+                            <button
+                                type="button"
+                                className="absolute top-5 right-5 w-10 h-10 flex items-center justify-center bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-full transition-colors transition-all-300"
+                                onClick={() => setIsAddCommentOpen(false)}
+                            >
+                                ✕
+                            </button>
+
+                            <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                                <span className="text-3xl">✍️</span> {t.addReview}
+                            </h3>
+
+                            <div className="space-y-5">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">{t.nickname}</label>
+                                    <input
+                                        type="text"
+                                        placeholder={t.nicknamePlaceholder}
+                                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-shadow text-gray-800"
+                                        value={name}
+                                        onChange={(e) => setName(e.target.value)}
+                                        required
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">{t.ratingLabel}</label>
+                                    <div className="flex gap-2">
+                                        {[1, 2, 3, 4, 5].map((star) => (
+                                            <button
+                                                key={star}
+                                                type="button"
+                                                onClick={() => setRating(star)}
+                                                className={`text-3xl transition-transform hover:scale-110 ${rating >= star ? 'text-yellow-400' : 'text-gray-300'}`}
+                                            >
+                                                ★
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">{t.commentLabel}</label>
+                                    <textarea
+                                        rows={4}
+                                        placeholder={t.commentPlaceholder}
+                                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-shadow resize-none text-gray-800"
+                                        value={comment}
+                                        onChange={(e) => setComment(e.target.value)}
+                                        required
+                                    ></textarea>
+                                </div>
+
+                                <div className="flex justify-end gap-3 pt-4 mt-2 border-t border-gray-100">
+                                    <button
+                                        type="button"
+                                        className="px-6 py-2.5 rounded-xl border border-gray-200 text-gray-600 font-medium hover:bg-gray-50 transition-colors"
+                                        onClick={() => setIsAddCommentOpen(false)}
+                                    >
+                                        {t.cancel}
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        className="px-6 py-2.5 rounded-xl bg-orange-500 text-white font-medium hover:bg-orange-600 shadow-md hover:shadow-lg transition-all"
+                                    >
+                                        {t.submit}
+                                    </button>
+                                </div>
+                            </div>
+                        </motion.form>
+                    </div>
+                )}
+            </AnimatePresence>
+        </motion.div>
     );
 }

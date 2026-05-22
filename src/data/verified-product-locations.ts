@@ -17,7 +17,7 @@ export const verifiedDistrictLocationOverrides: Record<string, DistrictLocationO
       shopNameCN: "Ko Lak Date Palm",
       address: "91 Moo 14, Si Dong Yen, Chai Prakan District, Chiang Mai 50320",
       addressCN: "91 Moo 14, Si Dong Yen, Chai Prakan District, Chiang Mai 50320",
-      mapsQuery: "Ko Lak Date Palm Chai Prakan Chiang Mai",
+      mapsQuery: "https://www.google.com/maps/search/?api=1&query=Ko+Lak+Date+Palm+Chai+Prakan+Chiang+Mai",
     }
     ,
     {
@@ -25,14 +25,14 @@ export const verifiedDistrictLocationOverrides: Record<string, DistrictLocationO
       shopNameCN: "Sri Dong Yen Beekeeping Farms",
       address: "Sri Dong Yen, Chai Prakan District, Chiang Mai",
       addressCN: "Sri Dong Yen, Chai Prakan District, Chiang Mai",
-      mapsQuery: "Local beekeeping farms Sri Dong Yen Chai Prakan Chiang Mai",
+      mapsQuery: "https://www.google.com/maps/search/?api=1&query=Sri+Dong+Yen+Chai+Prakan+Chiang+Mai",
     },
     {
       shopName: "Dr. Chatree Herbal Medicine Centers",
       shopNameCN: "Dr. Chatree Herbal Medicine Centers",
       address: "Sri Dong Yen, Chai Prakan District, Chiang Mai",
       addressCN: "Sri Dong Yen, Chai Prakan District, Chiang Mai",
-      mapsQuery: "Dr. Chatree Herbal Medicine Centers Sri Dong Yen Chai Prakan Chiang Mai",
+      mapsQuery: "https://www.google.com/maps/search/?api=1&query=Si+Dong+Yen+Chai+Prakan+Chiang+Mai",
     }
   ],
   "Chiang Dao": [
@@ -48,7 +48,7 @@ export const verifiedDistrictLocationOverrides: Record<string, DistrictLocationO
       shopNameCN: "Chiang Dao Hill Tribe Craft Centers",
       address: "82XM+7W5, Chiang Dao, Chiang Dao District, Chiang Mai 50170",
       addressCN: "82XM+7W5, Chiang Dao, Chiang Dao District, Chiang Mai 50170",
-      mapsQuery: "82XM+7W5, Chiang Dao, Chiang Dao District, Chiang Mai 50170",
+      mapsQuery: "https://www.google.com/maps/search/?api=1&query=82XM%2B7W5%2C+Chiang+Dao%2C+Chiang+Dao+District%2C+Chiang+Mai+50170",
     }
   ],
   "Chom Thong": [
@@ -57,24 +57,19 @@ export const verifiedDistrictLocationOverrides: Record<string, DistrictLocationO
       shopNameCN: "Thai Hmong Community Market",
       address: "GGJC+CPH, Ban Luang, Chom Thong District, Chiang Mai 50160, Thailand",
       addressCN: "GGJC+CPH, Ban Luang, Chom Thong District, Chiang Mai 50160, Thailand",
-      mapsQuery: "Thai Hmong Community Market Ban Luang Chiang Mai",
+      mapsQuery: "https://www.google.com/maps/search/?api=1&query=ตลาดม้ง+ดอยอินทนนท์",
     }
-    
-    
   ],
   "Doi Saket": [
-    
     {
       shopName: "Celadol Ceramic Pottery",
       shopNameCN: "Celadol Ceramic Pottery",
       address: "135/4 Doi Saket Road, Pa Pong Subdistrict, Doi Saket District, Chiang Mai 50220, Thailand",
       addressCN: "135/4 堆沙革路，帕蓬分区，堆沙革县，清迈府 50220，泰国",
-      mapsQuery: "Celadol Ceramic Pottery Doi Saket Chiang Mai",
+      mapsQuery: "https://www.google.com/maps/search/?api=1&query=Chiang+Mai+Celadon+Doi+Saket",
     }
   ],
   Fang: [
-    
-  
   ],
   "Hang Dong": [
     {
@@ -82,7 +77,7 @@ export const verifiedDistrictLocationOverrides: Record<string, DistrictLocationO
       shopNameCN: "Ban Tawai Woodcarving Village",
       address: "Khun Khong, Hang Dong District, Chiang Mai 50230",
       addressCN: "Khun Khong, Hang Dong District, Chiang Mai 50230",
-      mapsQuery: "Ban Tawai Woodcarving Village Hang Dong Chiang Mai",
+      mapsQuery: "https://www.google.com/maps/search/?api=1&query=Ban+Tawai+Woodcarving+Village+Hang+Dong+Chiang+Mai",
       mapRating: 4.5,
     },
     {
@@ -90,38 +85,30 @@ export const verifiedDistrictLocationOverrides: Record<string, DistrictLocationO
       shopNameCN: "Hang Dong Baan Muang Kung Lacquerware",
       address: "259 Ban Mueang Kung, Nong Kwai Subdistrict, Hang Dong District, Chiang Mai 50230, Thailand",
       addressCN: "259 孟功村，农快分区，杭东县，清迈府 50230，泰国",
-      mapsQuery: "Baan Muang Kung Lacquerware Hang Dong Chiang Mai",
+      mapsQuery: "https://www.google.com/maps/search/?api=1&query=Baan+Muang+Kung+Pottery+Village+Chiang+Mai",
     }
   ],
   "Mae Ai": [
-    
-  
   ],
   "Mae On": [
-    
     {
       shopName: "Teen Tok Royal Project Center",
       shopNameCN: "Teen Tok Royal Project Center",
       address: "Huai Kaeo, Mae On District, Chiang Mai 50130",
       addressCN: "Huai Kaeo, Mae On District, Chiang Mai 50130",
-      mapsQuery: "Teen Tok Royal Project centers Mae On District Chiang Mai",
+      mapsQuery: "https://www.google.com/maps/search/?api=1&query=Teen+Tok+Royal+Project+Development+Center+Mae+On",
     },
   ],
   "Mae Rim": [
-    
-    
     {
       shopName: "Mae Rim Honey & Herbal Centers",
       shopNameCN: "Mae Rim Honey & Herbal Centers",
       address: "Mae Rim District, Chiang Mai 50180",
       addressCN: "Mae Rim District, Chiang Mai 50180",
-      mapsQuery: "Honey producers herbal centers Mae Rim Chiang Mai",
+      mapsQuery: "https://www.google.com/maps/search/?api=1&query=Supha+Bee+Farm+Mae+Rim+Chiang+Mai",
     }
   ],
   "Mae Taeng": [
-    
-
-    
   ],
   "Mueang Chiang Mai": [
     {
@@ -129,21 +116,21 @@ export const verifiedDistrictLocationOverrides: Record<string, DistrictLocationO
       shopNameCN: "One Nimman Shopping Complex",
       address: "Mueang Chiang Mai District, Chiang Mai 50200",
       addressCN: "Mueang Chiang Mai District, Chiang Mai 50200",
-      mapsQuery: "One Nimman Shopping Complex Mueang Chiang Mai",
+      mapsQuery: "https://www.google.com/maps/search/?api=1&query=One+Nimman+Chiang+Mai",
     },
     {
       shopName: "Warorot Market (Kad Luang)",
       shopNameCN: "Warorot Market (Kad Luang)",
       address: "Mueang Chiang Mai District, Chiang Mai 50200",
       addressCN: "Mueang Chiang Mai District, Chiang Mai 50200",
-      mapsQuery: "Warorot Market Kad Luang Mueang Chiang Mai",
+      mapsQuery: "https://www.google.com/maps/search/?api=1&query=Warorot+Market+Chiang+Mai",
     },
     {
       shopName: "Central Chiangmai Airport",
       shopNameCN: "Central Chiangmai Airport",
       address: "Chang Khlan Road, Mueang Chiang Mai District, Chiang Mai 50100",
       addressCN: "Chang Khlan Road, Mueang Chiang Mai District, Chiang Mai 50100",
-      mapsQuery: "Central Chiangmai Airport Chang Khlan Road Chiang Mai",
+      mapsQuery: "https://www.google.com/maps/search/?api=1&query=Central+Chiangmai+Airport+Chiang+Mai",
     }
   ],
   "San Kamphaeng": [
@@ -152,15 +139,14 @@ export const verifiedDistrictLocationOverrides: Record<string, DistrictLocationO
       shopNameCN: "Chiang Mai OTOP Center",
       address: "San Kamphaeng District, Chiang Mai 50130",
       addressCN: "San Kamphaeng District, Chiang Mai 50130",
-      mapsQuery: "Chiang Mai OTOP Center San Kamphaeng District Chiang Mai",
+      mapsQuery: "https://maps.app.goo.gl/K3MX1sz5jCsz96zh7",
     },
     {
       shopName: "Bo Sang Umbrella Village Workshops",
       shopNameCN: "Bo Sang Umbrella Village Workshops",
       address: "Ton Pao, San Kamphaeng District, Chiang Mai 50130",
       addressCN: "Ton Pao, San Kamphaeng District, Chiang Mai 50130",
-      mapsQuery: "Bo Sang Umbrella Village workshops San Kamphaeng Chiang Mai",
+      mapsQuery: "https://www.google.com/maps/search/?api=1&query=Bo+Sang+Umbrella+Village+Chiang+Mai",
     }
-    
   ],
 };

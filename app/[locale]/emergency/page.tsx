@@ -8,10 +8,33 @@ import {
   Phone,
   MapPin,
   MessageSquareText,
-  SignalZero,
+  Siren,
   Timer
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+
+// Custom SignalOff icon matching Lucide style
+function SignalOff({ className }: { className?: string }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <path d="M2 20h.01" />
+      <path d="M7 20v-4" />
+      <path d="M12 20v-8" />
+      <path d="M17 20V8" />
+      <path d="M22 20V4" />
+      <line x1="2" y1="2" x2="22" y2="22" />
+    </svg>
+  );
+}
 import { Locale, PAGE_UI, EMERGENCY_SECTIONS, EmergencyItem } from '@/src/data/essentials';
 
 const promptFont = Prompt({ subsets: ['thai'], weight: ['300', '400', '500', '600', '700'] });
@@ -34,7 +57,7 @@ const TIPS_DATA = {
     },
     {
       id: 3,
-      icon: <SignalZero className="w-6 h-6 text-red-500" />,
+      icon: <SignalOff className="w-6 h-6 text-red-500" />,
       title: { th: "ไม่ต้องมีสัญญาณ", en: "No Signal Needed", zh: "无需信号" },
       desc: { th: "โทรฉุกเฉินได้แม้ไม่มีสัญญาณหรือซิมการ์ด ระบบจะต่อสายให้ข้ามเครือข่ายอัตโนมัติ", en: "Emergency calls can be made without network signal or a SIM card.", zh: "即使没有信号或SIM卡也可拨打紧急电话，系统会自动跨网连接。" }
     },
@@ -98,17 +121,28 @@ export default function EmergencyLayout() {
             desc: PAGE_UI.policeHeroDesc,
             color: 'text-red-600'
           } as unknown as EmergencyItem)} // <--- แก้ตรงนี้ เติม unknown as เข้าไป
-          className="group block mb-12 w-full text-left"
+          className="group block mb-10 w-full text-left"
         >
-          <div className="relative overflow-hidden bg-linear-to-r from-red-600 to-red-800 rounded-[30px] p-8 text-white flex items-center justify-between shadow-xl shadow-red-200/50 transition-transform active:scale-95">
-            <div className="flex items-center gap-6">
-              <span className="text-7xl font-black">191</span>
-              <div className="border-l border-white/20 pl-6">
-                <h2 className="text-xl font-bold mb-1">{PAGE_UI.policeHeroTitle[locale]}</h2>
-                <p className="text-white/70 text-xs">{PAGE_UI.policeHeroDesc[locale]}</p>
+          <div className="relative overflow-hidden bg-linear-to-r from-red-600 to-red-800 rounded-[24px] sm:rounded-[30px] p-5 sm:p-8 text-white flex items-center justify-between shadow-xl shadow-red-200/50 transition-transform active:scale-95">
+            <div className="flex items-center gap-3 sm:gap-6 min-w-0">
+              <motion.div
+                animate={{ y: [0, -6, 0] }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+                className="shrink-0"
+              >
+                <Siren className="w-8 h-8 sm:w-12 sm:h-12 text-white fill-white/10" />
+              </motion.div>
+              <span className="text-4xl sm:text-5xl md:text-7xl font-black shrink-0">191</span>
+              <div className="border-l border-white/20 pl-3 sm:pl-6 min-w-0">
+                <h2 className="text-sm sm:text-base md:text-xl font-bold mb-1 truncate">{PAGE_UI.policeHeroTitle[locale]}</h2>
+                <p className="text-white/70 text-[10px] sm:text-xs truncate">{PAGE_UI.policeHeroDesc[locale]}</p>
               </div>
             </div>
-            <ArrowRight className="w-10 h-10 group-hover:translate-x-2 transition-transform opacity-80" />
+            <ArrowRight className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 group-hover:translate-x-2 transition-transform opacity-80 shrink-0" />
           </div>
         </button>
 
@@ -132,20 +166,30 @@ export default function EmergencyLayout() {
                   <button
                     key={item.id}
                     onClick={() => openModal(item)}
-                    className="w-full flex items-center justify-between group p-4 rounded-2xl hover:bg-slate-50 transition-all text-left"
+                    className="w-full flex items-center justify-between group p-3 sm:p-4 rounded-2xl hover:bg-slate-50 transition-all text-left gap-3 sm:gap-5"
                   >
-                    <div className="flex items-center gap-5">
-                      <div className="w-14 h-14 flex items-center justify-center bg-slate-100 rounded-2xl group-hover:bg-white group-hover:shadow-md transition-all">
-                        {item.icon || <Phone className="w-6 h-6 text-slate-300" />}
+                    <div className="flex items-center gap-3 sm:gap-5 min-w-0">
+                      <div className="w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center bg-slate-100 rounded-2xl group-hover:bg-white group-hover:shadow-md transition-all shrink-0">
+                        <motion.div
+                          animate={{ y: [0, -5, 0] }}
+                          transition={{
+                            duration: 2,
+                            repeat: Infinity,
+                            ease: "easeInOut",
+                            delay: (parseInt(item.id) || 0) * 0.15
+                          }}
+                        >
+                          {item.icon || <Phone className="w-5 h-5 sm:w-6 sm:h-6 text-slate-300" />}
+                        </motion.div>
                       </div>
-                      <div>
-                        <h3 className="text-lg font-bold text-slate-800 group-hover:text-blue-600 transition-colors">
+                      <div className="min-w-0">
+                        <h3 className="text-base sm:text-lg font-bold text-slate-800 group-hover:text-blue-600 transition-colors leading-snug">
                           {item.title[locale]}
                         </h3>
-                        <p className="text-slate-400 text-xs mt-0.5">{item.desc[locale]}</p>
+                        <p className="text-slate-400 text-xs mt-0.5 leading-normal">{item.desc[locale]}</p>
                       </div>
                     </div>
-                    <span className={`text-4xl font-bold tracking-tighter ${item.color}`}>
+                    <span className={`text-xl sm:text-3xl md:text-4xl font-bold tracking-tighter shrink-0 whitespace-nowrap ${item.color}`}>
                       {item.number}
                     </span>
                   </button>
@@ -171,7 +215,18 @@ export default function EmergencyLayout() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {TIPS_DATA.items.map((item) => (
                 <div key={item.id} className="bg-slate-50/50 p-6 rounded-2xl border border-slate-100 hover:bg-slate-50 transition-colors">
-                  <div className="mb-3">{item.icon}</div>
+                  <motion.div
+                    className="mb-3"
+                    animate={{ y: [0, -6, 0] }}
+                    transition={{
+                      duration: 2.2,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                      delay: item.id * 0.25
+                    }}
+                  >
+                    {item.icon}
+                  </motion.div>
                   <h4 className="text-sm font-bold text-slate-800 mb-1">{item.title[locale]}</h4>
                   <p className="text-xs text-slate-500 leading-relaxed">{item.desc[locale]}</p>
                 </div>
@@ -207,16 +262,25 @@ export default function EmergencyLayout() {
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="bg-white w-full max-w-lg rounded-t-[32px] sm:rounded-[32px] p-8 pb-10 sm:pb-8 shadow-2xl"
+              className="bg-white w-full max-w-lg rounded-t-[32px] sm:rounded-[32px] p-6 sm:p-8 pb-8 sm:pb-8 shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
               {/* ขีดลากด้านบน (UI มือถือ) */}
-              <div className="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-8 sm:hidden"></div>
+              <div className="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-6 sm:hidden"></div>
 
               {/* ส่วนหัว */}
               <div className="mb-6">
                 <div className="w-12 h-12 flex items-center justify-center bg-emerald-50 rounded-xl mb-4">
-                  {selectedItem.icon || <Phone className="w-6 h-6 text-emerald-600" />}
+                  <motion.div
+                    animate={{ y: [0, -4, 0] }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }}
+                  >
+                    {selectedItem.icon || <Phone className="w-6 h-6 text-emerald-600" />}
+                  </motion.div>
                 </div>
                 <h2 className="text-2xl font-bold text-slate-800">{selectedItem.title[locale]}</h2>
                 <p className="text-slate-500 text-sm mt-1">{selectedItem.desc[locale]}</p>

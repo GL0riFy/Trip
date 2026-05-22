@@ -47,7 +47,8 @@ export default function Map() {
         <motion.div 
           variants={staggerContainer}
           initial="hidden"
-          animate="visible"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
           className="flex flex-col items-start max-w-2xl"
         >
           <motion.div variants={fadeUpVariants} className="-mb-8 sm:-mb-10 -ml-2 sm:-ml-3 md:-ml-5">
@@ -91,7 +92,8 @@ export default function Map() {
         {/* --- Right Column: Image Gallery --- */}
         <motion.div 
           initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 1, ease: [0.25, 1, 0.5, 1], delay: 0.2 }}
           className="flex flex-col gap-3 sm:gap-4 md:gap-6 w-full"
         >

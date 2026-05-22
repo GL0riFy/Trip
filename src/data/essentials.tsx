@@ -83,6 +83,7 @@ export const EMERGENCY_SECTIONS: EmergencyCategory[] = [
         title: { th: "ตำรวจท่องเที่ยว", en: "Tourist Police", zh: "旅游警察" },
         desc: { th: "ดูแลความปลอดภัยนักท่องเที่ยว", en: "Security for tourists", zh: "保障游客安全" },
         number: "1155",
+        icon: <ShieldAlert className="w-8 h-8 text-blue-500" />,
         color: "text-blue-500"
       },
       {
@@ -90,6 +91,7 @@ export const EMERGENCY_SECTIONS: EmergencyCategory[] = [
         title: { th: "ตำรวจทางหลวง", en: "Highway Police", zh: "公路警察" },
         desc: { th: "อุบัติเหตุบนทางหลวงทั่วประเทศ", en: "Highway accidents nationwide", zh: "全国公路事故" },
         number: "1193",
+        icon: <CarFront className="w-8 h-8 text-indigo-600" />,
         color: "text-indigo-600"
       },
       {

@@ -4,6 +4,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Prompt } from 'next/font/google';
+import { motion, Variants } from 'framer-motion';
 
 // 1. ประกาศ Font (แก้ Error: Cannot find name 'promptFont')
 const promptFont = Prompt({
@@ -11,6 +12,21 @@ const promptFont = Prompt({
   weight: ['300', '400', '500', '600', '700'],
   display: 'swap',
 });
+
+const fadeUpVariants: Variants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } },
+};
+
+const staggerContainer: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
+    },
+  },
+};
 
 export type Locale = 'th' | 'en' | 'zh';
 
@@ -58,22 +74,37 @@ export default function SeasonLayout() {
       <div className="w-full mx-auto">
         
         {/* Header Section */}
-        <div className="mb-8 sm:mb-10 text-left">
+        <motion.div 
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={fadeUpVariants}
+          className="mb-8 sm:mb-10 text-left"
+        >
           <h2 className="text-2xl sm:text-3xl md:text-[40px] font-bold mb-3 sm:mb-4 text-white">
             {t('title')}
           </h2>
           <p className="text-slate-300 text-xs sm:text-sm md:text-base max-w-2xl leading-relaxed">
             {t('description')}
           </p>
-        </div>
+        </motion.div>
 
         {/* Cards Grid Section */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 w-full">
+        <motion.div 
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={staggerContainer}
+          className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 w-full"
+        >
           {/* 3. ระบุ Type ให้ season (แก้ Error: Parameter 'season' implicitly has an 'any' type) */}
           {SEASONS_DATA.map((season: SeasonData) => (
             <Link href={season.href} key={season.id} className="group flex flex-col h-full w-full">
               
-              <div className="bg-[#1E293B] rounded-[20px] overflow-hidden flex flex-col h-full w-full hover:-translate-y-1 transition-transform duration-300">
+              <motion.div 
+                variants={fadeUpVariants}
+                className="bg-[#1E293B] rounded-[20px] overflow-hidden flex flex-col h-full w-full hover:-translate-y-1 transition-transform duration-300"
+              >
                 
                 {/* Image Area */}
                 <div className="relative w-full aspect-video md:aspect-4/3 xl:aspect-video bg-slate-800 shrink-0">
@@ -103,10 +134,10 @@ export default function SeasonLayout() {
                   </div>
                 </div>
 
-              </div>
+              </motion.div>
             </Link>
           ))}
-        </div>
+        </motion.div>
 
       </div>
     </section>

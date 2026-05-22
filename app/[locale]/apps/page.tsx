@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { ESSENTIAL_APPS, type Locale } from '@/src/data/essentials';
+import { motion } from 'framer-motion';
 
 // --- Base Data Structure (ข้อมูลที่ไม่ต้องแปลภาษา) ---
 const BASE_CATEGORIES = [
@@ -168,9 +169,10 @@ export default function TravelGuide() {
             <ul className="space-y-1 mb-8">
               {categories.map((cat) => (
                 <li key={cat.id}>
-                  <a
+                  <motion.a
                     href={`#${cat.id}`}
                     onClick={() => setActiveSection(cat.id)}
+                    whileHover="hover"
                     className={`flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition-all ${activeSection === cat.id
                         ? 'bg-white shadow-sm text-orange-600 ring-1 ring-black/5'
                         : 'text-gray-600 hover:bg-gray-100'
@@ -179,7 +181,26 @@ export default function TravelGuide() {
                     <span className="flex items-center gap-3">
                       {/* ส่วนที่เพิ่ม: ไอคอนพร้อมพื้นหลังวงกลม */}
                       <span className={`w-8 h-8 rounded-full flex items-center justify-center text-base ${cat.bgColor}`}>
-                        {cat.icon}
+                        <motion.span
+                          variants={{
+                            hover: {
+                              scale: 1.25,
+                              rotate: [0, -10, 10, -10, 10, 0],
+                              transition: { duration: 0.4, ease: "easeInOut" }
+                            }
+                          }}
+                          animate={activeSection === cat.id ? {
+                            y: [0, -3, 0],
+                            transition: {
+                              duration: 1.8,
+                              repeat: Infinity,
+                              ease: "easeInOut"
+                            }
+                          } : { y: 0 }}
+                          className="inline-block"
+                        >
+                          {cat.icon}
+                        </motion.span>
                       </span>
                       {cat.name}
                     </span>
@@ -188,7 +209,7 @@ export default function TravelGuide() {
                     {activeSection === cat.id && (
                       <span className="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
                     )}
-                  </a>
+                  </motion.a>
                 </li>
               ))}
             </ul>
@@ -229,9 +250,32 @@ export default function TravelGuide() {
                 {/* Section Header */}
                 <div className="flex items-center justify-between border-b border-gray-200 pb-4 mb-6">
                   <div className="flex items-center gap-4">
-                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl ${cat.bgColor}`}>
-                      {cat.icon}
-                    </div>
+                    <motion.div
+                      whileHover="hover"
+                      className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl ${cat.bgColor} overflow-hidden cursor-default`}
+                    >
+                      <motion.span
+                        variants={{
+                          hover: {
+                            scale: 1.25,
+                            rotate: [0, -12, 12, -12, 12, 0],
+                            transition: { duration: 0.4, ease: "easeInOut" }
+                          }
+                        }}
+                        animate={{
+                          y: [0, -5, 0]
+                        }}
+                        transition={{
+                          duration: 2.2,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                          delay: index * 0.15
+                        }}
+                        className="inline-block"
+                      >
+                        {cat.icon}
+                      </motion.span>
+                    </motion.div>
                     <div>
                       <h2 className="text-xl font-bold text-gray-900">{cat.name}</h2>
                       <p className="text-sm text-gray-500">{cat.desc}</p>

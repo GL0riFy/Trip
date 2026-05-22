@@ -12,9 +12,44 @@ import { Kanit, Anuphan } from 'next/font/google'
 import { 
   Siren, 
   Smartphone, 
-  Coins,
-  Sun
+  Coins
 } from "lucide-react"
+
+// Custom Rotating Sun icon where only the outer rays rotate
+function RotatingSun({ className }: { className?: string }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <circle cx="12" cy="12" r="4" />
+      <motion.g
+        animate={{ rotate: 360 }}
+        transition={{
+          repeat: Infinity,
+          duration: 15,
+          ease: "linear",
+        }}
+        style={{ transformOrigin: "center" }}
+      >
+        <path d="M12 2v2" />
+        <path d="M12 20v2" />
+        <path d="m4.93 4.93 1.41 1.41" />
+        <path d="m17.66 17.66 1.41 1.41" />
+        <path d="M2 12h2" />
+        <path d="M20 12h2" />
+        <path d="m6.34 17.66-1.41 1.41" />
+        <path d="m19.07 4.93-1.41 1.41" />
+      </motion.g>
+    </svg>
+  )
+}
 
 const kanit = Kanit({
   subsets: ['thai', 'latin'],
@@ -260,9 +295,20 @@ export default function ChiangMaiTravelGuide() {
                 className="h-full bg-white rounded-3xl p-8 shadow-sm hover:shadow-xl border border-gray-100 flex flex-col transition-all duration-300"
               >
                 <div className="flex justify-between items-start mb-6">
-                  <div className={`${item.iconColor}`}>
+                  <motion.div 
+                    className={`${item.iconColor}`}
+                    animate={{
+                      y: [0, -8, 0]
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                      delay: item.id * 0.2
+                    }}
+                  >
                     {item.icon}
-                  </div>
+                  </motion.div>
                   <span className="text-gray-300 font-medium text-lg">
                     {item.num}
                   </span>
@@ -295,15 +341,15 @@ export default function ChiangMaiTravelGuide() {
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="w-full bg-gradient-to-r from-[#2b467a] to-[#386edb] rounded-[2rem] p-8 text-white shadow-xl shadow-blue-900/20 mb-12 flex flex-col md:flex-row items-center justify-between transition-opacity duration-500"
+          className="w-full bg-gradient-to-r from-[#2b467a] to-[#386edb] rounded-[2rem] p-6 sm:p-8 text-white shadow-xl shadow-blue-900/20 mb-12 flex flex-col md:flex-row items-center justify-between transition-opacity duration-500"
           style={{ opacity: weather.isLoaded ? 1 : 0.8 }} 
         >
-          <div className="flex items-center gap-6 mb-6 md:mb-0">
-            <Sun size={72} className="text-yellow-400 fill-yellow-400 drop-shadow-md" />
-            <div>
-              <h2 className="text-5xl font-bold mb-1">{weather.temp}°C</h2>
-              <p className="font-semibold text-lg mb-1">{t('Weather.status')}</p>
-              <p className="text-sm text-blue-200">
+          <div className="flex items-center gap-4 sm:gap-6 mb-6 md:mb-0 w-full md:w-auto min-w-0">
+            <RotatingSun className="w-14 h-14 sm:w-[72px] sm:h-[72px] text-yellow-400 fill-yellow-400 drop-shadow-md shrink-0" />
+            <div className="min-w-0">
+              <h2 className="text-3xl sm:text-5xl font-bold mb-1">{weather.temp}°C</h2>
+              <p className="font-semibold text-base sm:text-lg mb-1 break-words">{t('Weather.status')}</p>
+              <p className="text-xs sm:text-sm text-blue-200 break-words">
                 {t('Weather.feelsLike').replace('39°C', `${weather.feelslike}°C`)}
               </p>
             </div>
