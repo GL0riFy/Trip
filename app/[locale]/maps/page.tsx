@@ -4,17 +4,14 @@ import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react'
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import type { ExpressionSpecification } from '@maplibre/maplibre-gl-style-spec';
-import { useTranslations, useLocale, Locale } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import * as turf from '@turf/turf';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useParams } from 'next/navigation';
 // เปลี่ยนชื่อ Map เป็น MapIcon เพื่อไม่ให้ชนกับ JavaScript Map Object
 import {
     type LucideIcon,
     MapPin, Utensils, Hotel, X, Map as MapIcon, Star, Clock, Phone,
-    ChevronRight, Waves, Coffee, ShoppingBag, TreePine,
-    Mountain, Church, Music, Fish, Soup, Cake, Landmark,
-    Wine, Dumbbell, Camera, Ticket, Sun, Zap, UsersRound,
+    TreePine, Mountain, Church, Ticket, Landmark, UsersRound,
 } from 'lucide-react';
 import { renderToString } from 'react-dom/server';
 
@@ -65,10 +62,10 @@ const TAG_ICON_MAP: Record<string, LucideIcon> = {
     // โรงแรม
     'โรงแรม': Hotel,           'hotel': Hotel,          '酒店': Hotel,
     
-    // ร้านอาหาร (เปลี่ยนตามที่แจ้ง)
+    // ร้านอาหาร
     'ร้านอาหาร': Utensils,      'restaurant': Utensils,  '餐厅': Utensils,
     
-    // สถานที่ท่องเที่ยว (คัดเฉพาะกลุ่มหลักที่ใช้แยกไอคอน)
+    // สถานที่ท่องเที่ยว แยกกลุ่มไอคอนชัดเจน
     'วัด': Church,             'temple': Church,          '寺庙': Church,
     'ธรรมชาติ': TreePine,      'nature': TreePine,        '自然': TreePine,
     'ภูเขา': Mountain,         'mountain': Mountain,      '山': Mountain,
@@ -77,13 +74,57 @@ const TAG_ICON_MAP: Record<string, LucideIcon> = {
     'ชุมชน': UsersRound,       'community': UsersRound,   '社区': UsersRound,
 };
 
-const PIN_COLORS: Record<PlaceCategory, { bg: string; ring: string }> = {
-    hotel:      { bg: '#1E3A5F', ring: '#5B9BD5' },
-    restaurant: { bg: '#7C2D12', ring: '#FB923C' },
-    tourist:    { bg: '#5B21B6', ring: '#A78BFA' },
+// ฟังก์ชันช่วยกรองจับคู่ประเภทสถานที่ท่องเที่ยวย่อยๆ จาก Tags
+function getTouristType(tags: string[]): string {
+    if (!tags || tags.length === 0) return 'default';
+    const tag = tags[0].toLowerCase();
+    if (tag.includes('วัด') || tag === 'temple' || tag === '寺庙') return 'temple';
+    if (tag.includes('ธรรมชาติ') || tag === 'nature' || tag === '自然' || 
+        tag.includes('สวน') || tag === 'garden' || tag === '花园' ||
+        tag.includes('ฟาร์ม') || tag === 'farm' || tag === '农场') return 'nature';
+    if (tag.includes('เดินป่า') || tag === 'hiking' || tag === '登山' ||
+        tag.includes('ภูเขา') || tag === 'mountain' || tag === '山' ||
+        tag.includes('สัตว์') || tag === 'animal' || tag === '动物') return 'mountain';
+    if (tag.includes('กิจกรรม') || tag === 'activity' || tag === '活动') return 'activity';
+    if (tag.includes('สถาปัตยกรรม') || tag === 'architecture' || tag === '建筑') return 'architecture';
+    if (tag.includes('ชุมชน') || tag.includes('community') || tag.includes('社区')) return 'community';
+    return 'default';
+}
+
+// ชุดสีพาเลทแยกตามพฤติกรรมหมวดหมู่ย่อย (แก้โจทย์สีสถานที่ท่องเที่ยวไม่ให้ซ้ำกัน)
+const TOURIST_COLORS: Record<string, { bg: string; ring: string }> = {
+    temple:       { bg: '#B91C1C', ring: '#FCA5A5' }, // สีแดงคริมสัน สำหรับวัด/ศาสนสถาน
+    nature:       { bg: '#047857', ring: '#6EE7B7' }, // สีเขียวป่าไม้ สำหรับธรรมชาติ/สวน
+    mountain:     { bg: '#0369A1', ring: '#7DD3FC' }, // สีฟ้าเข้ม สำหรับดอย/ภูเขา/จุดชมวิว
+    activity:     { bg: '#BE185D', ring: '#F472B6' }, // สีชมพูเข้ม สำหรับกิจกรรมสันทนาการ/ความบันเทิง
+    architecture: { bg: '#D97706', ring: '#FCD34D' }, // สีส้มอิฐ/ทอง สำหรับแลนด์มาร์ค/สถาปัตยกรรม
+    community:    { bg: '#4D7C0F', ring: '#A3E635' }, // สีเขียวมะนาว สำหรับแหล่งชุมชน/หมู่บ้านท่องเที่ยว
+    default:      { bg: '#5B21B6', ring: '#A78BFA' }, // สีม่วงเดิม สำหรับหมวดหมู่ทั่วไป
 };
 
-// ปรับให้เหลือเฉพาะไอคอนหลักของร้านอาหาร
+// ฟังก์ชันดึงสีพินแบบไดนามิก รองรับทั้งโรงแรม ร้านอาหาร และท่องเที่ยวหลากสี
+function getPlaceColors(category: PlaceCategory, tags: string[]): { bg: string; ring: string } {
+    if (category === 'hotel') return { bg: '#1E3A5F', ring: '#5B9BD5' };
+    if (category === 'restaurant') return { bg: '#7C2D12', ring: '#FB923C' };
+    const type = getTouristType(tags);
+    return TOURIST_COLORS[type] || TOURIST_COLORS['default'];
+}
+
+// ฟังก์ชันรวมศูนย์สำหรับระบุคลาส Icon Component ของ Lucide ให้แม่นยำตรงกันทุกจุด
+function getPlaceIconComponent(category: PlaceCategory, tags: string[]): LucideIcon {
+    if (category === 'hotel') return Hotel;
+    if (category === 'restaurant') return Utensils;
+    
+    const type = getTouristType(tags);
+    if (type === 'temple') return Church;
+    if (type === 'nature') return TreePine;
+    if (type === 'mountain') return Mountain;
+    if (type === 'activity') return Ticket;
+    if (type === 'architecture') return Landmark;
+    if (type === 'community') return UsersRound;
+    return Clock;
+}
+
 const RESTAURANT_ICONS = new Set<LucideIcon>([Utensils]);
 
 function getTagIcon(tags: string[]): LucideIcon {
@@ -96,59 +137,13 @@ function getTagIcon(tags: string[]): LucideIcon {
     return MapPin;
 }
 
-// Inline SVG for pin body icon (avoids ReactDOM in DOM context)
 function getPinBodySVG(category: PlaceCategory, tags: string[], size: number): string {
-    let IconComponent: LucideIcon = MapPin;
-    
-    if (category === 'hotel') {
-        IconComponent = Hotel;
-    } 
-    else if (category === 'restaurant') {
-        IconComponent = Utensils;
-    } 
-    else if (category === 'tourist') {
-        if (tags.length > 0) {
-            const tag = tags[0].toLowerCase();
-            
-            if (tag.includes('วัด') || tag === 'temple' || tag === '寺庙') {
-                IconComponent = Church;
-            }
-            else if (
-                tag.includes('ธรรมชาติ') || tag === 'nature' || tag === '自然' || 
-                tag.includes('สวน') || tag === 'garden' || tag === '花园' ||
-                tag.includes('ฟาร์ม') || tag === 'farm' || tag === '农场'
-            ) {
-                IconComponent = TreePine;
-            }
-            else if (
-                tag.includes('เดินป่า') || tag === 'hiking' || tag === '登山' ||
-                tag.includes('ภูเขา') || tag === 'mountain' || tag === '山' ||
-                tag.includes('สัตว์') || tag === 'animal' || tag === '动物'
-            ) {
-                IconComponent = Mountain;
-            }
-            else if (tag.includes('กิจกรรม') || tag === 'activity' || tag === '活动') {
-                IconComponent = Ticket;
-            }
-            else if (tag.includes('สถาปัตยกรรม') || tag === 'architecture' || tag === '建筑') {
-                IconComponent = Landmark;
-            }
-            else if (tag.includes('ชุมชน') || tag.includes('community') || tag.includes('社区')) {
-                IconComponent = UsersRound;
-            }
-            else {
-                IconComponent = Clock;
-            }
-        } else {
-            IconComponent = Clock;
-        }
-    }
-
+    const IconComponent = getPlaceIconComponent(category, tags);
     return renderToString(<IconComponent size={size} className='text-white' />);
 }
 
 function createMarkerEl(category: PlaceCategory, tags: string[], selected: boolean): HTMLElement {
-    const { bg, ring } = PIN_COLORS[category];
+    const { bg, ring } = getPlaceColors(category, tags);
     const circleSize  = selected ? 44 : 36;
     const iconSize    = selected ? 20 : 16;
     const borderWidth = selected ? '3px' : '2px';
@@ -326,9 +321,8 @@ function PlacePanel({ place, nearby, lang, onClose, onSelect, isMobile }: PanelP
 
     useEffect(() => setImgIdx(0), [place.id]);
 
-    const catRing = place.category === 'hotel'
-        ? 'bg-[#1E3A5F]/80 border-[#5B9BD5]/50'
-        : 'bg-[#7C2D12]/80 border-[#FB923C]/50';
+    const colors = getPlaceColors(place.category, place.tags);
+    const catRing = `backdrop-blur-sm border` ;
 
     const TagIcon = getTagIcon(place.tags);
 
@@ -353,7 +347,10 @@ function PlacePanel({ place, nearby, lang, onClose, onSelect, isMobile }: PanelP
                     </div>
                 )}
 
-                <div className={`absolute top-3 left-3 z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold text-white backdrop-blur-sm border ${catRing}`}>
+                <div 
+                    className={`absolute top-3 left-3 z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold text-white ${catRing}`}
+                    style={{ backgroundColor: `${colors.bg}CC`, borderColor: `${colors.ring}80` }}
+                >
                     <TagIcon size={11} />
                     {CAT_LABEL[place.category][lang]}
                 </div>
@@ -488,15 +485,16 @@ export default function MapsPage() {
     const [hoveredDistrict, setHoveredDistrict] = useState<{ id: string; x: number; y: number } | null>(null);
     const [selectedPlace,   setSelectedPlace]   = useState<PlaceFeature | null>(null);
     const [nearby,          setNearby]          = useState<PlaceFeature[]>([]);
-    const [filter,          setFilter]          = useState<Record<PlaceCategory, boolean>>({ hotel: true, restaurant: true, tourist: true });
-    const [mapReady,        setMapReady]        = useState(false);
     
-    // เพิ่ม State สำหรับคุมการ เปิด-ปิด คำอธิบายสัญลักษณ์บนมือถือ
+    // เปลี่ยนแปลง State: ใช้เก็บ Label ไอคอนเดี่ยวที่กำลังกรองดู (ถ้าเป็น null คือแสดงทั้งหมด)
+    const [activeIconFilter, setActiveIconFilter] = useState<string | null>(null);
+    
+    const [mapReady,        setMapReady]        = useState(false);
     const [isMobileLegendOpen, setIsMobileLegendOpen] = useState(false);
 
     const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
 
-    // สกัดเอาไอคอนที่ไม่ซ้ำออกมาจัดการด้วย useMemo เพื่อแก้ปัญหาเรื่อง Type Error และ Performance
+    // สกัดเอาไอคอนที่ไม่ซ้ำออกมารันใน useMemo พร้อมดึงเฉดสีแบบไดนามิกที่แก้ใหม่
     const legendItems = useMemo(() => {
         type LegendData = { label: string; Icon: LucideIcon; bg: string; ring: string };
         const uniqueIcons = new Map<LucideIcon, LegendData>();
@@ -506,8 +504,12 @@ export default function MapsPage() {
             if (lang === 'zh' && !/[\u4E00-\u9FFF]/.test(label)) return;
             if (lang === 'en' && !/^[a-zA-Z\s]+$/.test(label)) return;
 
-            const category: PlaceCategory = RESTAURANT_ICONS.has(Icon) ? 'restaurant' : 'tourist';
-            const { bg, ring } = PIN_COLORS[category];
+            let category: PlaceCategory = 'tourist';
+            if (Icon === Hotel) category = 'hotel';
+            else if (RESTAURANT_ICONS.has(Icon)) category = 'restaurant';
+
+            // ดึงสีพินตามสูตรคำนวณใหม่ ให้สีท่องเที่ยวไม่ซ้ำกัน
+            const { bg, ring } = getPlaceColors(category, [label]);
 
             if (!uniqueIcons.has(Icon)) {
                 uniqueIcons.set(Icon, { label, Icon, bg, ring });
@@ -532,13 +534,22 @@ export default function MapsPage() {
         });
     }, [isMobile]);
 
+    // ฟังก์ชันอัปเดตหมุดบนแผนที่ รองรับ Exclusive Filter (แสดงแค่ไอคอนที่กดเลือก)
     const refreshMarkers = useCallback(() => {
         if (!map.current) return;
         markersRef.current.forEach(m => m.remove());
         markersRef.current = [];
 
         placesRef.current.forEach(place => {
-            if (!filter[place.category]) return;
+            // โลจิก Exclusive กรองขั้นสูง: ถ้ามีการเลือกไอคอนใน Legend ให้แสดงเฉพาะอันที่ตรงกันเท่านั้น
+            if (activeIconFilter) {
+                const activeItem = legendItems.find(item => item.label === activeIconFilter);
+                if (activeItem) {
+                    const placeIcon = getPlaceIconComponent(place.category, place.tags);
+                    if (placeIcon !== activeItem.Icon) return; // หากไอคอนไม่ตรงกับที่เลือก ให้ข้ามไป (ไม่แสดง)
+                }
+            }
+
             const isSelected = selectedPlace?.id === place.id;
             const el = createMarkerEl(place.category, place.tags, isSelected);
             el.addEventListener('click', e => { e.stopPropagation(); openPlace(place); });
@@ -548,7 +559,7 @@ export default function MapsPage() {
                 .addTo(map.current!);
             markersRef.current.push(marker);
         });
-    }, [filter, selectedPlace, openPlace]);
+    }, [activeIconFilter, selectedPlace, openPlace, legendItems]);
 
     useEffect(() => {
         if (map.current || !mapContainer.current) return;
@@ -639,7 +650,7 @@ export default function MapsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    useEffect(() => { if (mapReady) refreshMarkers(); }, [mapReady, filter, selectedPlace, refreshMarkers]);
+    useEffect(() => { if (mapReady) refreshMarkers(); }, [mapReady, activeIconFilter, selectedPlace, refreshMarkers]);
 
     return (
         <div className="relative w-full h-[calc(100vh-80px)] font-kanit overflow-hidden bg-slate-50">
@@ -703,13 +714,10 @@ export default function MapsPage() {
 
             {/* ── Legend UI Logic ── */}
             {isMobile ? (
-                // กรณีที่เป็นจอมือถือ (Mobile)
                 <AnimatePresence>
-                    {/* ซ่อนปุ่มสัญลักษณ์ทั้งหมดเมื่อผู้ใช้เปิดการ์ดสถานที่ เพื่อเคลียร์หน้าจอ */}
                     {!selectedPlace && (
                         <>
                             {!isMobileLegendOpen ? (
-                                // 1. ปุ่มลอยจิ๋ว (Floating Toggle Trigger)
                                 <motion.button
                                     key="legend-trigger-btn"
                                     initial={{ scale: 0.8, opacity: 0 }}
@@ -721,10 +729,9 @@ export default function MapsPage() {
                                     <div className="w-5 h-5 rounded-full bg-indigo-50 flex items-center justify-center">
                                         <MapIcon size={11} className="text-indigo-500" />
                                     </div>
-                                    <span>คำอธิบายสัญลักษณ์</span>
+                                    <span>{activeIconFilter ? `กำลังแสดง: ${activeIconFilter}` : 'คำอธิบายสัญลักษณ์'}</span>
                                 </motion.button>
                             ) : (
-                                // 2. แผงคำอธิบายตอนกางออก (จัดระเบียบใหม่เป็นสไลด์บอร์ดแบบ Grid 2 คอลัมน์)
                                 <motion.div
                                     key="mobile-legend-sheet"
                                     initial={{ y: '100%', opacity: 0 }}
@@ -733,7 +740,6 @@ export default function MapsPage() {
                                     transition={{ type: 'spring', damping: 25, stiffness: 220 }}
                                     className="absolute bottom-0 left-0 right-0 z-40 bg-white/98 backdrop-blur-xl rounded-t-3xl shadow-[0_-8px_40px_rgba(0,0,0,0.10)] border-t border-slate-100 p-5 max-h-[45vh] overflow-y-auto"
                                 >
-                                    {/* Drag Handle */}
                                     <div className="flex justify-center mb-4">
                                         <div className="w-9 h-1 rounded-full bg-slate-200" />
                                     </div>
@@ -754,19 +760,30 @@ export default function MapsPage() {
                                     </div>
 
                                     <div className="grid grid-cols-2 gap-x-3 gap-y-3">
-                                        {legendItems.map(({ label, Icon, bg, ring }) => (
-                                            <div key={label} className="flex items-center gap-2.5 min-w-0 bg-slate-50/80 rounded-xl px-2.5 py-2 border border-slate-100">
-                                                <div
-                                                    className="flex items-center justify-center rounded-full shadow-sm flex-shrink-0"
-                                                    style={{ width: 28, height: 28, backgroundColor: bg, outline: `2px solid ${ring}`, outlineOffset: 1 }}
+                                        {legendItems.map(({ label, Icon, bg, ring }) => {
+                                            const isSelected = activeIconFilter === label;
+                                            const isAnySelected = activeIconFilter !== null;
+                                            // เล่นมิติความโปร่งแสง: ถ้ามีอันอื่นถูกเลือก อันที่ไม่ใช่จะจางลงอย่างชัดเจน
+                                            const opacityStyle = isAnySelected ? (isSelected ? 'opacity-100 ring-2 ring-indigo-500/30' : 'opacity-30 grayscale-[30%]') : 'opacity-100';
+
+                                            return (
+                                                <button 
+                                                    key={label}
+                                                    onClick={() => setActiveIconFilter(prev => prev === label ? null : label)}
+                                                    className={`flex items-center gap-2.5 min-w-0 bg-slate-50/80 rounded-xl px-2.5 py-2 border border-slate-100 text-left transition-all duration-200 ${opacityStyle}`}
                                                 >
-                                                    <Icon size={12} className="text-white" />
-                                                </div>
-                                                <span className="text-slate-700 font-medium text-[11.5px] truncate capitalize leading-tight">
-                                                    {label}
-                                                </span>
-                                            </div>
-                                        ))}
+                                                    <div
+                                                        className="flex items-center justify-center rounded-full shadow-sm flex-shrink-0"
+                                                        style={{ width: 28, height: 28, backgroundColor: bg, outline: `2px solid ${ring}`, outlineOffset: 1 }}
+                                                    >
+                                                        <Icon size={12} className="text-white" />
+                                                    </div>
+                                                    <span className={`font-semibold text-[11.5px] truncate capitalize leading-tight ${isSelected ? 'text-indigo-600 font-bold' : 'text-slate-700'}`}>
+                                                        {label}
+                                                    </span>
+                                                </button>
+                                            );
+                                        })}
                                     </div>
                                 </motion.div>
                             )}
@@ -774,29 +791,55 @@ export default function MapsPage() {
                     )}
                 </AnimatePresence>
             ) : (
-                // กรณีที่เป็นหน้าจอคอมพิวเตอร์ (Desktop Layer แบบเดิม)
-            <div className="absolute z-20 bottom-6 left-4 max-h-[420px] w-[220px] px-3.5 py-3.5 bg-white/95 backdrop-blur-xl border border-slate-100 shadow-[0_8px_32px_rgba(0,0,0,0.10)] rounded-2xl overflow-y-auto">
-                {/* Header */}
-                <div className="flex items-center gap-2 mb-3 pb-2.5 border-b border-slate-100">
-                    <MapIcon size={13} className="text-indigo-500" />
-                    <span className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">{tMap.Symbol}</span>
-                </div>
-                <div className="flex flex-col gap-2.5">
-                    {legendItems.map(({ label, Icon, bg, ring }) => (
-                        <div key={label} className="flex items-center gap-3 group">
-                            <div
-                                className="flex items-center justify-center rounded-full flex-shrink-0 shadow-sm ring-2 ring-offset-1 transition-transform group-hover:scale-110"
-                                style={{ width: 32, height: 32, backgroundColor: bg, outline: `2px solid ${ring}`, outlineOffset: '1px' }}
-                            >
-                                <Icon size={14} className="text-white" />
-                            </div>
-                            <span className="text-slate-600 font-medium text-[12.5px] capitalize leading-none">
-                                {label}
-                            </span>
+                /* Desktop Layer คำอธิบายสัญลักษณ์ */
+                <div className="absolute z-20 bottom-6 left-4 max-h-[420px] w-[220px] px-3.5 py-3.5 bg-white/95 backdrop-blur-xl border border-slate-100 shadow-[0_8px_32px_rgba(0,0,0,0.10)] rounded-2xl overflow-y-auto">
+                    <div className="flex items-center justify-between mb-3 pb-2.5 border-b border-slate-100">
+                        <div className="flex items-center gap-2">
+                            <MapIcon size={13} className="text-indigo-500" />
+                            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">{tMap.Symbol}</span>
                         </div>
-                    ))}
+                        {/* {activeIconFilter && (
+                            <button 
+                                onClick={() => setActiveIconFilter(null)}
+                                className="text-[10px] text-indigo-500 hover:underline font-semibold"
+                            >
+                                รีเซ็ต
+                            </button>
+                        )} */}
+                    </div>
+                    <div className="flex flex-col gap-2.5">
+                        {legendItems.map(({ label, Icon, bg, ring }) => {
+                            const isSelected = activeIconFilter === label;
+                            const isAnySelected = activeIconFilter !== null;
+                            const opacityStyle = isAnySelected ? (isSelected ? 'opacity-100 translate-x-1' : 'opacity-30 grayscale-[30%]') : 'opacity-100';
+
+                            return (
+                                <button 
+                                    key={label}
+                                    onClick={() => setActiveIconFilter(prev => prev === label ? null : label)}
+                                    className={`flex items-center gap-3 group text-left w-full transition-all duration-200 hover:translate-x-0.5 ${opacityStyle}`}
+                                >
+                                    <div
+                                        className="flex items-center justify-center rounded-full flex-shrink-0 shadow-sm ring-2 ring-offset-1 transition-transform group-hover:scale-110"
+                                        style={{ 
+                                            width: 32, 
+                                            height: 32, 
+                                            backgroundColor: bg, 
+                                            outline: `2px solid ${ring}`, 
+                                            outlineOffset: '1px',
+                                            boxShadow: isSelected ? `0 0 12px ${ring}` : 'none'
+                                        }}
+                                    >
+                                        <Icon size={14} className="text-white" />
+                                    </div>
+                                    <span className={`font-medium text-[12.5px] capitalize leading-none ${isSelected ? 'text-indigo-600 font-bold' : 'text-slate-600'}`}>
+                                        {label}
+                                    </span>
+                                </button>
+                            );
+                        })}
+                    </div>
                 </div>
-            </div>
             )}
         </div>
     );
