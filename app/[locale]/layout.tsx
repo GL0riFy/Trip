@@ -6,6 +6,7 @@ import Footer from "../components/footer";
 import { NextIntlClientProvider } from "next-intl";
 import { notFound } from "next/navigation";
 import WelcomePopup from "../components/WelcomePopup";
+import ScrollToTop from "../components/ScrollToTop";
 import '../globals.css';
 import { Toaster } from 'react-hot-toast';
 
@@ -61,6 +62,7 @@ export default async function LocaleLayout({
       >
         <NextIntlClientProvider locale={locale} messages={messages}>
           <WelcomePopup />
+          <ScrollToTop />
           <div className="min-h-screen flex flex-col">
 
         <Toaster

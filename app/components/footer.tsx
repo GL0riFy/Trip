@@ -7,13 +7,13 @@ import { motion } from 'framer-motion';
 import { useLocale, useTranslations } from 'next-intl'; // เพิ่ม useTranslations
 import { MapPin, Phone, Mail, Facebook, MessageCircle, BarChart2 } from 'lucide-react';
 
-  const Footer = () => {
-    const [visitorCount, setVisitorCount] = useState<number | null>(null);
-    const locale = useLocale();
-    const t = useTranslations('Footer');
+const Footer = () => {
+  const [visitorCount, setVisitorCount] = useState<number | null>(null);
+  const locale = useLocale();
+  const t = useTranslations('Footer');
 
   useEffect(() => {
-    fetch('/api/visitors') 
+    fetch('/api/visitors')
       .then((res) => res.json())
       .then((data) => {
         if (data && typeof data.count === 'number') {
@@ -31,7 +31,7 @@ import { MapPin, Phone, Mail, Facebook, MessageCircle, BarChart2 } from 'lucide-
       className="mt-auto w-full bg-slate-950 border-t border-slate-800 text-slate-300 transition-colors font-sans"
     >
       <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12">
-        
+
         {/* คอลัมน์ 1: โลโก้และคำอธิบาย */}
         <div className="md:col-span-5 flex flex-col gap-6">
           <motion.div whileHover={{ scale: 1.02 }} className="w-fit">
@@ -70,7 +70,7 @@ import { MapPin, Phone, Mail, Facebook, MessageCircle, BarChart2 } from 'lucide-
             </li>
             <li className="flex items-center gap-3">
               <Phone className="w-5 h-5 text-blue-400 shrink-0" />
-              <span>053-XXX-XXXX</span>
+              <span>062-294-1945</span>
             </li>
             <li className="flex items-center gap-3">
               <Mail className="w-5 h-5 text-blue-400 shrink-0" />
@@ -84,13 +84,13 @@ import { MapPin, Phone, Mail, Facebook, MessageCircle, BarChart2 } from 'lucide-
 
       <div className="border-t border-slate-800 bg-slate-900/50">
         <div className="max-w-7xl mx-auto px-6 py-4 flex flex-col-reverse md:flex-row items-center justify-between gap-4">
-          
+
           <div className="text-xs text-slate-500">
             © {new Date().getFullYear()} {t('copyright')}
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6">
-            
+
             {/* Visitor Counter */}
             <motion.div
               key={visitorCount}

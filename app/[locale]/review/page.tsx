@@ -19,7 +19,31 @@ interface UserReview {
     image?: string;
 }
 
+const pageVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            duration: 0.6,
+            ease: "easeOut",
+            when: "beforeChildren",
+            staggerChildren: 0.1
+        }
+    }
+};
+
 const heroTextVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.15,
+            delayChildren: 0.1
+        }
+    }
+};
+
+const heroChildVariants: Variants = {
     hidden: { opacity: 0, y: 30 },
     visible: {
         opacity: 1,
@@ -33,8 +57,8 @@ const containerVariants: Variants = {
     visible: {
         opacity: 1,
         transition: {
-            staggerChildren: 0.1,
-            delayChildren: 0.2
+            staggerChildren: 0.08,
+            delayChildren: 0.15
         }
     }
 };
@@ -67,6 +91,26 @@ const modalContentVariants: Variants = {
         scale: 0.95,
         y: 15,
         transition: { duration: 0.25, ease: "easeIn" }
+    }
+};
+
+const modalStaggerContainer: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.06,
+            delayChildren: 0.1
+        }
+    }
+};
+
+const modalStaggerItem: Variants = {
+    hidden: { opacity: 0, y: 15 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] }
     }
 };
 
@@ -236,6 +280,7 @@ export default function ReviewPage() {
 
     return (
         <motion.div
+            variants={pageVariants}
             initial="hidden"
             animate="visible"
             className="min-h-screen bg-gray-50 pb-20"
@@ -263,18 +308,18 @@ export default function ReviewPage() {
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ duration: 1.6, ease: "easeOut" }}
                     className="absolute inset-0 bg-cover bg-center"
-                    style={{ backgroundImage: "url('/review/Hero2.png')" }}
+                    style={{ backgroundImage: "url('/review/Hero1.png')" }}
                 />
                 <div className="absolute inset-0 bg-black/45"></div>
                 <motion.div
                     variants={heroTextVariants}
                     className="relative z-10 text-center text-white px-6"
                 >
-                    <h1 className="text-4xl md:text-6xl font-bold mb-5 drop-shadow-lg leading-tight">
+                    <motion.h1 variants={heroChildVariants} className="text-4xl md:text-6xl font-bold mb-5 drop-shadow-lg leading-tight">
                         {t.heroTitle1}<span className="text-red-500">{t.heroTitle2}</span> {t.heroTitle3}
-                    </h1>
-                    <h2 className="hidden md:block text-5xl font-extrabold drop-shadow-lg">{t.heroTitle4}</h2>
-                    <p className="hidden md:block text-white/90 text-xl mt-6">{t.heroSubtitle}</p>
+                    </motion.h1>
+                    <motion.h2 variants={heroChildVariants} className="hidden md:block text-5xl font-extrabold drop-shadow-lg">{t.heroTitle4}</motion.h2>
+                    <motion.p variants={heroChildVariants} className="hidden md:block text-white/90 text-xl mt-6">{t.heroSubtitle}</motion.p>
                 </motion.div>
             </div>
 
@@ -484,31 +529,36 @@ export default function ReviewPage() {
                                 </div>
                             )}
 
-                            <div className={`${selectedReview.image ? 'md:w-1/2' : 'w-full'} p-8 md:p-12 flex flex-col justify-center overflow-y-auto`}>
-                                <div className="flex mb-6 shrink-0">
+                            <motion.div
+                                variants={modalStaggerContainer}
+                                initial="hidden"
+                                animate="visible"
+                                className={`${selectedReview.image ? 'md:w-1/2' : 'w-full'} p-8 md:p-12 flex flex-col justify-center overflow-y-auto`}
+                            >
+                                <motion.div variants={modalStaggerItem} className="flex mb-6 shrink-0">
                                     {renderStars(selectedReview.rating)}
-                                </div>
+                                </motion.div>
 
-                                <h3 className="text-3xl font-extrabold text-gray-800 mb-2 flex items-center gap-2.5">
+                                <motion.h3 variants={modalStaggerItem} className="text-3xl font-extrabold text-gray-800 mb-2 flex items-center gap-2.5">
                                     {selectedReview.name} 🌸
-                                </h3>
-                                <p className="text-base text-gray-500 mb-8 pl-1">{selectedReview.createdAt}</p>
+                                </motion.h3>
+                                <motion.p variants={modalStaggerItem} className="text-base text-gray-500 mb-8 pl-1">{selectedReview.createdAt}</motion.p>
 
-                                <div className="bg-gray-50 p-7 rounded-2xl border border-gray-100 relative shadow-inner">
+                                <motion.div variants={modalStaggerItem} className="bg-gray-50 p-7 rounded-2xl border border-gray-100 relative shadow-inner">
                                     <span className="absolute top-2 left-2 text-5xl text-gray-200">"</span>
                                     <p className="text-gray-700 leading-relaxed relative z-10 text-lg">
                                         {selectedReview.comment}
                                     </p>
-                                </div>
+                                </motion.div>
 
-                                <div className="mt-10 flex gap-2.5 flex-wrap pt-6 border-t border-gray-100">
+                                <motion.div variants={modalStaggerItem} className="mt-10 flex gap-2.5 flex-wrap pt-6 border-t border-gray-100">
                                     {selectedReview.tags && selectedReview.tags.map((tag, idx) => (
                                         <span key={idx} className="px-5 py-2.5 bg-green-100 text-green-700 text-sm font-semibold rounded-full shadow-inner border border-green-200 transition-all-300">
                                             {tag}
                                         </span>
                                     ))}
-                                </div>
-                            </div>
+                                </motion.div>
+                            </motion.div>
                         </motion.div>
                     </div>
                 )}
@@ -546,8 +596,13 @@ export default function ReviewPage() {
                                 <span className="text-3xl">✍️</span> {t.addReview}
                             </h3>
 
-                            <div className="space-y-5">
-                                <div>
+                            <motion.div
+                                variants={modalStaggerContainer}
+                                initial="hidden"
+                                animate="visible"
+                                className="space-y-5"
+                            >
+                                <motion.div variants={modalStaggerItem}>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">{t.nickname}</label>
                                     <input
                                         type="text"
@@ -557,9 +612,9 @@ export default function ReviewPage() {
                                         onChange={(e) => setName(e.target.value)}
                                         required
                                     />
-                                </div>
+                                </motion.div>
 
-                                <div>
+                                <motion.div variants={modalStaggerItem}>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">{t.ratingLabel}</label>
                                     <div className="flex gap-2">
                                         {[1, 2, 3, 4, 5].map((star) => (
@@ -573,9 +628,9 @@ export default function ReviewPage() {
                                             </button>
                                         ))}
                                     </div>
-                                </div>
+                                </motion.div>
 
-                                <div>
+                                <motion.div variants={modalStaggerItem}>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">{t.commentLabel}</label>
                                     <textarea
                                         rows={4}
@@ -585,9 +640,9 @@ export default function ReviewPage() {
                                         onChange={(e) => setComment(e.target.value)}
                                         required
                                     ></textarea>
-                                </div>
+                                </motion.div>
 
-                                <div className="flex justify-end gap-3 pt-4 mt-2 border-t border-gray-100">
+                                <motion.div variants={modalStaggerItem} className="flex justify-end gap-3 pt-4 mt-2 border-t border-gray-100">
                                     <button
                                         type="button"
                                         className="px-6 py-2.5 rounded-xl border border-gray-200 text-gray-600 font-medium hover:bg-gray-50 transition-colors"
@@ -601,8 +656,8 @@ export default function ReviewPage() {
                                     >
                                         {t.submit}
                                     </button>
-                                </div>
-                            </div>
+                                </motion.div>
+                            </motion.div>
                         </motion.form>
                     </div>
                 )}
