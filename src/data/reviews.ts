@@ -48,10 +48,10 @@ export const reviewsData: Review[] = [
     },
     {
         id: 11,
-        image: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=1200&q=80", // ภาพจำลองUnsplash
+        image: "/review/11.jpg", // ภาพจำลองUnsplash
     },
     {
         id: 12,
-        image: "https://images.unsplash.com/photo-1498551172505-8ee7ad69f235?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=1100&q=80", // ภาพจำลองUnsplash
+        image: "/review/12.jpg", // ภาพจำลองUnsplash
     }
 ];
