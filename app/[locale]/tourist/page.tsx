@@ -4,7 +4,6 @@ import { useState, useMemo } from "react";
 import { ChiangMaiData } from "@/src/data/chiangmai";
 import type { LocalizedText } from "@/src/data/chiangmai";
 import { useParams, useRouter } from "next/navigation";
-import ChiangMaiPreloader from "@/app/perloding/ChiangMaiPreloader";
 import {
   MapPin,
   Clock,
@@ -206,15 +205,6 @@ export default function TouristAttractions() {
   const [dataPromise] = useState<Promise<void>>(
     () => Promise.resolve().then(() => setChiangmai(ChiangMaiData))
   );
-
-  if (!isReady) {
-    return (
-      <ChiangMaiPreloader
-        onComplete={() => setIsReady(true)}
-        dataPromise={dataPromise}
-      />
-    );
-  }
 
   return (
     <main className="min-h-screen pt-20">
