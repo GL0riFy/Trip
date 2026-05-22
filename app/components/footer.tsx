@@ -66,16 +66,16 @@ import { MapPin, Phone, Mail, Facebook, MessageCircle, BarChart2 } from 'lucide-
           <ul className="flex flex-col gap-3 text-sm text-slate-400">
             <li className="flex items-start gap-3">
               <MapPin className="w-5 h-5 text-blue-400 shrink-0" />
-              <span>Tourism Office, Chiang Mai City Hall, Thailand</span>
+              <span>Chiangmai Technical College, Thailand</span>
             </li>
             <li className="flex items-center gap-3">
               <Phone className="w-5 h-5 text-blue-400 shrink-0" />
-              <span>053-248-604</span>
+              <span>053-XXX-XXXX</span>
             </li>
             <li className="flex items-center gap-3">
               <Mail className="w-5 h-5 text-blue-400 shrink-0" />
               <a href="mailto:admin@chiangmaipao.go.th" className="hover:text-white transition-colors">
-                admin@chiangmaipao.go.th
+                adirek@cmtc.ac.th
               </a>
             </li>
           </ul>
