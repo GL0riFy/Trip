@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   title: "Trip Chiang Mai",
   description: "Explore the beauty of Chiang Mai",
   icons: {
-    icon: '/logo/logo.png',
+    icon: '/Logo/Logo.png',
   },
 };
 
