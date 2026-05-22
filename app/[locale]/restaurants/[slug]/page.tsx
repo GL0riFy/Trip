@@ -1,18 +1,17 @@
 "use client";
 
 import dynamic from 'next/dynamic';
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { motion, Variants } from 'framer-motion';
+import { motion, Variants, AnimatePresence } from 'framer-motion';
 import { 
     Star, MapPin, Clock, Phone, ChevronLeft, 
-    UtensilsCrossed, ExternalLink, DollarSign
+    UtensilsCrossed, ExternalLink, DollarSign, X, ChevronRight
 } from 'lucide-react';
 import { restaurantData } from '@/src/data/restaurants/food_data';
 
 type Locale = 'th' | 'en' | 'zh';
 
-// Helper Component — must be defined BEFORE it's used
 function InfoItem({ icon, label, value, color }: { 
     icon: React.ReactNode; label: string; value: string; color: string 
 }) {
@@ -26,6 +25,129 @@ function InfoItem({ icon, label, value, color }: {
                 <p className="text-slate-800 font-semibold leading-snug">{value}</p>
             </div>
         </div>
+    );
+}
+
+// ─── Gallery Mosaic ────────────────────────────────────────────────────────────
+function GalleryMosaic({ images, name }: { images: string[]; name: string }) {
+    const [lightbox, setLightbox] = useState<number | null>(null);
+
+    const prev = () => setLightbox(i => (i! - 1 + images.length) % images.length);
+    const next = () => setLightbox(i => (i! + 1) % images.length);
+
+    // Layout แบบ dynamic ตามจำนวนรูป
+    const renderGrid = () => {
+        const count = images.length;
+
+        // 1 รูป — full width
+        if (count === 1) {
+            return (
+                <div
+                    className="w-full h-[260px] md:h-[340px] relative cursor-pointer group overflow-hidden rounded-[1.5rem]"
+                    onClick={() => setLightbox(0)}
+                >
+                    <img src={images[0]} alt={`${name} 1`} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
+                </div>
+            );
+        }
+
+        // 2 รูป — side by side
+        if (count === 2) {
+            return (
+                <div className="grid grid-cols-2 gap-2 h-[260px] md:h-[340px] rounded-[1.5rem] overflow-hidden">
+                    {images.map((src, idx) => (
+                        <div key={idx} className="relative cursor-pointer group overflow-hidden" onClick={() => setLightbox(idx)}>
+                            <img src={src} alt={`${name} ${idx + 1}`} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
+                        </div>
+                    ))}
+                </div>
+            );
+        }
+
+        // 3+ รูป — mosaic: 1 ใหญ่ซ้าย + 2 เล็กขวา
+        const remaining = images.length - 3;
+        return (
+            <div className="grid grid-cols-3 gap-2 h-[260px] md:h-[340px] rounded-[1.5rem] overflow-hidden">
+                {/* รูปใหญ่ */}
+                <div className="col-span-2 relative cursor-pointer group overflow-hidden" onClick={() => setLightbox(0)}>
+                    <img src={images[0]} alt={`${name} 1`} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
+                </div>
+
+                {/* 2 รูปเล็กซ้อนกัน */}
+                <div className="col-span-1 flex flex-col gap-2">
+                    {[1, 2].map((idx) => (
+                        <div key={idx} className="flex-1 relative cursor-pointer group overflow-hidden" onClick={() => setLightbox(idx)}>
+                            <img src={images[idx]} alt={`${name} ${idx + 1}`} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                            {/* "+N" overlay เฉพาะรูปสุดท้ายที่แสดง */}
+                            {idx === 2 && remaining > 0 ? (
+                                <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                                    <span className="text-white text-xl font-black">+{remaining}</span>
+                                </div>
+                            ) : (
+                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
+                            )}
+                        </div>
+                    ))}
+                </div>
+            </div>
+        );
+    };
+
+    return (
+        <>
+            {renderGrid()}
+
+            {/* Lightbox */}
+            <AnimatePresence>
+                {lightbox !== null && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
+                        onClick={() => setLightbox(null)}
+                    >
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.9, opacity: 0 }}
+                            transition={{ type: "spring", damping: 25 }}
+                            className="relative max-w-4xl w-full"
+                            onClick={e => e.stopPropagation()}
+                        >
+                            <img
+                                src={images[lightbox]}
+                                alt={`${name} ${lightbox + 1}`}
+                                className="w-full max-h-[80vh] object-contain rounded-2xl"
+                            />
+                            <p className="text-center text-white/50 text-sm mt-3">
+                                {lightbox + 1} / {images.length}
+                            </p>
+                        </motion.div>
+
+                        <button onClick={(e) => { e.stopPropagation(); setLightbox(null); }}
+                            className="absolute top-4 right-4 text-white bg-white/10 hover:bg-white/20 p-2 rounded-full transition-colors">
+                            <X className="w-6 h-6" />
+                        </button>
+                        {images.length > 1 && (
+                            <>
+                                <button onClick={(e) => { e.stopPropagation(); prev(); }}
+                                    className="absolute left-4 top-1/2 -translate-y-1/2 text-white bg-white/10 hover:bg-white/20 p-3 rounded-full transition-colors">
+                                    <ChevronLeft className="w-6 h-6" />
+                                </button>
+                                <button onClick={(e) => { e.stopPropagation(); next(); }}
+                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-white bg-white/10 hover:bg-white/20 p-3 rounded-full transition-colors">
+                                    <ChevronRight className="w-6 h-6" />
+                                </button>
+                            </>
+                        )}
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </>
     );
 }
 
@@ -48,9 +170,9 @@ export default function RestaurantDetail() {
     const restaurant = restaurantData.find((r: typeof restaurantData[0]) => r.slug === slug);
 
     const uiMap = {
-        th: { label: "Recommended", open: "เวลาเปิดทำการ", tel: "เบอร์โทรศัพท์", menu: "เมนูแนะนำ" },
-        en: { label: "Recommended", open: "Opening Hours", tel: "Contact", menu: "Signature Dishes" },
-        zh: { label: "推荐餐厅", open: "营业时间", tel: "电话", menu: "推荐菜品" }
+        th: { label: "Recommended", open: "เวลาเปิดทำการ", tel: "เบอร์โทรศัพท์", menu: "เมนูแนะนำ", gallery: "แกลเลอรี่" },
+        en: { label: "Recommended", open: "Opening Hours", tel: "Contact", menu: "Signature Dishes", gallery: "Gallery" },
+        zh: { label: "推荐餐厅", open: "营业时间", tel: "电话", menu: "推荐菜品", gallery: "图库" }
     };
     const ui = uiMap[locale];
 
@@ -86,6 +208,7 @@ export default function RestaurantDetail() {
                     variants={fadeInUp}
                     className="relative -mt-24 bg-white rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.05)] p-8 md:p-12 z-10 border border-white"
                 >
+                    {/* Header */}
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
                         <div className="space-y-3">
                             <motion.span className="inline-block px-4 py-1.5 rounded-full bg-orange-100 text-orange-600 text-xs font-bold uppercase tracking-widest">
@@ -103,17 +226,32 @@ export default function RestaurantDetail() {
                         </div>
                     </div>
 
-                    <p className="text-slate-600 text-lg md:text-xl leading-relaxed max-w-3xl mb-12">
+                    {/* Description */}
+                    <p className="text-slate-600 text-lg md:text-xl leading-relaxed max-w-3xl mb-10">
                         {data.desc}
                     </p>
 
-                    {/* ✅ InfoItem is now defined above and works correctly */}
+                    {/* ── GALLERY (ใหม่) ── */}
+                    {restaurant.gallery && restaurant.gallery.length > 0 && (
+                        <motion.div
+                            initial="hidden"
+                            whileInView="visible"
+                            viewport={{ once: true }}
+                            variants={fadeInUp}
+                            className="mb-10"
+                        >
+                            <GalleryMosaic images={restaurant.gallery} name={data.name} />
+                        </motion.div>
+                    )}
+
+                    {/* Info bar */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 p-8 bg-slate-50 rounded-[2rem] border border-slate-100 mb-12">
                         <InfoItem icon={<MapPin className="w-6 h-6" />} label="Location" value={data.location} color="text-blue-500" />
                         <InfoItem icon={<Clock className="w-6 h-6" />} label={ui.open} value={restaurant.openHours} color="text-emerald-500" />
                         <InfoItem icon={<Phone className="w-6 h-6" />} label={ui.tel} value={restaurant.tel} color="text-indigo-500" />
                     </div>
 
+                    {/* Recommended dishes */}
                     {data.recommended && (
                         <div className="space-y-6">
                             <div className="flex items-center gap-3">
@@ -138,7 +276,7 @@ export default function RestaurantDetail() {
                     )}
                 </motion.div>
 
-                {/* 3. MAP — ✅ only one copy, uses position variable */}
+                {/* 3. MAP */}
                 <motion.div 
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
