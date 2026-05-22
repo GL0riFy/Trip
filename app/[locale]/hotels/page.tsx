@@ -8,7 +8,6 @@ import {
   MapPin
 } from 'lucide-react';
 import { HotelData } from '@/src/data/hotels';
-import ChiangMaiPreloader from '@/app/perloding/ChiangMaiPreloader';
 
 type Locale = 'th' | 'en' | 'zh';
 type Category = 'all' | 'city' | 'hotel' | 'nature' | 'riverside';
@@ -23,15 +22,6 @@ export default function HotelGuide() {
     const [dataPromise] = useState<Promise<void>>(
         () => Promise.resolve().then(() => setHotels(HotelData))
     );
-
-    if (!isReady) {
-        return (
-            <ChiangMaiPreloader
-                onComplete={() => setIsReady(true)}
-                dataPromise={dataPromise}
-            />
-        );
-    }
 
     interface UITranslation {
         heroTitle: string;

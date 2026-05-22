@@ -8,7 +8,6 @@ import {
     MapPin, ChefHat, Lightbulb
 } from 'lucide-react';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
-import ChiangMaiPreloader from '@/app/perloding/ChiangMaiPreloader'; // ← เพิ่ม
 
 type Locale = 'th' | 'en' | 'zh';
 
@@ -97,15 +96,6 @@ export default function ChiangMaiTravelGuide() {
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
-
-    if (!isReady) {
-        return (
-            <ChiangMaiPreloader
-                onComplete={() => setIsReady(true)}
-                dataPromise={dataPromise}
-            />
-        );
-    }
 
     const uiMap = {
         th: {

@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import ChiangMaiPreloader from '@/app/perloding/ChiangMaiPreloader';
 import { useParams } from 'next/navigation';
 import { reviewsData } from "@/src/data/reviews";
 import toast from 'react-hot-toast';
@@ -228,15 +227,6 @@ export default function ReviewPage() {
             </svg>
         ));
     };
-
-    if (!isReady) {
-        return dataPromise ? (
-            <ChiangMaiPreloader
-                onComplete={() => setIsReady(true)}
-                dataPromise={dataPromise}
-            />
-        ) : null; // หรือใส่ Loading เล็กๆ ไว้ก็ได้ครับ
-    }
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
