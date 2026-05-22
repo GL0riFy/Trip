@@ -87,7 +87,7 @@ export default function Navigation() {
 
   if (!isClient) return null
 
-  const specialPages = ['/maps', '/emergency', '/currency', '/apps']
+  const specialPages = ['/maps', '/emergency', '/currency', '/apps', '/products']
   const isSpecialPage = specialPages.some((page) => pathname.includes(page))
 
   const isFloating = isScrolled || isSpecialPage
