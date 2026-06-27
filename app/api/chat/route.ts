@@ -7,8 +7,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://yoursite.com";
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { contextText, hasData } = buildSmartContext(body.message);
-
+    const { contextText, hasData } = await buildSmartContext(body.message);
     // ---- Case 1: มีข้อมูลในระบบ ----------------------------------------
     if (hasData) {
       const completion = await groq.chat.completions.create({
