@@ -124,6 +124,7 @@ export default function ReviewPage() {
     const [isAddCommentOpen, setIsAddCommentOpen] = useState(false);
     const [selectedReview, setSelectedReview] = useState<UserReview | null>(null);
     const [isReady, setIsReady] = useState(false);
+    const [isMounted, setIsMounted] = useState(false);
     const [dataPromise, setDataPromise] = useState<Promise<void> | null>(null);
     const Tratranslate = {
         th: {
@@ -203,6 +204,7 @@ export default function ReviewPage() {
     const t = Tratranslate[locale] || Tratranslate.th;
 
     useEffect(() => {
+        setIsMounted(true);
         const promise = fetch('/api/review')
             .then((res) => res.json())
             .then((data) => {
@@ -404,7 +406,7 @@ export default function ReviewPage() {
                         </motion.div>
 
                         {/* แสดงผลรีวิวข้อความจาก Redis */}
-                        {reviews.map((review: any, index) => {
+                        {isMounted && reviews.map((review: any, index) => {
                             let parsedReview = review;
                             if (typeof review === 'string') {
                                 try {

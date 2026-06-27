@@ -15,13 +15,6 @@ import {
 } from 'lucide-react';
 import { renderToString } from 'react-dom/server';
 
-// ── Correct import paths ──────────────────────────────────────────────
-import { HotelData }       from '@/src/data/hotels';
-import { restaurantData }  from '@/src/data/restaurants/food_data';
-import { ChiangMaiData }   from '@/src/data/chiangmai';
-import type { Hotel as HotelType } from '@/src/data/hotels/type';
-import type { Restaurant }          from '@/src/data/restaurants/type';
-
 // ─────────────────────────────────────────────────────────────────────
 // Types
 // ─────────────────────────────────────────────────────────────────────
@@ -85,7 +78,7 @@ function getTouristType(tags: string[]): string {
     if (tag.includes('เดินป่า') || tag === 'hiking' || tag === '登山' ||
         tag.includes('ภูเขา') || tag === 'mountain' || tag === '山' ||
         tag.includes('สัตว์') || tag === 'animal' || tag === '动物') return 'mountain';
-    if (tag.includes('กิจกรรม') || tag === 'activity' || tag === '活动') return 'activity';
+    if (tag.includes('กิจกรรม') || tag === 'activity' || tag === 'activity' || tag === '活动') return 'activity';
     if (tag.includes('สถาปัตยกรรม') || tag === 'architecture' || tag === '建筑') return 'architecture';
     if (tag.includes('ชุมชน') || tag.includes('community') || tag.includes('社区')) return 'community';
     return 'default';
@@ -184,58 +177,112 @@ function createMarkerEl(category: PlaceCategory, tags: string[], selected: boole
 }
 
 // ─────────────────────────────────────────────────────────────────────
-// Build PlaceFeature[] from raw data
+// แปลงโครงสร้าง Raw Data จาก API มาเป็นรูปแบบ PlaceFeature[] ที่ระบบต้องการ
 // ─────────────────────────────────────────────────────────────────────
-function buildPlaces(lang: Lang): PlaceFeature[] {
+function transformRawDataToPlaces(rawData: any, lang: Lang): PlaceFeature[] {
+    if (!rawData) return [];
     const places: PlaceFeature[] = [];
 
-    for (const h of HotelData as HotelType[]) {
-        const loc = h.locales[lang] ?? h.locales['th'];
+    // เพิ่ม Fallback ป้องกันกรณีค่าที่ส่งมาจาก API เป็น null / undefined ให้กลายเป็น Array ว่างแทน
+    const hotels = Array.isArray(rawData.hotels) ? rawData.hotels : (rawData.hotels?.hotels || rawData.hotels?.data || []);
+    const restaurants = Array.isArray(rawData.restaurants) ? rawData.restaurants : (rawData.restaurants?.restaurants || rawData.restaurants?.data || []);
+    
+    // ดักจับรูปแบบโครงสร้างของ attractions / tourists ให้ยืดหยุ่น ป้องกัน Error is not iterable
+    let attractions = [];
+    if (rawData.attractions) {
+        if (Array.isArray(rawData.attractions)) {
+            attractions = rawData.attractions;
+        } else if (Array.isArray(rawData.attractions.attractions)) {
+            attractions = rawData.attractions.attractions;
+        } else if (Array.isArray(rawData.attractions.data)) {
+            attractions = rawData.attractions.data;
+        }
+    }
+
+    // 1. จัดการข้อมูลโรงแรม
+    for (const h of hotels) {
+        if (!h) continue;
+        const loc = h.locales?.[lang] ?? h.locales?.['th'] ?? {};
         places.push({
-            id: `hotel_${h.id}`, category: 'hotel',
-            name: loc.name, desc: loc.desc, location: loc.location,
-            image: h.image, gallery: h.gallery ?? [], mapLink: h.mapLink,
-            tags: loc.tags ?? [], lat: h.coords.lat, lng: h.coords.lng,
+            id: `hotel_${h.id || h._id}`,
+            category: 'hotel',
+            name: loc.name || '', desc: loc.desc || '', location: loc.location || '',
+            image: h.image || '', gallery: h.gallery ?? [], mapLink: h.mapLink || '',
+            tags: loc.tags ?? [], lat: h.coords?.lat ?? 0, lng: h.coords?.lng ?? 0,
             priceRange: h.priceRange, starRating: h.starRating,
             checkIn: h.checkIn, checkOut: h.checkOut,
         });
     }
 
-    for (const r of restaurantData as Restaurant[]) {
-        const loc = r.locales[lang];
+    // 2. จัดการข้อมูลร้านอาหาร
+    for (const r of restaurants) {
+        if (!r) continue;
+        const loc = r.locales?.[lang] ?? r.locales?.['th'] ?? {};
         places.push({
-            id: `restaurant_${r.id}`, category: 'restaurant',
-            name: loc.name, desc: loc.desc, location: loc.location,
-            image: r.image, gallery: r.gallery ?? [], mapLink: r.mapLink,
-            tags: loc.tags ?? [], lat: r.coords.lat, lng: r.coords.lng,
+            id: `restaurant_${r.id || r._id}`,
+            category: 'restaurant',
+            name: loc.name || '', desc: loc.desc || '', location: loc.location || '',
+            image: r.image || '', gallery: r.gallery ?? [], mapLink: r.mapLink || '',
+            tags: loc.tags ?? [], lat: r.coords?.lat ?? 0, lng: r.coords?.lng ?? 0,
             rating: r.rating, openHours: r.openHours,
             tel: r.tel, recommended: loc.recommended,
         });
     }
 
-    for (const trip of ChiangMaiData) {
-        const titleData = trip.title as Record<'en' | 'th' | 'zh', string>;
-        const detailData = trip.detail as Record<'en' | 'th' | 'zh', string>;
-        const priceData = trip.price as Record<'en' | 'th' | 'zh', string>;
-        const hoursData = trip.hours as Record<'en' | 'th' | 'zh', string>;
-        const tagData = trip.tag as Record<'en' | 'th' | 'zh', string>;
+    // 3. จัดการสถานที่ท่องเที่ยว (มีความปลอดภัยสูง ไม่พังแน่นอน)
+    for (const trip of attractions) {
+        if (!trip) continue;
 
-        const tagValue = tagData[lang] ?? tagData['th'];
-        const tags = tagValue ? [tagValue] : [];
+        // ── ตรวจว่าเป็นโครงสร้างใหม่ (MongoDB แบบ locales + coords) หรือแบบเก่า ──
+        const isNewSchema = !!(trip.locales || trip.coords);
+
+        let name = '', desc = '', location = '', image = '', tags: string[] = [];
+        let lat = 0, lng = 0, gallery: string[] = [], mapLink = '', price = '', hours = '';
+
+        if (isNewSchema) {
+            // ── โครงสร้างใหม่ (เหมือน hotel/restaurant) ──
+            const loc = trip.locales?.[lang] ?? trip.locales?.['th'] ?? {};
+            name     = loc.name     || trip.name || '';
+            desc     = loc.desc     || trip.desc || '';
+            location = loc.location || trip.district || '';
+            const tagVal = loc.tag ?? loc.tags?.[0] ?? '';
+            tags = tagVal ? [tagVal] : [];
+            lat      = trip.coords?.lat ?? 0;
+            lng      = trip.coords?.lng ?? 0;
+            image    = trip.image   || '';
+            gallery  = trip.gallery ?? [];
+            mapLink  = trip.mapLink || '';
+            price    = loc.price    || '';
+            hours    = loc.hours    || '';
+        } else {
+            // ── โครงสร้างเก่า (detail_more nested) ──
+            const titleData = (trip.title  || {}) as Record<string, string>;
+            const detailData= (trip.detail || {}) as Record<string, string>;
+            const priceData = (trip.price  || {}) as Record<string, string>;
+            const hoursData = (trip.hours  || {}) as Record<string, string>;
+            const tagData   = (trip.tag    || {}) as Record<string, string>;
+            const tagValue  = tagData[lang] ?? tagData['th'];
+
+            name     = (titleData[lang]  ?? titleData['th'])  || '';
+            desc     = (detailData[lang] ?? detailData['th']) || '';
+            location = trip.detail_more?.location || '';
+            image    = trip.detail_more?.img      || '';
+            gallery  = trip.detail_more?.gallery  ?? [];
+            mapLink  = trip.detail_more?.mapLink  || '';
+            tags     = tagValue ? [tagValue] : [];
+            lat      = trip.detail_more?.lat ?? 0;
+            lng      = trip.detail_more?.lng ?? 0;
+            price    = (priceData[lang] ?? priceData['th']) || '';
+            hours    = (hoursData[lang] ?? hoursData['th']) || '';
+        }
+
+        // กรอง record ที่ไม่มี coords (จะไม่ขึ้นหมุด)
+        if (!lat || !lng) continue;
 
         places.push({
-            id: `tourist_${trip.id}`, category: 'tourist',
-            name: titleData[lang] ?? titleData['th'],
-            desc: detailData[lang] ?? detailData['th'],
-            location: trip.detail_more.location,
-            image: trip.detail_more.img,
-            gallery: trip.detail_more.gallery ?? [],
-            mapLink: `https://maps.google.com/?q=${trip.detail_more.lat},${trip.detail_more.lng}`,
-            tags: tags,
-            lat: trip.detail_more.lat,
-            lng: trip.detail_more.lng,
-            price: priceData[lang] ?? priceData['th'],
-            hours: hoursData[lang] ?? hoursData['th'],
+            id: `tourist_${trip.id || trip._id}`,
+            category: 'tourist',
+            name, desc, location, image, gallery, mapLink, tags, lat, lng, price, hours,
         });
     }
 
@@ -480,13 +527,14 @@ export default function MapsPage() {
     const mapContainer  = useRef<HTMLDivElement>(null);
     const map           = useRef<maplibregl.Map | null>(null);
     const markersRef    = useRef<maplibregl.Marker[]>([]);
-    const placesRef     = useRef<PlaceFeature[]>([]);
 
+    // เปลี่ยนแปลง State: ใช้เป็น useState แทน placesRef.current เพื่อให้หน้าแผนที่อัปเดตอัตโนมัติเมื่อดึงข้อมูลเสร็จ
+    const [places,          setPlaces]          = useState<PlaceFeature[]>([]);
     const [hoveredDistrict, setHoveredDistrict] = useState<{ id: string; x: number; y: number } | null>(null);
     const [selectedPlace,   setSelectedPlace]   = useState<PlaceFeature | null>(null);
     const [nearby,          setNearby]          = useState<PlaceFeature[]>([]);
     
-    // เปลี่ยนแปลง State: ใช้เก็บ Label ไอคอนเดี่ยวที่กำลังกรองดู (ถ้าเป็น null คือแสดงทั้งหมด)
+    // จัดการ Filter สถานะการคลิกเลือกในแถบอธิบายสัญลักษณ์
     const [activeIconFilter, setActiveIconFilter] = useState<string | null>(null);
     
     const [mapReady,        setMapReady]        = useState(false);
@@ -494,7 +542,7 @@ export default function MapsPage() {
 
     const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
 
-    // สกัดเอาไอคอนที่ไม่ซ้ำออกมารันใน useMemo พร้อมดึงเฉดสีแบบไดนามิกที่แก้ใหม่
+    // ประมวลผลไอคอนเพื่อแสดงผลในส่วนสัญลักษณ์แผนที่
     const legendItems = useMemo(() => {
         type LegendData = { label: string; Icon: LucideIcon; bg: string; ring: string };
         const uniqueIcons = new Map<LucideIcon, LegendData>();
@@ -508,7 +556,6 @@ export default function MapsPage() {
             if (Icon === Hotel) category = 'hotel';
             else if (RESTAURANT_ICONS.has(Icon)) category = 'restaurant';
 
-            // ดึงสีพินตามสูตรคำนวณใหม่ ให้สีท่องเที่ยวไม่ซ้ำกัน
             const { bg, ring } = getPlaceColors(category, [label]);
 
             if (!uniqueIcons.has(Icon)) {
@@ -519,11 +566,43 @@ export default function MapsPage() {
         return Array.from(uniqueIcons.values());
     }, [lang]);
 
-    useEffect(() => { placesRef.current = buildPlaces(lang); }, [lang]);
+    // ── ดึงข้อมูลผ่าน API รายหมวดหมู่พร้อมกันเมื่อเริ่มต้นทำงาน ────────────────────────────
+    useEffect(() => {
+        async function fetchPlaces() {
+            try {
+                const [hotelsRes, restaurantsRes, touristsRes] = await Promise.all([
+                    fetch('/api/hotels'),
+                    fetch('/api/restaurants'),
+                    fetch('/api/tourists')
+                ]);
+
+                if (!hotelsRes.ok || !restaurantsRes.ok || !touristsRes.ok) {
+                    throw new Error('Some API requests failed');
+                }
+
+                const hotelsData = await hotelsRes.json();
+                const restaurantsData = await restaurantsRes.json();
+                const touristsData = await touristsRes.json();
+
+                // มัดรวมให้เข้าฟังก์ชันแปลงค่า
+                const rawData = {
+                    hotels: hotelsData,
+                    restaurants: restaurantsData,
+                    attractions: touristsData 
+                };
+
+                const transformed = transformRawDataToPlaces(rawData, lang);
+                setPlaces(transformed); // บันทึกลงสถานะของ Component
+            } catch (error) {
+                console.error("Error loading elements from individual APIs:", error);
+            }
+        }
+        fetchPlaces();
+    }, [lang]);
 
     const openPlace = useCallback((place: PlaceFeature) => {
         setSelectedPlace(place);
-        const nb = placesRef.current
+        const nb = places
             .filter(p => p.id !== place.id && p.category === place.category &&
                 Math.hypot(p.lat - place.lat, p.lng - place.lng) < 0.04)
             .slice(0, 5);
@@ -532,21 +611,20 @@ export default function MapsPage() {
             center: [place.lng, place.lat], zoom: 14, duration: 800,
             offset: isMobile ? [0, -100] : [-160, 0],
         });
-    }, [isMobile]);
+    }, [isMobile, places]);
 
-    // ฟังก์ชันอัปเดตหมุดบนแผนที่ รองรับ Exclusive Filter (แสดงแค่ไอคอนที่กดเลือก)
+    // ฟังก์ชันอัปเดตหมุดบนแผนที่ตามข้อมูลและฟิลเตอร์ที่เลือก
     const refreshMarkers = useCallback(() => {
         if (!map.current) return;
         markersRef.current.forEach(m => m.remove());
         markersRef.current = [];
 
-        placesRef.current.forEach(place => {
-            // โลจิก Exclusive กรองขั้นสูง: ถ้ามีการเลือกไอคอนใน Legend ให้แสดงเฉพาะอันที่ตรงกันเท่านั้น
+        places.forEach(place => {
             if (activeIconFilter) {
                 const activeItem = legendItems.find(item => item.label === activeIconFilter);
                 if (activeItem) {
                     const placeIcon = getPlaceIconComponent(place.category, place.tags);
-                    if (placeIcon !== activeItem.Icon) return; // หากไอคอนไม่ตรงกับที่เลือก ให้ข้ามไป (ไม่แสดง)
+                    if (placeIcon !== activeItem.Icon) return;
                 }
             }
 
@@ -559,7 +637,7 @@ export default function MapsPage() {
                 .addTo(map.current!);
             markersRef.current.push(marker);
         });
-    }, [activeIconFilter, selectedPlace, openPlace, legendItems]);
+    }, [activeIconFilter, selectedPlace, openPlace, legendItems, places]);
 
     useEffect(() => {
         if (map.current || !mapContainer.current) return;
@@ -650,7 +728,7 @@ export default function MapsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    useEffect(() => { if (mapReady) refreshMarkers(); }, [mapReady, activeIconFilter, selectedPlace, refreshMarkers]);
+    useEffect(() => { if (mapReady) refreshMarkers(); }, [mapReady, activeIconFilter, selectedPlace, refreshMarkers, places]);
 
     return (
         <div className="relative w-full h-[calc(100vh-80px)] font-kanit overflow-hidden bg-slate-50">
@@ -763,7 +841,6 @@ export default function MapsPage() {
                                         {legendItems.map(({ label, Icon, bg, ring }) => {
                                             const isSelected = activeIconFilter === label;
                                             const isAnySelected = activeIconFilter !== null;
-                                            // เล่นมิติความโปร่งแสง: ถ้ามีอันอื่นถูกเลือก อันที่ไม่ใช่จะจางลงอย่างชัดเจน
                                             const opacityStyle = isAnySelected ? (isSelected ? 'opacity-100 ring-2 ring-indigo-500/30' : 'opacity-30 grayscale-[30%]') : 'opacity-100';
 
                                             return (
@@ -798,14 +875,6 @@ export default function MapsPage() {
                             <MapIcon size={13} className="text-indigo-500" />
                             <span className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">{tMap.Symbol}</span>
                         </div>
-                        {/* {activeIconFilter && (
-                            <button 
-                                onClick={() => setActiveIconFilter(null)}
-                                className="text-[10px] text-indigo-500 hover:underline font-semibold"
-                            >
-                                รีเซ็ต
-                            </button>
-                        )} */}
                     </div>
                     <div className="flex flex-col gap-2.5">
                         {legendItems.map(({ label, Icon, bg, ring }) => {

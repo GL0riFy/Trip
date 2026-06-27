@@ -1,14 +1,19 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { 
   MapPin, Clock, Info, Share, Heart, X 
 } from 'lucide-react';
-import { ChiangMaiData } from '@/src/data/chiangmai';
-import MapComponent from './MapComponent';
+import dynamic from 'next/dynamic';
 
-// --- Interfaces ---
+// 🚀 แก้ไขจุดที่ 1: ป้องกันปัญหา window is not defined ด้วยการโหลด MapComponent แบบ Dynamic ฝั่ง Client เท่านั้น
+const MapComponent = dynamic(() => import('./MapComponent'), {
+  ssr: false,
+  loading: () => <div className="h-[260px] w-full bg-stone-100 animate-pulse rounded-2xl" />
+});
+
+// --- Interfaces สำหรับ Mapping เข้ากับ UI ---
 export interface ChiangMaiUIData {
   name: string;
   address: string;
@@ -43,6 +48,7 @@ const translations = {
     contactDirectly: "ติดต่อสถานที่โดยตรง",
     notFoundTitle: "404",
     notFoundDesc: "ไม่พบข้อมูลสถานที่ท่องเที่ยวเชียงใหม่ที่คุณต้องการ",
+    loading: "กำลังโหลดข้อมูลจากฐานข้อมูล...",
   },
   en: {
     viewAllPhotos: "View all photos",
@@ -54,6 +60,7 @@ const translations = {
     contactDirectly: "Contact directly",
     notFoundTitle: "404",
     notFoundDesc: "Chiang Mai attraction not found",
+    loading: "Loading attraction data...",
   },
   zh: {
     viewAllPhotos: "查看全部照片",
@@ -65,10 +72,11 @@ const translations = {
     contactDirectly: "直接联系目的地",
     notFoundTitle: "404",
     notFoundDesc: "未找到您需要的清迈景点信息",
+    loading: "正在加载景点信息...",
   }
 };
 
-// --- Component ย่อยสำหรับแสดงผล ---
+// --- Component แสดงเนื้อหาในหน้ารายละเอียด ---
 const ChiangMaiDetailContent: React.FC<{ data: ChiangMaiUIData, locale: Locale }> = ({ data, locale }) => {
   const t = translations[locale] || translations['en'];
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
@@ -82,7 +90,7 @@ const ChiangMaiDetailContent: React.FC<{ data: ChiangMaiUIData, locale: Locale }
           <div>
             <div className="flex items-center gap-3 mb-2">
               {data.tags && data.tags.map((tag, idx) => (
-                <span key={idx} className="bg-blue-100 text-blue-700 text-xs px-3 py-1 rounded-full font-medium">
+                <span key={idx} className="bg-emerald-50 text-emerald-700 text-xs px-3 py-1 rounded-full font-medium border border-emerald-200">
                   {tag}
                 </span>
               ))}
@@ -193,7 +201,7 @@ const ChiangMaiDetailContent: React.FC<{ data: ChiangMaiUIData, locale: Locale }
 
             <hr className="border-gray-200" />
 
-            {/* Info Box (Opening Hours) */}
+            {/* Info Box */}
             <section className="bg-rose-50/50 border border-rose-100 rounded-3xl p-6 md:p-8">
               <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
                 <Info className="mr-3 text-rose-500" /> {t.goodToKnow}
@@ -250,14 +258,73 @@ const ChiangMaiDetailContent: React.FC<{ data: ChiangMaiUIData, locale: Locale }
 export default function ChiangMaiDetailPage() {
   const params = useParams();
   const locale = (params.locale as Locale) || 'en';
-  const id = params.id as string;
+  
+  // 🚀 ดึงตัวแปร slug จาก Dynamic Route
+  const slug = params.slug as string;
 
   const t = translations[locale] || translations['en'];
-  
-  // จุดแก้ไขที่ 1: ใส่เงื่อนไขหาคู่เช็ค id กับ slug จาก URL ให้ถูกต้อง
-  const chiangMaiItem = ChiangMaiData.find((h) => h.id === id);
 
-  if (!chiangMaiItem) {
+  const [touristData, setTouristData] = useState<ChiangMaiUIData | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  // 🚀 ดึงรายละเอียดข้อมูลจาก Database ผ่าน API หลักเส้นเดียว (/api/tourists)
+  useEffect(() => {
+    async function fetchDetail() {
+      if (!slug) return;
+      try {
+        const res = await fetch(`/api/tourists`);
+        const json = await res.json();
+
+        if (json.success && json.data) {
+          // 🚀 ค้นหาข้อมูลใน Database ชิ้นที่ฟิลด์ slug ตรงกับค่าบน URL
+          const matchedItem = json.data.find((item: any) => item.slug === slug);
+
+          if (matchedItem) {
+            // ดึงกลุ่มภาษา locales หรือถ้าไม่มีให้ใช้ภาษาอังกฤษครอบไว้ก่อน
+            const loc = matchedItem.locales?.[locale] || matchedItem.locales?.['en'] || {};
+            
+            // รวมรูปหน้าปก (image) และรูปในแกลเลอรี (gallery) เข้าด้วยกันตามโครงสร้าง Bento Grid
+            const allImages = matchedItem.image 
+              ? [matchedItem.image, ...(matchedItem.gallery || [])]
+              : (matchedItem.gallery || []);
+
+            setTouristData({
+              name: loc.name || matchedItem.id,
+              address: loc.location || "",
+              images: allImages,
+              description: loc.desc || "",
+              starRating: 0,
+              priceRange: loc.price || "N/A",
+              contact: { phone: '-', email: '-' },
+              hours: loc.hours || "",
+              tags: loc.tag ? [loc.tag] : [],
+              amenities: [],
+              coords: {
+                lat: matchedItem.coords?.lat || 0,
+                lng: matchedItem.coords?.lng || 0,
+              },
+              mapLink: matchedItem.mapLink || "",
+            });
+          }
+        }
+    } catch (error) {
+        console.error("Failed to load attraction detail from database:", error);
+      } finally { // <--- แก้เป็น finally ตัวนี้ครับ
+        setLoading(false);
+      }
+    }
+    fetchDetail();
+  }, [slug, locale]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-sm text-stone-400 font-medium">{t.loading}</div>
+      </div>
+    );
+  }
+
+  if (!touristData) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
@@ -268,28 +335,5 @@ export default function ChiangMaiDetailPage() {
     );
   }
 
-  const allImages = chiangMaiItem.detail_more?.img 
-    ? [chiangMaiItem.detail_more.img, ...(chiangMaiItem.detail_more.gallery || [])]
-    : (chiangMaiItem.detail_more?.gallery || []);
-
-  const uiData: ChiangMaiUIData = {
-    name: chiangMaiItem.title?.[locale] || chiangMaiItem.title?.['th'] || "",
-    address: chiangMaiItem.detail_more?.location || "",
-    images: allImages,
-    description: chiangMaiItem.detail?.[locale] || chiangMaiItem.detail?.['th'] || "",
-    starRating: 0,
-    priceRange: chiangMaiItem.price?.[locale] || chiangMaiItem.price?.['th'] || "N/A",
-    contact: { phone: '-', email: '-' },
-    hours: chiangMaiItem.hours?.[locale] || chiangMaiItem.hours?.['th'] || "",
-    tags: chiangMaiItem.tag?.[locale] ? [chiangMaiItem.tag[locale]] : [],
-    amenities: [],
-    coords: { 
-      lat: chiangMaiItem.detail_more?.lat || 0, 
-      lng: chiangMaiItem.detail_more?.lng || 0 
-    },
-    // รองรับ fallback เผื่อพิมพ์พิมพ์เล็ก-ใหญ่ผิดใน mock data (maplink / mapLink)
-    mapLink: chiangMaiItem.detail_more?.maplink || "",
-  };
-
-  return <ChiangMaiDetailContent data={uiData} locale={locale} />;
+  return <ChiangMaiDetailContent data={touristData} locale={locale} />;
 }

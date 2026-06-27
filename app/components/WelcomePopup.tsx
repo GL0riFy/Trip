@@ -48,13 +48,19 @@ export default function WelcomePopup() {
       const hasVisited = sessionStorage.getItem('has_visited_chiangmai');
       
       if (!hasVisited) {
+        // 💡 ล็อกเอาไว้ตรงนี้ทันที! รอบที่สองเข้ามาจะได้ไม่หลุดคิวเข้า fetch
+        sessionStorage.setItem('has_visited_chiangmai', 'true');
+
         fetch('/api/visitors', { method: 'POST' })
           .then(res => res.json())
           .then(data => {
             console.log('✅ Visitor counted via Popup:', data.count);
-            sessionStorage.setItem('has_visited_chiangmai', 'true');
           })
-          .catch(err => console.error('❌ Error counting visitor:', err));
+          .catch(err => {
+            console.error('❌ Error counting visitor:', err);
+            // 💡 เผื่อเกิดข้อผิดพลาดในการเน็ตหลุด ค่อยลบออกเพื่อให้ระบบลองนับใหม่รอบหน้าได้
+            sessionStorage.removeItem('has_visited_chiangmai');
+          });
       }
     }
   }, []);

@@ -4,22 +4,64 @@ import { motion, Variants, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useLocale } from "next-intl";
 import Image from "next/image";
-import { products } from "@/src/data/products";
+// ถอดการนำเข้าลบดึง static data ตัวเดิมออก
 import { verifiedDistrictLocationOverrides } from "@/src/data/verified-product-locations";
 
 type SortType = "default" | "price-asc" | "price-desc";
 type CategoryType = "all" | "food" | "product";
-type BaseProduct = (typeof products)[number];
-type Product = Omit<BaseProduct, "shopName" | "shopNameCN" | "shopNameTH" | "phone" | "address" | "addressCN" | "addressTH"> & {
-  shopName?: string;
-  shopNameCN?: string;
-  shopNameTH?: string;
-  phone?: string;
-  address?: string;
-  addressCN?: string;
-  addressTH?: string;
+
+// อินเตอร์เฟสสำหรับข้อมูลดิบที่ส่งมาจาก API (อ้างอิงตาม Mongoose Model)
+interface APILocaleContent {
+  name: string;
+  description: string;
+  address: string;
+  district: string;
+  shopName: string;
+}
+
+interface APIProduct {
+  _id: string;
+  id: string;
+  slug: string;
+  price: number;
+  image: string;
+  tag: string;
+  icon: string;
+  mapsQuery: string;
+  phone: string;
+  locales: {
+    th: APILocaleContent;
+    en: APILocaleContent;
+    zh: APILocaleContent;
+  };
+}
+
+// โครงสร้าง Product แบบ Flat ที่ UI เดิมใช้งานอยู่
+type Product = {
+  id: number;
+  slug: string;
+  price: number;
+  image: string;
+  tag: string;
+  icon: string;
+  mapsQuery: string;
+  phone: string;
+  name: string;
+  nameTH: string;
+  nameCN: string;
+  description: string;
+  descriptionTH: string;
+  descriptionCN: string;
+  address: string;
+  addressTH: string;
+  addressCN: string;
+  district: string;
+  districtTH: string;
+  districtCN: string;
+  shopName: string;
+  shopNameTH: string;
+  shopNameCN: string;
   mapRating?: number;
-  mapsQuery?: string;
 };
 
 function tri(locale: string, en: string, zh: string, th: string) {
@@ -30,17 +72,57 @@ function tri(locale: string, en: string, zh: string, th: string) {
 
 const SKIP_LOCATION_UPDATE_IDS = new Set([1, 2, 3, 4, 6, 7, 8]);
 
-const districtItemCounter = new Map<string, number>();
-const productsWithVerifiedLocations: Product[] = products.map((product) => {
-  if (!product.district) return product;
-  const districtOverrides = verifiedDistrictLocationOverrides[product.district];
-  if (!districtOverrides || districtOverrides.length === 0) return product;
-  const index = districtItemCounter.get(product.district) ?? 0;
-  districtItemCounter.set(product.district, index + 1);
-  if (SKIP_LOCATION_UPDATE_IDS.has(product.id)) return product;
-  const override = districtOverrides[index] ?? districtOverrides[districtOverrides.length - 1];
-  return { ...product, ...override, phone: override.phone ?? product.phone };
-});
+// ฟังก์ชันแปลงรูปแบบโครงสร้างข้อมูลจาก API (locales) ให้เป็นแบบ Flat เพื่อให้เข้ากับระบบเดิม
+function normalizeProducts(apiProducts: APIProduct[]): Product[] {
+  const districtItemCounter = new Map<string, number>();
+
+  return apiProducts.map((p) => {
+    // ดึงค่าแยกภาษาออกมา และ fallback ไปยัง en หากไม่มีข้อมูล
+    const th = p.locales?.th || p.locales?.en;
+    const en = p.locales?.en;
+    const zh = p.locales?.zh || p.locales?.en;
+
+    const baseProduct: Product = {
+      id: parseInt(p.id, 10) || 0, // แปลง id จาก string ในฐานข้อมูลเป็น number ตามโค้ดเดิม
+      slug: p.slug,
+      price: p.price,
+      image: p.image,
+      tag: p.tag,
+      icon: p.icon,
+      mapsQuery: p.mapsQuery,
+      phone: p.phone,
+      name: en?.name || "",
+      nameTH: th?.name || "",
+      nameCN: zh?.name || "",
+      description: en?.description || "",
+      descriptionTH: th?.description || "",
+      descriptionCN: zh?.description || "",
+      address: en?.address || "",
+      addressTH: th?.address || "",
+      addressCN: zh?.address || "",
+      district: en?.district || "",
+      districtTH: th?.district || "",
+      districtCN: zh?.district || "",
+      shopName: en?.shopName || "",
+      shopNameTH: th?.shopName || "",
+      shopNameCN: zh?.shopName || "",
+    };
+
+    if (!baseProduct.district) return baseProduct;
+
+    // ระบบตรวจจับพิกัดและข้อมูลแก้ไขตามอำเภอเดิมของคุณ
+    const districtOverrides = verifiedDistrictLocationOverrides[baseProduct.district];
+    if (!districtOverrides || districtOverrides.length === 0) return baseProduct;
+
+    const index = districtItemCounter.get(baseProduct.district) ?? 0;
+    districtItemCounter.set(baseProduct.district, index + 1);
+
+    if (SKIP_LOCATION_UPDATE_IDS.has(baseProduct.id)) return baseProduct;
+
+    const override = districtOverrides[index] ?? districtOverrides[districtOverrides.length - 1];
+    return { ...baseProduct, ...override, phone: override.phone ?? baseProduct.phone };
+  });
+}
 
 const getProductCategory = (p: Product): "food" | "product" => {
   const foodIcons = ["🧄", "🐝", "🌿", "🍯", "🍪", "🌶️", "☕", "🫚", "🍷", "🍹", "🍋", "🌴", "🍚", "🍲"];
@@ -89,6 +171,10 @@ const filterFade: Variants = {
 export default function RefactoredProductShowcase() {
   const locale = useLocale();
 
+  // State สำหรับเก็บข้อมูลสินค้าที่ได้รับมาจาก API และจัดการสถานะการโหลด
+  const [products, setProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
   const displayName = (p: Product) =>
     locale === "th" ? (p.nameTH ?? p.name) : locale === "zh" ? p.nameCN : p.name;
   const secondaryName = (p: Product) =>
@@ -109,6 +195,24 @@ export default function RefactoredProductShowcase() {
 
   const closeContactPopup = () => setSelectedProduct(null);
 
+  // ดึงข้อมูลสินค้าจาก API ด้วย useEffect เมื่อคอมโพเนนต์ Mount
+  useEffect(() => {
+    async function fetchProducts() {
+      try {
+        setIsLoading(true);
+        const res = await fetch("/api/products");
+        if (!res.ok) throw new Error("Failed to fetch data");
+        const data: APIProduct[] = await res.json();
+        setProducts(normalizeProducts(data));
+      } catch (err) {
+        console.error("Error fetching products:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchProducts();
+  }, []);
+
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => { if (e.key === "Escape") closeContactPopup(); };
     window.addEventListener("keydown", onKeyDown);
@@ -128,10 +232,10 @@ export default function RefactoredProductShowcase() {
     }).format(price);
 
   const allDistricts = Array.from(
-    new Set(productsWithVerifiedLocations.map((p) => p.district).filter((d): d is string => Boolean(d)))
+    new Set(products.map((p) => p.district).filter((d): d is string => Boolean(d)))
   ).sort();
 
-  let filteredProducts = productsWithVerifiedLocations;
+  let filteredProducts = products;
 
   if (selectedCategory !== "all") {
     filteredProducts = filteredProducts.filter((p) => getProductCategory(p) === selectedCategory);
@@ -152,7 +256,16 @@ export default function RefactoredProductShowcase() {
     ? mapSearchText.startsWith("http") ? mapSearchText : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapSearchText)}`
     : "#";
 
-  const featuredProduct = productsWithVerifiedLocations[0];
+  const featuredProduct = products[0];
+
+  // แสดงหน้าจอ Loading แบบเรียบง่ายระหว่างรอข้อมูลจาก API 
+  if (isLoading) {
+    return (
+      <div className="flex h-screen w-screen items-center justify-center bg-[#F9F8F6]" style={{ display: 'flex', height: '100vh', justifyContent: 'center', alignItems: 'center', background: '#F9F8F6', color: '#1A1714', fontFamily: 'sans-serif' }}>
+        <p style={{ fontSize: '16px', fontWeight: 600 }}>Loading OTOP Products...</p>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -160,7 +273,6 @@ export default function RefactoredProductShowcase() {
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=Prompt:wght@400;500;600;700;800&display=swap');
 
         :root {
-          /* ปรับสีพื้นหลังหลักเป็นโทนขาวมินิมอล (Off-white) */
           --cream: #F9F8F6; 
           --cream-dark: #EFECE7; 
           
@@ -173,8 +285,6 @@ export default function RefactoredProductShowcase() {
           --rust-mid: #E8C4AB;
           --white: #FFFFFF;
           --gold: #A07840;
-          
-          /* ปรับสีเส้นขอบให้ละมุนเข้ากับพื้นหลังมินิมอล */
           --border: #E8E5E1; 
           
           --shadow-sm: 0 2px 8px rgba(26,23,20,0.06);
@@ -361,6 +471,7 @@ export default function RefactoredProductShowcase() {
           flex-direction: column;
           gap: 16px;
           flex: 1;
+          width: 100%;
         }
 
         /* ── CATEGORY BUTTONS ──────────────────────── */
@@ -694,7 +805,6 @@ export default function RefactoredProductShowcase() {
           .filter-select-wrap { margin-left: 0; }
         }
         @media (max-width: 640px) {
-          /* ซ่อนรูปโชว์สินค้าฝั่งขวาในหน้าจอมือถือ */
           .hero-right {
             display: none;
           }
@@ -761,7 +871,7 @@ export default function RefactoredProductShowcase() {
               {tri(locale,
                 "Browse by district and connect directly with local sellers — call or navigate in one tap.",
                 "按地区浏览商品，一键联系卖家或打开导航。",
-                "เลือกซื้อสินค้า OTOP แท้จากผู้ผลิตท้องถิ่นโดยตรง ติดต่อร้านค้า โทรหา หรือเปิดแผนที่ได้ในคลิกเดียว"
+                "เลือกซื้อสินค้า OTOP แท้จากผู้ผลิตท้องถิ่นโดยตรง ติดต่อร้านค้า โโทรหา หรือเปิดแผนที่ได้ในคลิกเดียว"
               )}
             </motion.p>
 
@@ -776,7 +886,7 @@ export default function RefactoredProductShowcase() {
 
             <motion.div variants={heroItem} className="hero-stats">
               <div>
-                <span className="hero-stat-num">{productsWithVerifiedLocations.length}+</span>
+                <span className="hero-stat-num">{products.length}+</span>
                 <span className="hero-stat-label">{tri(locale, "Products", "商品", "สินค้า")}</span>
               </div>
               <div>
@@ -891,8 +1001,8 @@ export default function RefactoredProductShowcase() {
                     {locale === "en"
                       ? d
                       : locale === "zh"
-                        ? productsWithVerifiedLocations.find(p => p.district === d)?.districtCN || d
-                        : productsWithVerifiedLocations.find(p => p.district === d)?.districtTH ?? d}
+                        ? products.find(p => p.district === d)?.districtCN || d
+                        : products.find(p => p.district === d)?.districtTH ?? d}
                   </button>
                 ))}
 
@@ -937,7 +1047,6 @@ export default function RefactoredProductShowcase() {
                   </div>
 
                   <div className="card-body">
-                    {/* ปรับสี Card Category ให้สอดคล้องกับ Filter */}
                     <div className={`card-category ${getProductCategory(product) === 'food' ? 'cat-food' : 'cat-product'}`}>
                       {getProductCategory(product) === 'food'
                         ? tri(locale, 'Food & Drink', '食品', 'อาหารและเครื่องดื่ม')

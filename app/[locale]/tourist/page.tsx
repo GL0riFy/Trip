@@ -1,8 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { ChiangMaiData } from "@/src/data/chiangmai";
-import type { LocalizedText } from "@/src/data/chiangmai";
+import { useState, useMemo, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import {
   MapPin,
@@ -18,6 +16,7 @@ import {
 
 interface PlaceCard {
   id: string;
+  slug: string; // เปลี่ยนมาเน้นใช้ slug สำหรับทำ Routing
   name: string;
   desc: string;
   location: string;
@@ -51,8 +50,7 @@ const UI_TEXT = {
     region: "Chiang Mai, Thailand",
     titlePrefix: "Explore",
     titleHighlight: "Chiang Mai",
-    subtitle:
-      "Discover temples, nature, and attractions across every district of Chiang Mai.",
+    subtitle: "Discover temples, nature, and attractions across every district of Chiang Mai.",
     searchPlaceholder: "Search places, areas...",
     showing: "Showing",
     of: "of",
@@ -85,28 +83,7 @@ function getT(locale: string) {
   return UI_TEXT[key];
 }
 
-// ---- Helper ----------------------------------------------------------------
-
-function tripsToCards(
-  trips: typeof ChiangMaiData,
-  locale: keyof LocalizedText
-): PlaceCard[] {
-  return trips.map((t) => ({
-    id: t.id,
-    name: t.title?.[locale] ?? t.id,
-    desc: t.detail?.[locale] ?? "",
-    tag: t.tag?.[locale] ?? "",
-    location: t.detail_more?.location ?? "",
-    lat: t.detail_more?.lat ?? 0,
-    lng: t.detail_more?.lng ?? 0,
-    image: t.detail_more?.img ?? "",
-    gallery: t.detail_more?.gallery ?? [],
-    price: t.price?.[locale] ?? "",
-    hours: t.hours?.[locale] ?? "",
-  }));
-}
-
-// ---- Card ------------------------------------------------------------------
+// ---- Card Item -------------------------------------------------------------
 
 function PlaceCardItem({
   place,
@@ -135,7 +112,7 @@ function PlaceCardItem({
             <Mountain className="w-14 h-14" strokeWidth={1} />
           </div>
         )}
-        {place.price && (
+        {place.tag && (
           <div className="absolute top-2.5 left-2.5">
             <span className="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700">
               {place.tag}
@@ -175,16 +152,50 @@ function PlaceCardItem({
 export default function TouristAttractions() {
   const { locale } = useParams();
   const router = useRouter();
-  const LOCALE = (locale as keyof LocalizedText) ?? "en";
+  const LOCALE = (locale as string) ?? "en";
   const t = getT(locale as string);
 
-  const allPlaces = useMemo<PlaceCard[]>(
-    () => tripsToCards(ChiangMaiData, LOCALE),
-    []
-  );
-
+  const [allPlaces, setAllPlaces] = useState<PlaceCard[]>([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [visibleCount, setVisibleCount] = useState(12);
+
+  // ดึงข้อมูลสถานที่ท่องเที่ยวจาก API บน MongoDB
+  useEffect(() => {
+    async function fetchTourists() {
+      try {
+        const res = await fetch("/api/tourists");
+        const json = await res.json();
+        
+        if (json.success && json.data) {
+          // แปลงโครงสร้างข้อมูลจาก MongoDB เข้าสู่ตัวแปรที่ใช้เรนเดอร์ UI
+          const formatted: PlaceCard[] = json.data.map((t: any) => {
+            const loc = t.locales?.[LOCALE] || t.locales?.['en'] || {};
+            return {
+              id: t.id,
+              slug: t.slug, // แมปค่า slug
+              name: loc.name || t.id,
+              desc: loc.desc || "",
+              tag: loc.tag || "",
+              location: loc.location || "",
+              lat: t.coords?.lat || 0,
+              lng: t.coords?.lng || 0,
+              image: t.image || "",
+              gallery: t.gallery || [],
+              price: loc.price || "-",
+              hours: loc.hours || "-",
+            };
+          });
+          setAllPlaces(formatted);
+        }
+      } catch (error) {
+        console.error("Failed to load tourist attractions:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchTourists();
+  }, [LOCALE]);
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase().trim();
@@ -199,12 +210,6 @@ export default function TouristAttractions() {
 
   const visible = filtered.slice(0, visibleCount);
   const hasMore = visibleCount < filtered.length;
-
-  const [isReady, setIsReady] = useState(false);
-  const [Chiangmai, setChiangmai] = useState(ChiangMaiData);
-  const [dataPromise] = useState<Promise<void>>(
-    () => Promise.resolve().then(() => setChiangmai(ChiangMaiData))
-  );
 
   return (
     <main className="min-h-screen pt-20">
@@ -258,54 +263,63 @@ export default function TouristAttractions() {
         </div>
       </div>
 
-      {/* ── Grid ── */}
+      {/* ── Grid Content ── */}
       <section className="max-w-5xl mx-auto px-6 py-6">
-        <p className="text-sm text-stone-500 mb-4">
-          {t.showing}{" "}
-          <span className="font-semibold text-stone-700">{visible.length}</span>{" "}
-          {t.of} {filtered.length} {t.places}
-          {search && (
-            <span className="ml-1.5 text-emerald-600">
-              {t.matchingQuery(search)}
-            </span>
-          )}
-        </p>
-
-        {filtered.length === 0 ? (
-          <div className="text-center py-20 text-stone-400">
-            <Search className="w-12 h-12 mx-auto mb-3 text-stone-300" strokeWidth={1} />
-            <p className="text-base">{t.noResults}</p>
-            <button
-              onClick={() => {
-                setSearch("");
-                setVisibleCount(12);
-              }}
-              className="mt-3 text-sm text-emerald-600 hover:underline"
-            >
-              {t.clearSearch}
-            </button>
+        {loading ? (
+          <div className="text-center py-20 text-stone-400 text-sm">
+            กำลังโหลดข้อมูลสถานที่ท่องเที่ยว...
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {visible.map((place) => (
-                <PlaceCardItem
-                  key={place.id}
-                  place={place}
-                  onClick={(p) => router.push(`/${locale}/tourist/${p.id}`)}
-                />
-              ))}
-            </div>
-            {hasMore && (
-              <div className="mt-8 text-center">
+            <p className="text-sm text-stone-500 mb-4">
+              {t.showing}{" "}
+              <span className="font-semibold text-stone-700">{visible.length}</span>{" "}
+              {t.of} {filtered.length} {t.places}
+              {search && (
+                <span className="ml-1.5 text-emerald-600">
+                  {t.matchingQuery(search)}
+                </span>
+              )}
+            </p>
+
+            {filtered.length === 0 ? (
+              <div className="text-center py-20 text-stone-400">
+                <Search className="w-12 h-12 mx-auto mb-3 text-stone-300" strokeWidth={1} />
+                <p className="text-base">{t.noResults}</p>
                 <button
-                  onClick={() => setVisibleCount((c) => c + 12)}
-                  className="inline-flex items-center gap-1.5 px-6 py-2.5 rounded-xl border border-stone-200 bg-white text-sm text-stone-600 hover:bg-stone-50 hover:border-stone-300 transition-colors"
+                  onClick={() => {
+                    setSearch("");
+                    setVisibleCount(12);
+                  }}
+                  className="mt-3 text-sm text-emerald-600 hover:underline"
                 >
-                  <ChevronDown className="w-4 h-4" />
-                  {t.loadMore(filtered.length - visibleCount)}
+                  {t.clearSearch}
                 </button>
               </div>
+            ) : (
+              <>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {visible.map((place) => (
+                    <PlaceCardItem
+                      key={place.id}
+                      place={place}
+                      // 🚀 แก้ไขตรงนี้: เปลี่ยนไปส่งเส้นทางโดยใช้ p.slug แทน p.id
+                      onClick={(p) => router.push(`/${locale}/tourist/${p.slug}`)}
+                    />
+                  ))}
+                </div>
+                {hasMore && (
+                  <div className="mt-8 text-center">
+                    <button
+                      onClick={() => setVisibleCount((c) => c + 12)}
+                      className="inline-flex items-center gap-1.5 px-6 py-2.5 rounded-xl border border-stone-200 bg-white text-sm text-stone-600 hover:bg-stone-50 hover:border-stone-300 transition-colors"
+                    >
+                      <ChevronDown className="w-4 h-4" />
+                      {t.loadMore(filtered.length - visibleCount)}
+                    </button>
+                  </div>
+                )}
+              </>
             )}
           </>
         )}

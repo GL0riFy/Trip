@@ -1,13 +1,15 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { 
-  MapPin
+  MapPin,
+  Loader2
 } from 'lucide-react';
-import { HotelData } from '@/src/data/hotels';
+// นำเข้า Interface จากโมเดลโรงแรมมาใช้แทน Static Type ตัวเก่า
+import { IHotel } from '@/models/Hotels'; // ปรับ path ตามไฟล์โมเดลของคุณ
 
 type Locale = 'th' | 'en' | 'zh';
 type Category = 'all' | 'city' | 'hotel' | 'nature' | 'riverside';
@@ -16,12 +18,33 @@ export default function HotelGuide() {
     const params = useParams();
     const locale = (params.locale as Locale) || 'en';
     const [activeTab, setActiveTab] = useState<Category>('all');
-    const [isReady, setIsReady] = useState(false);
     
-    const [hotels, setHotels] = useState(HotelData); // ถ้าเป็น static data แบบนี้
-    const [dataPromise] = useState<Promise<void>>(
-        () => Promise.resolve().then(() => setHotels(HotelData))
-    );
+    // เปลี่ยนมาเริ่มต้นด้วย Array เปล่าสำหรับรอรับข้อมูลจาก Database
+    const [hotels, setHotels] = useState<IHotel[]>([]); 
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [isError, setIsError] = useState<boolean>(false);
+
+    // ดึงข้อมูลโรงแรมจาก API ทันทีเมื่อหน้าเว็บโหลดขึ้นมา
+    useEffect(() => {
+        const fetchHotels = async () => {
+            try {
+                setIsLoading(true);
+                const response = await fetch('/api/hotels');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                setHotels(data);
+            } catch (error) {
+                console.error("Error fetching hotels:", error);
+                setIsError(true);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchHotels();
+    }, []);
 
     interface UITranslation {
         heroTitle: string;
@@ -59,7 +82,6 @@ export default function HotelGuide() {
         }
     };
 
-    // ดึงข้อมูลตาม locale ถ้าไม่มีให้ใช้ภาษาไทยเป็นหลัก
     const ui = uiMap[locale] || uiMap.en;
 
     const filteredHotels = activeTab === 'all'
@@ -95,7 +117,7 @@ export default function HotelGuide() {
                         <p className="text-gray-500 max-w-2xl">{ui.secDesc}</p>
                     </div>
 
-                    {/* --- CATEGORY TABS (Error ตรงนี้จะหายไป) --- */}
+                    {/* --- CATEGORY TABS --- */}
                     <div className="flex gap-6 overflow-x-auto pb-4 mb-10 scrollbar-hide border-b border-gray-100">
                         {(Object.keys(ui.tabs) as Array<Category>).map((tab) => (
                             <button
@@ -113,63 +135,83 @@ export default function HotelGuide() {
                         ))}
                     </div>
 
-                    <motion.div layout className="grid grid-cols-1 md:grid-cols-6 gap-6 items-stretch">
-                        <AnimatePresence mode='popLayout'>
-                            {filteredHotels.map((hotel, index) => {
-                                // ถัาอยู่หน้า 'ทั้งหมด' 2 อันแรกจะกินพื้นที่ครึ่งจอ (3/6 คอลัมน์) อันที่เหลือกิน 1/3 จอ (2/6 คอลัมน์)
-                                const isLarge = activeTab === 'all' && index < 2;
-                                
-                                return (
-                                    <motion.div
-                                        key={hotel.id}
-                                        layout
-                                        initial={{ opacity: 0, scale: 0.95 }}
-                                        animate={{ opacity: 1, scale: 1 }}
-                                        exit={{ opacity: 0, scale: 0.95 }}
-                                        transition={{ duration: 0.3 }}
-                                        // จัดการขนาด Responsive: มือถือ = เต็มจอ, Tablet = ครึ่งจอ, PC = ตามเงื่อนไข isLarge
-                                        className={`flex ${isLarge ? 'md:col-span-3' : 'md:col-span-3 lg:col-span-2'}`} 
-                                    >
-                                        <Link 
-                                            href={`/${locale}/hotels/${hotel.slug}`} 
-                                            className="group flex flex-col w-full h-full bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-gray-100"
+                    {/* แสดงสถานะกำลังโหลดข้อมูล */}
+                    {isLoading && (
+                        <div className="flex flex-col items-center justify-center py-20 w-full gap-4">
+                            <Loader2 className="animate-spin text-blue-900 w-12 h-12" />
+                            <p className="text-gray-500 font-medium">Loading accommodations...</p>
+                        </div>
+                    )}
+
+                    {/* แสดงกรณีดึงข้อมูลไม่สำเร็จ */}
+                    {isError && !isLoading && (
+                        <div className="text-center py-20 w-full">
+                            <p className="text-red-500 font-bold text-lg">Error loading data. Please try again later.</p>
+                        </div>
+                    )}
+
+                    {/* แสดงกรณีไม่มีข้อมูลห้องพักในหมวดหมู่นั้นๆ */}
+                    {!isLoading && !isError && filteredHotels.length === 0 && (
+                        <div className="text-center py-20 w-full">
+                            <p className="text-gray-400 text-lg">No accommodations found in this category.</p>
+                        </div>
+                    )}
+
+                    {/* ส่วนแสดงการ์ดห้องพักเมื่อข้อมูลพร้อมใช้งาน */}
+                    {!isLoading && !isError && (
+                        <motion.div layout className="grid grid-cols-1 md:grid-cols-6 gap-6 items-stretch">
+                            <AnimatePresence mode='popLayout'>
+                                {filteredHotels.map((hotel, index) => {
+                                    const isLarge = activeTab === 'all' && index < 2;
+                                    
+                                    return (
+                                        <motion.div
+                                            key={hotel.id}
+                                            layout
+                                            initial={{ opacity: 0, scale: 0.95 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            exit={{ opacity: 0, scale: 0.95 }}
+                                            transition={{ duration: 0.3 }}
+                                            className={`flex ${isLarge ? 'md:col-span-3' : 'md:col-span-3 lg:col-span-2'}`} 
                                         >
-                                            {/* 1. FIX ความสูงรูปภาพตรงนี้เลยครับ */}
-                                            <div className={`relative w-full shrink-0 overflow-hidden ${isLarge ? 'h-[360px]' : 'h-[240px]'}`}>
-                                                <img 
-                                                    src={hotel.image} 
-                                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
-                                                    alt={hotel.locales[locale]?.name || hotel.locales['th'].name} 
-                                                />
-                                            </div>
-
-                                            {/* 2. ดันเนื้อหาให้เต็มพื้นที่การ์ด */}
-                                            <div className="p-6 flex flex-col flex-grow">
-                                                <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-900 transition-colors line-clamp-1">
-                                                    {hotel.locales[locale]?.name || hotel.locales['th'].name}
-                                                </h3>
-                                                
-                                                <p className="text-sm text-gray-500 mt-3 line-clamp-2 leading-relaxed">
-                                                    {hotel.locales[locale]?.desc || hotel.locales['th'].desc}
-                                                </p>
-
-                                                {/* 3. mt-auto จะดันหมุดหมายและราคาไปติดขอบล่างสุดเสมอ */}
-                                                <div className="mt-auto pt-5 flex justify-between items-center text-xs font-medium text-gray-400">
-                                                    <span className="truncate mr-2 flex items-center gap-1">
-                                                        <span className="text-pink-500 text-base"><MapPin /></span> 
-                                                        {hotel.locales[locale]?.location || hotel.locales['th'].location}
-                                                    </span>
-                                                    <span className="text-blue-600 font-bold shrink-0 text-sm">
-                                                        {hotel.priceRange} ฿
-                                                    </span>
+                                            <Link 
+                                                href={`/${locale}/hotels/${hotel.slug}`} 
+                                                className="group flex flex-col w-full h-full bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-gray-100"
+                                            >
+                                                <div className={`relative w-full shrink-0 overflow-hidden ${isLarge ? 'h-[360px]' : 'h-[240px]'}`}>
+                                                    <img 
+                                                        src={hotel.image} 
+                                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
+                                                        alt={hotel.locales[locale]?.name || hotel.locales['th'].name} 
+                                                    />
                                                 </div>
-                                            </div>
-                                        </Link>
-                                    </motion.div>
-                                );
-                            })}
-                        </AnimatePresence>
-                    </motion.div>
+
+                                                <div className="p-6 flex flex-col flex-grow">
+                                                    <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-900 transition-colors line-clamp-1">
+                                                        {hotel.locales[locale]?.name || hotel.locales['th'].name}
+                                                    </h3>
+                                                    
+                                                    <p className="text-sm text-gray-500 mt-3 line-clamp-2 leading-relaxed">
+                                                        {hotel.locales[locale]?.desc || hotel.locales['th'].desc}
+                                                    </p>
+
+                                                    <div className="mt-auto pt-5 flex justify-between items-center text-xs font-medium text-gray-400">
+                                                        <span className="truncate mr-2 flex items-center gap-1">
+                                                            <span className="text-pink-500 text-base flex items-center"><MapPin className="w-4 h-4" /></span> 
+                                                            {hotel.locales[locale]?.location || hotel.locales['th'].location}
+                                                        </span>
+                                                        <span className="text-blue-600 font-bold shrink-0 text-sm">
+                                                            {hotel.priceRange} ฿
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </Link>
+                                        </motion.div>
+                                    );
+                                })}
+                            </AnimatePresence>
+                        </motion.div>
+                    )}
                 </div>
             </div>
         </motion.div>
