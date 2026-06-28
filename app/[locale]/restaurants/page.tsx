@@ -3,15 +3,14 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { MapPin, ChefHat, Lightbulb } from 'lucide-react';
+import { MapPin, ChefHat, Lightbulb, Star } from 'lucide-react'; // 👈 เพิ่ม Star มาใช้แสดงผลดาว
 import { motion, AnimatePresence, Variants } from 'framer-motion';
-// นำเข้า Interfaces จากโมเดลของคุณเพื่อใช้กำหนด Type ให้ปลอดภัย
 import { IRestaurant } from '@/models/Restaurant';
 import { ITip } from '@/models/Tip';
 
 type Locale = 'th' | 'en' | 'zh';
 
-// --- Framer Motion Variants (คงเดิมตามโค้ดของคุณ) ---
+// --- Framer Motion Variants (คงเดิมตามระบบของคุณ) ---
 const cardVariants: Variants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } },
@@ -42,7 +41,6 @@ export default function ChiangMaiTravelGuide() {
     const params = useParams();
     const locale = (params.locale as Locale) || 'en';
 
-    // 1. เพิ่ม State สำหรับเก็บข้อมูลจาก API และสถานะ Loading
     const [restaurants, setRestaurants] = useState<IRestaurant[]>([]);
     const [tips, setTips] = useState<ITip[]>([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -50,7 +48,6 @@ export default function ChiangMaiTravelGuide() {
     const [showAllRestaurants, setShowAllRestaurants] = useState(false);
     const [activeSection, setActiveSection] = useState('restaurant-section');
 
-    // 2. useEffect สำหรับ Fetch ข้อมูลจาก API เมื่อหน้าโหลด
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -61,8 +58,20 @@ export default function ChiangMaiTravelGuide() {
                 ]);
 
                 if (resRestaurants.ok && resTips.ok) {
-                    const restaurantsData = await resRestaurants.json();
+                    let restaurantsData: IRestaurant[] = await resRestaurants.json();
                     const tipsData = await resTips.json();
+                    
+                    // 💡 โลจิกจัดเรียง: เอาร้านที่มีดาวเฉลี่ย (averageRating) สูงสุดขึ้นก่อน 
+                    // ถ้าดาวเท่ากัน ให้เอาร้านที่มีจำนวนรีวิว (reviewCount) มากกว่าขึ้นก่อนเพื่อความน่าเชื่อถือ
+                    restaurantsData.sort((a, b) => {
+                        const rateA = a.averageRating ?? 0;
+                        const rateB = b.averageRating ?? 0;
+                        if (rateB !== rateA) {
+                            return rateB - rateA; // เรียงจากมากไปน้อย
+                        }
+                        return (b.reviewCount ?? 0) - (a.reviewCount ?? 0);
+                    });
+
                     setRestaurants(restaurantsData);
                     setTips(tipsData);
                 } else {
@@ -78,7 +87,6 @@ export default function ChiangMaiTravelGuide() {
         fetchData();
     }, []);
 
-    // 3. useEffect สำหรับตรวจจับ Scroll (คงเดิม)
     useEffect(() => {
         const handleScroll = () => {
             const tipsSection = document.getElementById('tips-section');
@@ -101,31 +109,32 @@ export default function ChiangMaiTravelGuide() {
             heroSub: "ปักหมุดความอร่อย", heroTitle: "ร้านอาหารที่ต้องไป", heroCity: "เมื่อมาเชียงใหม่",
             heroDesc: "เปิดวาร์ปพิกัดความอร่อยฉบับคนเมืองแท้ๆ รวบรวมเมนูอาหารเหนือสูตรดั้งเดิมและร้านเด็ดที่สายกินห้ามพลาด",
             catTitle: "หมวดหมู่", catRest: "ร้านอาหารแนะนำ", catTips: "เคล็ดลับ",
-            sec01: "01 - ร้านอาหารแนะนำ", sec01Title: "20 ร้านอาหารเชียงใหม่ รสชาติเด็ด", sec01Desc: "พิกัดร้านดังและร้านลับที่คนท้องถิ่นแนะนำ",
+            sec01: "01 - ร้านอาหารแนะนำ", sec01Title: "ร้านอาหารยอดนิยม รสชาติเด็ด", sec01Desc: "พิกัดร้านดังเรียงตามรีวิวและคะแนนความอร่อยจากผู้ใช้งานจริง",
             sec02: "02- เคล็ดลับ", sec02Title: "รู้ก่อนไป เชียงใหม่", sec02Desc: "ทริคเล็กๆ น้อยๆ ที่จะทำให้การตระเวนกินสนุกยิ่งขึ้น",
-            showMore: (n: number) => `ดูทั้งหมด (${n})`, hide: "ซ่อน"
+            showMore: (n: number) => `ดูทั้งหมด (${n})`, hide: "ซ่อน",
+            reviewUnit: "รีวิว"
         },
         en: {
             heroSub: "Delicious Landmarks", heroTitle: "Must-Visit Eateries", heroCity: "In Chiang Mai",
             heroDesc: "Discover authentic local flavors, traditional Northern Thai recipes, and top-rated restaurants you can't miss.",
             catTitle: "Categories", catRest: "Recommended Restaurants", catTips: "Travel Tips",
-            sec01: "01 - Recommended", sec01Title: "20 Best Restaurants", sec01Desc: "Famous spots and hidden gems recommended by locals.",
+            sec01: "01 - Recommended", sec01Title: "Top-Rated Restaurants", sec01Desc: "Famous spots sorted by real user ratings and review activities.",
             sec02: "02 - Tips", sec02Title: "Know Before You Go", sec02Desc: "Small tricks to make your food tour smoother.",
-            showMore: (n: number) => `Show All (${n})`, hide: "Hide"
+            showMore: (n: number) => `Show All (${n})`, hide: "Hide",
+            reviewUnit: "Reviews"
         },
         zh: {
             heroSub: "美食打卡地", heroTitle: "必吃餐厅指南", heroCity: "在清迈",
             heroDesc: "探索最地道的清迈美味，汇集传统泰北菜肴และ吃货必去的名店。",
             catTitle: "类别", catRest: "推荐餐厅", catTips: "旅游小贴士",
-            sec01: "01 - 推荐", sec01Title: "20 家清迈地道餐馆", sec01Desc: "当地人推荐的知名餐厅和私藏小店。",
+            sec01: "01 - 推荐", sec01Title: "清迈最高評價餐馆", sec01Desc: "按照真实食客的评分与热度为您精选出来的必吃名店。",
             sec02: "02 - 小贴士", sec02Title: "出发前必看", sec02Desc: "让您的美食之旅更加顺畅的小技巧。",
-            showMore: (n: number) => `查看全部 (${n})`, hide: "隐藏"
+            showMore: (n: number) => `查看全部 (${n})`, hide: "隐藏",
+            reviewUnit: "条评论"
         }
     };
 
     const ui = uiMap[locale] || uiMap.th;
-
-    // เปลี่ยนมาใช้สไลซ์จาก State `restaurants` แทนไฟล์ Static
     const displayedRestaurants = showAllRestaurants ? restaurants : restaurants.slice(0, 9);
 
     const scrollToSection = (sectionId: string) => {
@@ -152,7 +161,6 @@ export default function ChiangMaiTravelGuide() {
         }
     };
 
-    // 4. หน้า Loading สวยๆ ระหว่างรอข้อมูล
     if (isLoading) {
         return (
             <div className="min-h-screen bg-[#fbfbfb] flex items-center justify-center">
@@ -164,7 +172,7 @@ export default function ChiangMaiTravelGuide() {
     return (
         <motion.div initial="hidden" animate="visible" className="font-sans text-gray-800 bg-[#fbfbfb] min-h-screen">
             
-            {/* --- HERO SECTION --- */}
+            {/* HERO CONTAINER */}
             <div className="relative h-screen w-full bg-black overflow-hidden">
                 <motion.img variants={heroImageVariants} src="/Food/Hero2.png" alt="Northern Thai Food" className="w-full h-full object-cover opacity-80" />
                 <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"></div>
@@ -180,7 +188,7 @@ export default function ChiangMaiTravelGuide() {
 
             <motion.div variants={mainContentVariants} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 flex flex-col md:flex-row gap-12 relative" >
                 
-                {/* --- SIDEBAR --- */}
+                {/* SIDEBAR */}
                 <motion.div variants={fadeUpVariants} className="w-full md:w-1/4">
                     <div className="sticky top-20 self-start">
                         <h3 className="text-xl font-bold mb-6 text-gray-700 px-4">{ui.catTitle}</h3>
@@ -194,7 +202,7 @@ export default function ChiangMaiTravelGuide() {
                                     {ui.catRest}
                                 </span>
                                 <span className={`text-sm font-bold ${activeSection === 'restaurant-section' ? 'text-[#16a34a]' : ''}`}>
-                                    {restaurants.length} {/* อ้างอิงความยาวจาก State DB */}
+                                    {restaurants.length}
                                 </span>
                             </li>
                             <li
@@ -210,7 +218,7 @@ export default function ChiangMaiTravelGuide() {
                     </div>
                 </motion.div>
 
-                {/* --- MAIN CONTENT --- */}
+                {/* MAIN CONTENT */}
                 <motion.div variants={fadeUpVariants} className="w-full md:w-3/4">
 
                     {/* Section 1: Restaurants */}
@@ -240,6 +248,13 @@ export default function ChiangMaiTravelGuide() {
                                         >
                                             <div className="w-full h-44 relative overflow-hidden shrink-0">
                                                 <img src={rest.image} alt={rest.locales[locale]?.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                                                
+                                                <div className="absolute top-3 right-3 bg-white/95 backdrop-blur-sm px-2.5 py-1 rounded-xl shadow-md flex items-center gap-1 border border-slate-100">
+                                                    <Star className="w-3.5 h-3.5 fill-yellow-400 stroke-yellow-400" />
+                                                    <span className="text-xs font-black text-slate-800">
+                                                        {rest.averageRating !== undefined && rest.averageRating > 0 ? rest.averageRating : "0"}
+                                                    </span>
+                                                </div>
                                             </div>
 
                                             <div className="w-full p-5 flex flex-col justify-between flex-grow">
@@ -247,11 +262,16 @@ export default function ChiangMaiTravelGuide() {
                                                     <h3 className="text-lg font-bold text-gray-900 mb-2">{rest.locales[locale]?.name}</h3>
                                                     <p className="text-sm text-gray-500 line-clamp-2 leading-relaxed">{rest.locales[locale]?.desc}</p>
                                                 </div>
-                                                <div className="mt-5">
-                                                    <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-600 max-w-full">
-                                                        <span className="text-red-500 text-xs"><MapPin /></span>
+                                                <div className="mt-5 flex items-center justify-between gap-2">
+                                                    <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-600 max-w-[65%]">
+                                                        <span className="text-red-500 text-xs shrink-0"><MapPin /></span>
                                                         <span className="truncate font-medium">{rest.locales[locale]?.location}</span>
                                                     </div>
+                                                    
+                                                    {/* แสดงจำนวนการเขียนรีวิวกำกับไว้ด้านท้าย */}
+                                                    <span className="text-xs font-bold text-gray-400 shrink-0">
+                                                        {rest.reviewCount || 0} {ui.reviewUnit}
+                                                    </span>
                                                 </div>
                                             </div>
                                         </Link>

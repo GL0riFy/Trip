@@ -6,10 +6,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { 
   MapPin,
-  Loader2
+  Loader2,
+  Star
 } from 'lucide-react';
-// นำเข้า Interface จากโมเดลโรงแรมมาใช้แทน Static Type ตัวเก่า
-import { IHotel } from '@/models/Hotels'; // ปรับ path ตามไฟล์โมเดลของคุณ
+import { IHotel } from '@/models/Hotels';
 
 type Locale = 'th' | 'en' | 'zh';
 type Category = 'all' | 'city' | 'hotel' | 'nature' | 'riverside';
@@ -19,12 +19,10 @@ export default function HotelGuide() {
     const locale = (params.locale as Locale) || 'en';
     const [activeTab, setActiveTab] = useState<Category>('all');
     
-    // เปลี่ยนมาเริ่มต้นด้วย Array เปล่าสำหรับรอรับข้อมูลจาก Database
     const [hotels, setHotels] = useState<IHotel[]>([]); 
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [isError, setIsError] = useState<boolean>(false);
 
-    // ดึงข้อมูลโรงแรมจาก API ทันทีเมื่อหน้าเว็บโหลดขึ้นมา
     useEffect(() => {
         const fetchHotels = async () => {
             try {
@@ -53,6 +51,7 @@ export default function HotelGuide() {
         secTitle: string;
         secDesc: string;
         tabs: Record<Category, string>;
+        reviewsCount: string;
     }
 
     const uiMap: Record<Locale, UITranslation> = {
@@ -62,7 +61,8 @@ export default function HotelGuide() {
             heroDesc: "รวมที่พัก ทั้งในตัวเมืองเชียงใหม่และรอบเมืองเชียงใหม่",
             secTitle: "แนะนำที่พักยอดฮิตในเชียงใหม่",
             secDesc: "รวบรวมข้อมูลและพิกัดที่พักในโซนต่างๆ ของเชียงใหม่ พร้อมรายละเอียดการเดินทางเบื้องต้น เพื่อเป็นตัวช่วยในการวางแผนทริปของคุณ",
-            tabs: { all: "ทั้งหมด", city: "ในตัวเมือง", hotel: "บ้านพัก/คฤหาสน์", nature: "ธรรมชาติ", riverside: "ริมแม่น้ำ" }
+            tabs: { all: "ทั้งหมด", city: "ในตัวเมือง", hotel: "บ้านพัก/คฤหาสน์", nature: "ธรรมชาติ", riverside: "ริมแม่น้ำ" },
+            reviewsCount: "รีวิว"
         },
         en: {
             heroTitle: "Recommended Stays",
@@ -70,7 +70,8 @@ export default function HotelGuide() {
             heroDesc: "Best accommodations in the city and surrounding areas.",
             secTitle: "Popular Stays in Chiang Mai",
             secDesc: "Discover handpicked accommodations across various zones to help you plan your perfect trip.",
-            tabs: { all: "All", city: "City Center", hotel: "Houses/Manors", nature: "Nature", riverside: "Riverside" }
+            tabs: { all: "All", city: "City Center", hotel: "Houses/Manors", nature: "Nature", riverside: "Riverside" },
+            reviewsCount: "reviews"
         },
         zh: {
             heroTitle: "推荐住宿",
@@ -78,15 +79,21 @@ export default function HotelGuide() {
             heroDesc: "城市及周边地区最佳住宿选择。",
             secTitle: "清迈热门住宿",
             secDesc: "发现精心挑选的住宿地点，遍布各个区域，帮助您规划完美的行程。",
-            tabs: { all: "全部", city: "市中心", hotel: "别墅/庄园", nature: "自然", riverside: "河岸" }
+            tabs: { all: "全部", city: "市中心", hotel: "别墅/庄园", nature: "自然", riverside: "河岸" },
+            reviewsCount: "条评价"
         }
     };
 
     const ui = uiMap[locale] || uiMap.en;
 
-    const filteredHotels = activeTab === 'all'
-        ? hotels
-        : hotels.filter(h => h.type === activeTab);
+    // 🔥 Fix: เรียงตามคะแนนดาวจากเยอะสุดไปน้อยสุด (Descending) ดึงค่าตามจริงใน DB 
+    const filteredHotels = [...hotels]
+        .filter(h => activeTab === 'all' || h.type === activeTab)
+        .sort((a, b) => {
+            const ratingA = a.starRating ?? 0;
+            const ratingB = b.starRating ?? 0;
+            return ratingB - ratingA;
+        });
 
     return (
         <motion.div 
@@ -135,7 +142,6 @@ export default function HotelGuide() {
                         ))}
                     </div>
 
-                    {/* แสดงสถานะกำลังโหลดข้อมูล */}
                     {isLoading && (
                         <div className="flex flex-col items-center justify-center py-20 w-full gap-4">
                             <Loader2 className="animate-spin text-blue-900 w-12 h-12" />
@@ -143,27 +149,29 @@ export default function HotelGuide() {
                         </div>
                     )}
 
-                    {/* แสดงกรณีดึงข้อมูลไม่สำเร็จ */}
                     {isError && !isLoading && (
                         <div className="text-center py-20 w-full">
                             <p className="text-red-500 font-bold text-lg">Error loading data. Please try again later.</p>
                         </div>
                     )}
 
-                    {/* แสดงกรณีไม่มีข้อมูลห้องพักในหมวดหมู่นั้นๆ */}
                     {!isLoading && !isError && filteredHotels.length === 0 && (
                         <div className="text-center py-20 w-full">
                             <p className="text-gray-400 text-lg">No accommodations found in this category.</p>
                         </div>
                     )}
 
-                    {/* ส่วนแสดงการ์ดห้องพักเมื่อข้อมูลพร้อมใช้งาน */}
                     {!isLoading && !isError && (
                         <motion.div layout className="grid grid-cols-1 md:grid-cols-6 gap-6 items-stretch">
                             <AnimatePresence mode='popLayout'>
                                 {filteredHotels.map((hotel, index) => {
                                     const isLarge = activeTab === 'all' && index < 2;
                                     
+                                    // 1. ล็อกรีวิวเริ่มต้นเป็น 0 ตามต้องการ
+                                    const reviewCount = 0; 
+                                    // 2. ดึงดาวจริงจาก DB (ถ้าไม่มีให้ขึ้น 0.0) ไม่บังคับ 5 ดาวแล้ว
+                                    const currentRating = hotel.starRating ?? 0;
+
                                     return (
                                         <motion.div
                                             key={hotel.id}
@@ -178,12 +186,25 @@ export default function HotelGuide() {
                                                 href={`/${locale}/hotels/${hotel.slug}`} 
                                                 className="group flex flex-col w-full h-full bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-gray-100"
                                             >
+                                                {/* 🔥 Fix: ย้ายกล่องดาวเข้ามาอยู่ใน Container 'relative' ชั้นเดียวกับรูปภาพ เพื่อป้องกันการจมหาย */}
                                                 <div className={`relative w-full shrink-0 overflow-hidden ${isLarge ? 'h-[360px]' : 'h-[240px]'}`}>
                                                     <img 
                                                         src={hotel.image} 
                                                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
                                                         alt={hotel.locales[locale]?.name || hotel.locales['th'].name} 
                                                     />
+                                                    
+                                                    {/* 🌟 กล่องคะแนนดาวลอยเด่นอยู่มุมขวาบนของตัวรูปภาพอย่างสมบูรณ์ */}
+                                                    <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-xl shadow-md flex items-center gap-2 border border-gray-100 z-10">
+                                                        <div className="flex items-center gap-0.5 text-yellow-500 font-bold text-xs">
+                                                            <Star size={14} fill="currentColor" />
+                                                            <span>{currentRating.toFixed(1)}</span>
+                                                        </div>
+                                                        <span className="w-px h-3 bg-gray-200" />
+                                                        <span className="text-[11px] text-gray-500 font-medium">
+                                                            {reviewCount} {ui.reviewsCount}
+                                                        </span>
+                                                    </div>
                                                 </div>
 
                                                 <div className="p-6 flex flex-col flex-grow">

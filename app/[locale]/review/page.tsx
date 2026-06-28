@@ -205,7 +205,7 @@ export default function ReviewPage() {
 
     useEffect(() => {
         setIsMounted(true);
-        const promise = fetch('/api/review')
+        const promise = fetch('/api/webreview')
             .then((res) => res.json())
             .then((data) => {
                 if (Array.isArray(data)) {

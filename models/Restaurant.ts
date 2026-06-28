@@ -30,7 +30,10 @@ const RestaurantSchema = new Schema(
     gallery:   { type: [String], default: [] },
     mapLink:   { type: String, required: true },
     coords:    { type: CoordsSchema, required: true },
-    rating:    { type: Number, required: true, min: 0, max: 5 },
+    averageRating: { type: Number, default: 0, min: 0, max: 5 },
+    reviewCount:   { type: Number, default: 0 },
+    // ────────────────────────────────────────────────────────────────────────────
+
     openHours: { type: String, required: true },
     tel:       { type: String, required: true },
     locales: {
@@ -45,6 +48,9 @@ const RestaurantSchema = new Schema(
   }
 );
 
+// สร้าง Index สำหรับตอนที่เราต้องการดึงร้านอาหารมาจัดเรียงตามคะแนนดาวเยอะที่สุด (เรียงลำดับเร็วขึ้นมาก)
+RestaurantSchema.index({ averageRating: -1 });
+
 // ── TypeScript interface ───────────────────────────────────────────────────
 export interface ILocaleContent {
   name:        string;
@@ -55,15 +61,16 @@ export interface ILocaleContent {
 }
 
 export interface IRestaurant extends Document {
-  id:        string;
-  slug:      string;
-  image:     string;
-  gallery:   string[];
-  mapLink:   string;
-  coords:    { lat: number; lng: number };
-  rating:    number;
-  openHours: string;
-  tel:       string;
+  id:            string;
+  slug:          string;
+  image:         string;
+  gallery:       string[];
+  mapLink:       string;
+  coords:        { lat: number; lng: number };
+  averageRating: number; 
+  reviewCount:   number;
+  openHours:     string;
+  tel:           string;
   locales: {
     th: ILocaleContent;
     en: ILocaleContent;
@@ -72,8 +79,11 @@ export interface IRestaurant extends Document {
 }
 
 // ── Model (singleton-safe for Next.js hot-reload) ─────────────────────────
-const RestaurantModel: Model<IRestaurant> =
-  mongoose.models.Restaurant ||
+if (mongoose.models.Restaurant) {
+  delete mongoose.models.Restaurant;
+}
+
+const RestaurantModel: Model<IRestaurant> = 
   mongoose.model<IRestaurant>("Restaurant", RestaurantSchema);
 
 export default RestaurantModel;

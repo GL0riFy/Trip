@@ -65,6 +65,8 @@ export default async function HotelDetailPage({ params }: Props) {
 
   // 5. จัดรูปแบบก้อน Data ให้เข้ากับโครงสร้างที่หน้า UI รอรับไป Render
   const uiData = {
+    id: hotel.id,
+    _id: String(hotel._id),
     name: currentLocaleData.name,
     address: currentLocaleData.address || currentLocaleData.location,
     images: hotel.gallery && hotel.gallery.length > 0 ? hotel.gallery : [hotel.image],
