@@ -17,10 +17,10 @@ async function connectDB() {
   if (mongoose.connection.readyState >= 1) return;
   
   // ตรวจสอบตัวแปร Environment และใส่ fallback เป็น URI ของคุณ
-  const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/ชื่อเดตาเบสของคุณ";
+  const DATABASE_URL = process.env.DATABASE_URL || "";
   
   try {
-    await mongoose.connect(MONGODB_URI);
+    await mongoose.connect(DATABASE_URL);
     console.log("MongoDB Connected Successfully for Slug Page");
   } catch (err) {
     console.error("MongoDB Connection Error:", err);
