@@ -4,7 +4,6 @@ import { motion, Variants, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useLocale } from "next-intl";
 import Image from "next/image";
-// ถอดการนำเข้าลบดึง static data ตัวเดิมออก
 import { verifiedDistrictLocationOverrides } from "@/src/data/verified-product-locations";
 
 type SortType = "default" | "price-asc" | "price-desc";
@@ -29,6 +28,7 @@ interface APIProduct {
   icon: string;
   mapsQuery: string;
   phone: string;
+  viewCount?: number; // เพิ่มฟิลด์นี้รองรับค่าจาก Database
   locales: {
     th: APILocaleContent;
     en: APILocaleContent;
@@ -46,6 +46,7 @@ type Product = {
   icon: string;
   mapsQuery: string;
   phone: string;
+  viewCount?: number; // เพิ่มฟิลด์นี้เพื่อให้ UI เรียกใช้งานได้
   name: string;
   nameTH: string;
   nameCN: string;
@@ -77,13 +78,12 @@ function normalizeProducts(apiProducts: APIProduct[]): Product[] {
   const districtItemCounter = new Map<string, number>();
 
   return apiProducts.map((p) => {
-    // ดึงค่าแยกภาษาออกมา และ fallback ไปยัง en หากไม่มีข้อมูล
     const th = p.locales?.th || p.locales?.en;
     const en = p.locales?.en;
     const zh = p.locales?.zh || p.locales?.en;
 
     const baseProduct: Product = {
-      id: parseInt(p.id, 10) || 0, // แปลง id จาก string ในฐานข้อมูลเป็น number ตามโค้ดเดิม
+      id: parseInt(p.id, 10) || 0,
       slug: p.slug,
       price: p.price,
       image: p.image,
@@ -91,6 +91,7 @@ function normalizeProducts(apiProducts: APIProduct[]): Product[] {
       icon: p.icon,
       mapsQuery: p.mapsQuery,
       phone: p.phone,
+      viewCount: p.viewCount || 0, // สวมค่า viewCount เข้ามาใน Object
       name: en?.name || "",
       nameTH: th?.name || "",
       nameCN: zh?.name || "",
@@ -110,7 +111,6 @@ function normalizeProducts(apiProducts: APIProduct[]): Product[] {
 
     if (!baseProduct.district) return baseProduct;
 
-    // ระบบตรวจจับพิกัดและข้อมูลแก้ไขตามอำเภอเดิมของคุณ
     const districtOverrides = verifiedDistrictLocationOverrides[baseProduct.district];
     if (!districtOverrides || districtOverrides.length === 0) return baseProduct;
 
@@ -171,7 +171,6 @@ const filterFade: Variants = {
 export default function RefactoredProductShowcase() {
   const locale = useLocale();
 
-  // State สำหรับเก็บข้อมูลสินค้าที่ได้รับมาจาก API และจัดการสถานะการโหลด
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -195,7 +194,30 @@ export default function RefactoredProductShowcase() {
 
   const closeContactPopup = () => setSelectedProduct(null);
 
-  // ดึงข้อมูลสินค้าจาก API ด้วย useEffect เมื่อคอมโพเนนต์ Mount
+  // ฟังก์ชันรองรับการกดดูสินค้า (เพิ่มยอดวิวแบบ Real-time และบันทึกลง MongoDB หลังบ้าน)
+  const handleProductClick = async (product: Product) => {
+    // 1. อัปเดต UI State หน้ารายการสินค้าทันที (Optimistic Update)
+    setProducts((prev) =>
+      prev.map((p) =>
+        p.id === product.id ? { ...p, viewCount: (p.viewCount || 0) + 1 } : p
+      )
+    );
+
+    // 2. ส่งค่าสินค้าที่โดนบวกวิวไปแสดงใน Modal ทันที
+    setSelectedProduct({ ...product, viewCount: (product.viewCount || 0) + 1 });
+
+    // 3. ยิงไปเซฟข้อมูลจำนวนการดูลง Database ในระบบหลังบ้านแบบ Background process
+    try {
+      await fetch("/api/products", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ slug: product.slug }),
+      });
+    } catch (err) {
+      console.error("Error updating view count:", err);
+    }
+  };
+
   useEffect(() => {
     async function fetchProducts() {
       try {
@@ -258,7 +280,6 @@ export default function RefactoredProductShowcase() {
 
   const featuredProduct = products[0];
 
-  // แสดงหน้าจอ Loading แบบเรียบง่ายระหว่างรอข้อมูลจาก API 
   if (isLoading) {
     return (
       <div className="flex h-screen w-screen items-center justify-center bg-[#F9F8F6]" style={{ display: 'flex', height: '100vh', justifyContent: 'center', alignItems: 'center', background: '#F9F8F6', color: '#1A1714', fontFamily: 'sans-serif' }}>
@@ -887,7 +908,7 @@ export default function RefactoredProductShowcase() {
             <motion.div variants={heroItem} className="hero-stats">
               <div>
                 <span className="hero-stat-num">{products.length}+</span>
-                <span className="hero-stat-label">{tri(locale, "Products", "商品", "สินค้า")}</span>
+                <span className="hero-stat-label seaw-label">{tri(locale, "Products", "商品", "สินค้า")}</span>
               </div>
               <div>
                 <span className="hero-stat-num">{allDistricts.length}</span>
@@ -916,7 +937,7 @@ export default function RefactoredProductShowcase() {
                   className="hero-img-main"
                   style={{ objectFit: "cover" }}
                 />
-                <div className="hero-card-float" onClick={() => setSelectedProduct(featuredProduct)}>
+                <div className="hero-card-float" onClick={() => handleProductClick(featuredProduct)}>
                   <div>
                     <div className="hero-card-title">{displayName(featuredProduct)}</div>
                     <div className="hero-card-sub">
@@ -1010,7 +1031,7 @@ export default function RefactoredProductShowcase() {
                   <select value={sortType} onChange={e => setSortType(e.target.value as SortType)}>
                     <option value="default">{tri(locale, "Sort: Default", "默认排序", "เรียง: ค่าเริ่มต้น")}</option>
                     <option value="price-asc">{tri(locale, "Price: Low → High", "价格从低到高", "ราคา: ต่ำ → สูง")}</option>
-                    <option value="price-desc">{tri(locale, "Price: High → Low", "价格从高到低", "ราคา: สูง → ต่ำ")}</option>
+                    <option value="price-desc">{tri(locale, "Price: High → Low", "价格จาก高到低", "ราคา: สูง → ต่ำ")}</option>
                   </select>
                 </div>
               </div>
@@ -1030,7 +1051,7 @@ export default function RefactoredProductShowcase() {
                   key={product.id}
                   variants={fadeUp}
                   className="product-card"
-                  onClick={() => setSelectedProduct(product)}
+                  onClick={() => handleProductClick(product)}
                 >
                   <div className="card-img-wrap">
                     <Image
@@ -1071,10 +1092,29 @@ export default function RefactoredProductShowcase() {
                       )}
                     </div>
 
+                    {/* แสดงจำนวนคนเข้าชมสินค้าบนการ์ด */}
+                    <div className="card-views" style={{
+                      fontSize: '12px',
+                      color: 'var(--ink-soft)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '5px',
+                      marginTop: '10px',
+                      marginBottom: '14px'
+                    }}>
+                      <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      </svg>
+                      <span>
+                        {product.viewCount || 0} {tri(locale, "views", "次浏览", "คนเข้าชม")}
+                      </span>
+                    </div>
+
                     <button
                       type="button"
                       className="card-btn"
-                      onClick={(e) => { e.stopPropagation(); setSelectedProduct(product); }}
+                      onClick={(e) => { e.stopPropagation(); handleProductClick(product); }}
                     >
                       {tri(locale, "View Contact", "联系商家", "ดูข้อมูลติดต่อ")}
                       <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
@@ -1133,7 +1173,10 @@ export default function RefactoredProductShowcase() {
                   <div className="modal-hero-info">
                     <div className="modal-eyebrow">{tri(locale, "Shop Contact", "商家联系方式", "ข้อมูลติดต่อร้าน")}</div>
                     <h2 className="modal-title">{displayName(selectedProduct)}</h2>
-                    <div className="modal-district">{displayDistrict(selectedProduct)} · เชียงใหม่</div>
+                    {/* แสดงยอดเข้าชมด้านใน Modal ถัดจากชื่ออำเภอ */}
+                    <div className="modal-district">
+                      {displayDistrict(selectedProduct)} · เชียงใหม่ · 👀 {selectedProduct.viewCount || 0} {tri(locale, "views", "次浏览", "คนเข้าชม")}
+                    </div>
                   </div>
                   <button className="modal-close-btn" onClick={closeContactPopup}>
                     <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">

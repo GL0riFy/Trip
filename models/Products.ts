@@ -1,13 +1,13 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 
-// ── Sub-schema: Locale Content (รวมข้อมูลภาษาทั้งหมดไว้ที่นี่) ─────────────────
+// ── Sub-schema: Locale Content ──────────────────────────────────────────
 const LocaleContentSchema = new Schema(
   {
     name:        { type: String, required: true },
     description: { type: String, required: true },
     address:     { type: String, required: true },
     district:    { type: String, default: "" },
-    shopName:    { type: String, required: true }, // ย้ายเข้ามาอยู่ที่นี่แล้ว
+    shopName:    { type: String, required: true },
   },
   { _id: false }
 );
@@ -24,7 +24,9 @@ const ProductSchema = new Schema(
     mapsQuery: { type: String, required: true },
     phone:     { type: String, default: "" },
     
-    // ฟิลด์ shopName ระดับนอกสุดถูกลบออกแล้ว เหลือเฉพาะใน locales
+    // เพิ่มฟิลด์สำหรับนับยอดวิว
+    viewCount: { type: Number, default: 0 }, 
+    
     locales: {
       th: { type: LocaleContentSchema, required: true },
       en: { type: LocaleContentSchema, required: true },
@@ -43,7 +45,7 @@ export interface ILocaleContent {
   description: string;
   address:     string;
   district:    string;
-  shopName:    string; // อัปเดต Interface ของภาษา
+  shopName:    string;
 }
 
 export interface IProduct extends Document {
@@ -55,6 +57,7 @@ export interface IProduct extends Document {
   icon:       string;
   mapsQuery:  string;
   phone:      string;
+  viewCount:  number; // เพิ่มเข้ามาใน Interface
   locales: {
     th: ILocaleContent;
     en: ILocaleContent;
@@ -62,7 +65,7 @@ export interface IProduct extends Document {
   };
 }
 
-// ── Model (Singleton-safe สำหรับ Next.js) ──────────────────────────────────
+// ── Model ────────────────────────────────────────────────────────────────
 const ProductModel: Model<IProduct> =
   mongoose.models.Product ||
   mongoose.model<IProduct>("Product", ProductSchema);
