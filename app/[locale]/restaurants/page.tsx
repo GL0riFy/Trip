@@ -49,34 +49,40 @@ export default function ChiangMaiTravelGuide() {
     const [activeSection, setActiveSection] = useState('restaurant-section');
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchData = async (silent = false) => {
             try {
-                setIsLoading(true);
+                if (!silent) setIsLoading(true);
                 const [resRestaurants, resTips] = await Promise.all([
                     fetch('/api/restaurants'),
                     fetch('/api/tips')
                 ]);
 
-                if (resRestaurants.ok && resTips.ok) {
+                // 1. จัดการข้อมูลร้านอาหารแยกต่างหาก
+                if (resRestaurants.ok) {
                     let restaurantsData: IRestaurant[] = await resRestaurants.json();
-                    const tipsData = await resTips.json();
                     
-                    // 💡 โลจิกจัดเรียง: เอาร้านที่มีดาวเฉลี่ย (averageRating) สูงสุดขึ้นก่อน 
-                    // ถ้าดาวเท่ากัน ให้เอาร้านที่มีจำนวนรีวิว (reviewCount) มากกว่าขึ้นก่อนเพื่อความน่าเชื่อถือ
                     restaurantsData.sort((a, b) => {
                         const rateA = a.averageRating ?? 0;
                         const rateB = b.averageRating ?? 0;
                         if (rateB !== rateA) {
-                            return rateB - rateA; // เรียงจากมากไปน้อย
+                            return rateB - rateA;
                         }
                         return (b.reviewCount ?? 0) - (a.reviewCount ?? 0);
                     });
 
                     setRestaurants(restaurantsData);
+                } else {
+                    console.error("Failed to load Restaurants API");
+                }
+
+                // 2. จัดการข้อมูลทริป/เคล็ดลับแยกต่างหาก
+                if (resTips.ok) {
+                    const tipsData = await resTips.json();
                     setTips(tipsData);
                 } else {
-                    console.error("Failed to load API data");
+                    console.error("Failed to load Tips API");
                 }
+
             } catch (error) {
                 console.error("Error fetching data:", error);
             } finally {
@@ -84,7 +90,17 @@ export default function ChiangMaiTravelGuide() {
             }
         };
 
-        fetchData();
+        fetchData(false);
+
+        // Re-fetch ดาวและ reviewCount ใหม่ทุกครั้งที่ user กลับมาที่แท็บนี้
+        // (แก้ปัญหา: ดาวหน้าหลักไม่อัปเดตหลังรีวิวในหน้า detail แล้วกลับมา)
+        const handleVisibilityChange = () => {
+            if (document.visibilityState === 'visible') {
+                fetchData(true); // silent=true: ไม่แสดง loading spinner ระหว่าง refresh
+            }
+        };
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+        return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
     }, []);
 
     useEffect(() => {

@@ -1,426 +1,703 @@
+// app/[locale]/restaurants/[slug]/RestaurantDetailClient.tsx
 "use client";
 
-import dynamic from 'next/dynamic';
 import React, { useState } from 'react';
-import { motion, Variants, AnimatePresence } from 'framer-motion';
-import { 
-    Star, MapPin, Clock, Phone, ChevronLeft, 
-    UtensilsCrossed, X, ChevronRight, MessageSquare
+import dynamic from 'next/dynamic';
+import { AnimatePresence, motion } from 'framer-motion';
+import {
+  MapPin, Clock, Phone, Star, UtensilsCrossed,
+  Share, Heart, X, ChevronLeft, ChevronRight, MessageSquare
 } from 'lucide-react';
+import toast, { Toaster } from 'react-hot-toast';
 import { IRestaurant } from '@/models/Restaurant';
 
 type Locale = 'th' | 'en' | 'zh';
 
 interface IReviewItem {
-    _id: string;
-    username: string;
-    rating: number;
-    comment: string;
-    createdAt: string;
+  _id: string;
+  username: string;
+  rating: number;
+  comment: string;
+  createdAt: string;
 }
 
 interface ClientProps {
-    restaurant: IRestaurant;
-    initialReviews: IReviewItem[]; // 👈 เปิดรับลิสต์รีวิวที่ส่งมาจากหลังบ้าน
-    locale: Locale;
+  restaurant: IRestaurant;
+  initialReviews: IReviewItem[];
+  locale: Locale;
 }
 
-function InfoItem({ icon, label, value, color }: { 
-    icon: React.ReactNode; label: string; value: string; color: string 
-}) {
-    return (
-        <div className="flex flex-col gap-3">
-            <div className={`${color} p-3 bg-white w-fit rounded-xl shadow-sm border border-slate-50`}>
-                {icon}
-            </div>
-            <div>
-                <p className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">{label}</p>
-                <p className="text-slate-800 font-semibold leading-snug">{value}</p>
-            </div>
-        </div>
-    );
-}
-
-const MapComponent = dynamic(() => import('./MapComponent'), { 
-    ssr: false,
-    loading: () => <div className="h-[450px] w-full bg-slate-100 animate-pulse rounded-[2.5rem]" />
+const MapComponent = dynamic(() => import('./MapComponent'), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-full bg-gray-100 rounded-2xl animate-pulse flex items-center justify-center text-gray-400 text-sm">
+      Loading map...
+    </div>
+  ),
 });
 
-const fadeInUp: Variants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } }
+const translations = {
+  th: {
+    recommended: "แนะนำ",
+    aboutRestaurant: "เกี่ยวกับร้านอาหาร",
+    signatureDishes: "เมนูแนะนำ",
+    openingHours: "เวลาเปิดทำการ",
+    contact: "ติดต่อร้านโดยตรง",
+    reviews: "รีวิวจากผู้ใช้งาน",
+    writeReview: "เขียนรีวิว",
+    yourName: "ชื่อของคุณ",
+    yourRating: "คะแนนของคุณ",
+    yourComment: "ความคิดเห็นของคุณ",
+    submitReview: "ส่งรีวิว",
+    submitting: "กำลังส่ง...",
+    reviewSuccess: "ขอบคุณสำหรับรีวิวของคุณ! 🎉",
+    reviewError: "เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง",
+    noReviews: "ยังไม่มีรีวิว มาเป็นคนแรกที่รีวิวร้านนี้กันเลย!",
+    basedOn: "จาก",
+    ratingsTotal: "รีวิว",
+    namePlaceholder: "กรอกชื่อของคุณ",
+    commentPlaceholder: "แชร์ประสบการณ์ของคุณที่ร้านนี้...",
+    cancel: "ยกเลิก",
+    location: "ที่ตั้ง",
+    viewAllPhotos: "ดูรูปทั้งหมด",
+  },
+  en: {
+    recommended: "Recommended",
+    aboutRestaurant: "About the restaurant",
+    signatureDishes: "Signature Dishes",
+    openingHours: "Opening Hours",
+    contact: "Contact directly",
+    reviews: "Customer Reviews",
+    writeReview: "Write a Review",
+    yourName: "Your Name",
+    yourRating: "Your Rating",
+    yourComment: "Your Comment",
+    submitReview: "Submit Review",
+    submitting: "Submitting...",
+    reviewSuccess: "Thank you for your review! 🎉",
+    reviewError: "Something went wrong. Please try again.",
+    noReviews: "No reviews yet. Be the first to review this restaurant!",
+    basedOn: "Based on",
+    ratingsTotal: "reviews",
+    namePlaceholder: "Enter your name",
+    commentPlaceholder: "Share your experience here...",
+    cancel: "Cancel",
+    location: "Location",
+    viewAllPhotos: "View all photos",
+  },
+  zh: {
+    recommended: "推荐餐厅",
+    aboutRestaurant: "关于餐厅",
+    signatureDishes: "推荐菜品",
+    openingHours: "营业时间",
+    contact: "直接联系餐厅",
+    reviews: "用户评价",
+    writeReview: "撰写评价",
+    yourName: "您的姓名",
+    yourRating: "您的评分",
+    yourComment: "您的评论",
+    submitReview: "提交评价",
+    submitting: "提交中...",
+    reviewSuccess: "感谢您的评价！🎉",
+    reviewError: "出现错误，请重试。",
+    noReviews: "暂无评价，成为第一个评价此餐厅的人！",
+    basedOn: "基于",
+    ratingsTotal: "条评价",
+    namePlaceholder: "请输入您的姓名",
+    commentPlaceholder: "在这里分享您的用餐体验...",
+    cancel: "取消",
+    location: "位置",
+    viewAllPhotos: "查看全部照片",
+  },
 };
 
-export default function RestaurantDetailClient({ restaurant, initialReviews, locale }: ClientProps) {
-    const data = restaurant.locales[locale] || restaurant.locales.th;
-    const position = restaurant.coords;
+// ---- Review Modal ----
+function ReviewModal({
+  open,
+  onClose,
+  onSubmit,
+  t,
+  isLoading,
+}: {
+  open: boolean;
+  onClose: () => void;
+  onSubmit: (name: string, rating: number, comment: string) => Promise<void>;
+  t: typeof translations['en'];
+  isLoading: boolean;
+}) {
+  const [formName, setFormName] = useState('');
+  const [formRating, setFormRating] = useState(5);
+  const [formComment, setFormComment] = useState('');
+  const [hoverRating, setHoverRating] = useState(0);
 
-    // ระบบจัดเก็บสถานะรีวิวภายในหน้าบ้าน
-    const [reviews, setReviews] = useState<IReviewItem[]>(initialReviews);
-    const [username, setUsername] = useState("");
-    const [rating, setRating] = useState(5);
-    const [comment, setComment] = useState("");
-    const [hoverRating, setHoverRating] = useState<number | null>(null);
-    const [isSubmitting, setIsSubmitting] = useState(false);
+  const handleSubmit = async () => {
+    if (!formName.trim() || !formComment.trim()) return;
+    await onSubmit(formName.trim(), formRating, formComment.trim());
+    setFormName('');
+    setFormComment('');
+    setFormRating(5);
+  };
 
-    // 💡 ตั้งสเตตโดยดึงพึ่งพา averageRating เท่านั้นตามที่คุณลบไป หากยังไม่มีให้ตั้งไว้ที่ 0 หรือ 5 ดาวชั่วคราว
-    const [displayRating, setDisplayRating] = useState<number>(
-        restaurant.averageRating !== undefined && restaurant.averageRating > 0 
-            ? restaurant.averageRating 
-            : 0 
-    );
+  const handleBackdrop = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) onClose();
+  };
 
-    const uiMap = {
-        th: { label: "Recommended", open: "เวลาเปิดทำการ", tel: "เบอร์โทรศัพท์", menu: "เมนูแนะนำ", gallery: "แกลเลอรี่", reviewTitle: "รีวิวจากผู้ใช้งาน", writeReview: "เขียนรีวิวของคุณ", namePlaceholder: "ชื่อของคุณ", commentPlaceholder: "แชร์ประสบการณ์ความประทับใจของคุณที่นี่...", submitReview: "ส่งรีวิว", reviewCountUnit: "รีวิว" },
-        en: { label: "Recommended", open: "Opening Hours", tel: "Contact", menu: "Signature Dishes", gallery: "Gallery", reviewTitle: "Customer Reviews", writeReview: "Write a Review", namePlaceholder: "Your Name", commentPlaceholder: "Share your experience here...", submitReview: "Submit Review", reviewCountUnit: "Reviews" },
-        zh: { label: "推荐餐厅", open: "营业时间", tel: "电话", menu: "推荐菜品", gallery: "图库", reviewTitle: "用户評價", writeReview: "撰写评论", namePlaceholder: "您的名字", commentPlaceholder: "在这里分享您的体验...", submitReview: "提交评论", reviewCountUnit: "条评论" }
-    };
-    const ui = uiMap[locale] || uiMap.th;
+  if (!open) return null;
 
-    const handleSubmitReview = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!username.trim() || !comment.trim()) return;
+  return (
+    <div
+      onClick={handleBackdrop}
+      className="fixed inset-0 z-[200] flex items-center justify-center px-4"
+      style={{ animation: 'fadeIn 0.2s ease' }}
+    >
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+      <div
+        className="relative bg-white rounded-3xl shadow-2xl w-full max-w-lg p-8 z-10"
+        style={{ animation: 'slideUp 0.3s cubic-bezier(0.34,1.56,0.64,1)' }}
+      >
+        <button
+          onClick={onClose}
+          className="absolute top-5 right-5 p-2 rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition"
+        >
+          <X size={20} />
+        </button>
 
-        setIsSubmitting(true);
-        try {
-            const res = await fetch("/api/reviews", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    targetId: restaurant.id,
-                    targetType: "restaurant",
-                    username,
-                    rating,
-                    comment
-                })
-            });
-
-            if (res.ok) {
-                const json = await res.json();
-                
-                // อัปเดต UI ทันทีหลังเพิ่มรีวิวผ่าน
-                const updatedReviews = [json.data, ...reviews];
-                setReviews(updatedReviews);
-
-                const totalRating = updatedReviews.reduce((sum, item) => sum + item.rating, 0);
-                const avg = totalRating / updatedReviews.length;
-                setDisplayRating(Math.round(avg * 10) / 10);
-
-                setUsername("");
-                setComment("");
-                setRating(5);
-            }
-        } catch (error) {
-            console.error("Failed to submit review:", error);
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
-
-    return (
-        <div className="bg-[#fafafa] min-h-screen font-sans pb-20 text-slate-900">
-
-            {/* 1. HERO */}
-            <div className="relative h-[45vh] md:h-[60vh] w-full overflow-hidden">
-                <motion.img
-                    initial={{ scale: 1.15 }}
-                    animate={{ scale: 1 }}
-                    transition={{ duration: 2, ease: "easeOut" }}
-                    src={restaurant.image}
-                    alt={data.name}
-                    className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/60" />
-            </div>
-
-            {/* 2. MAIN CONTENT AREA */}
-            <div className="max-w-5xl mx-auto px-4 sm:px-6">
-                <motion.div 
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true }}
-                    variants={fadeInUp}
-                    className="relative -mt-24 bg-white rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.05)] p-8 md:p-12 z-10 border border-white mb-12"
-                >
-                    {/* Header */}
-                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
-                        <div className="space-y-3">
-                            <motion.span className="inline-block px-4 py-1.5 rounded-full bg-orange-100 text-orange-600 text-xs font-bold uppercase tracking-widest">
-                                {ui.label}
-                            </motion.span>
-                            <h1 className="text-4xl md:text-6xl font-black tracking-tight text-slate-900">
-                                {data.name}
-                            </h1>
-                            <div className="flex items-center gap-4 text-slate-500">
-                                <div className="flex items-center gap-1.5 bg-yellow-400/10 text-yellow-700 px-3 py-1 rounded-lg">
-                                    <Star className="w-4 h-4 fill-yellow-400 stroke-yellow-400" />
-                                    {/* 💡 แสดงดาวเฉลี่ยจาก State ล่าสุด */}
-                                    <span className="font-bold">{displayRating}</span>
-                                </div>
-                                <span className="text-sm font-medium text-slate-400">
-                                    ({reviews.length} {ui.reviewCountUnit})
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Description */}
-                    <p className="text-slate-600 text-lg md:text-xl leading-relaxed max-w-3xl mb-10">
-                        {data.desc}
-                    </p>
-
-                    {/* GALLERY MOSAIC */}
-                    {restaurant.gallery && restaurant.gallery.length > 0 && (
-                        <motion.div
-                            initial="hidden"
-                            whileInView="visible"
-                            viewport={{ once: true }}
-                            variants={fadeInUp}
-                            className="mb-10"
-                        >
-                            <GalleryMosaic images={restaurant.gallery} name={data.name} />
-                        </motion.div>
-                    )}
-
-                    {/* Info bar */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 p-8 bg-slate-50 rounded-[2rem] border border-slate-100 mb-12">
-                        <InfoItem icon={<MapPin className="w-6 h-6" />} label="Location" value={data.location} color="text-blue-500" />
-                        <InfoItem icon={<Clock className="w-6 h-6" />} label={ui.open} value={restaurant.openHours} color="text-emerald-500" />
-                        <InfoItem icon={<Phone className="w-6 h-6" />} label={ui.tel} value={restaurant.tel} color="text-indigo-500" />
-                    </div>
-
-                    {/* Recommended dishes */}
-                    {data.recommended && data.recommended.length > 0 && (
-                        <div className="space-y-6">
-                            <div className="flex items-center gap-3">
-                                <div className="p-2 bg-orange-500 rounded-lg">
-                                    <UtensilsCrossed className="w-5 h-5 text-white" />
-                                </div>
-                                <h3 className="text-2xl font-bold text-slate-900">{ui.menu}</h3>
-                            </div>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                {data.recommended.map((dish, idx) => (
-                                    <motion.div 
-                                        key={idx}
-                                        whileHover={{ x: 5 }}
-                                        className="flex items-center gap-4 p-4 bg-white border border-slate-100 rounded-2xl hover:border-orange-200 hover:shadow-md transition-all cursor-pointer"
-                                    >
-                                        <span className="flex-shrink-0 w-2 h-2 rounded-full bg-orange-500" />
-                                        <span className="font-semibold text-slate-700">{dish}</span>
-                                    </motion.div>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-                </motion.div>
-
-                {/* 3. MAP SECTION */}
-                {position && (
-                    <motion.div 
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        className="mb-12 space-y-6"
-                    >
-                        <div className="h-[450px] rounded-[2.5rem] overflow-hidden shadow-2xl border-8 border-white relative z-0">
-                            <MapComponent 
-                                lat={position.lat} 
-                                lng={position.lng} 
-                                name={data.name}
-                                mapLink={restaurant.mapLink}
-                            />
-                        </div>
-                    </motion.div>
-                )}
-
-                {/* 4. REVIEWS SECTION */}
-                <motion.div
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true }}
-                    variants={fadeInUp}
-                    className="bg-white rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.05)] p-8 md:p-12 border border-white space-y-10"
-                >
-                    <div className="flex items-center gap-3">
-                        <div className="p-2 bg-blue-500 rounded-lg text-white">
-                            <MessageSquare className="w-5 h-5" />
-                        </div>
-                        <h3 className="text-2xl font-bold text-slate-900">{ui.reviewTitle}</h3>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
-                        {/* ฟอร์มกรอกรีวิว */}
-                        <form onSubmit={handleSubmitReview} className="bg-slate-50 p-6 rounded-3xl border border-slate-100 space-y-4">
-                            <h4 className="font-bold text-slate-800 text-lg">{ui.writeReview}</h4>
-                            
-                            <div>
-                                <label className="text-xs font-bold uppercase tracking-wider text-slate-400 block mb-2">Rating</label>
-                                <div className="flex items-center gap-1">
-                                    {[1, 2, 3, 4, 5].map((star) => (
-                                        <button
-                                            type="button"
-                                            key={star}
-                                            onClick={() => setRating(star)}
-                                            onMouseEnter={() => setHoverRating(star)}
-                                            onMouseLeave={() => setHoverRating(null)}
-                                            className="transition-transform active:scale-95"
-                                        >
-                                            <Star 
-                                                className={`w-7 h-7 ${
-                                                    star <= (hoverRating !== null ? hoverRating : rating)
-                                                        ? "fill-yellow-400 stroke-yellow-400"
-                                                        : "text-slate-300 stroke-slate-300"
-                                                }`} 
-                                            />
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-
-                            <div>
-                                <input 
-                                    type="text" 
-                                    placeholder={ui.namePlaceholder}
-                                    value={username}
-                                    onChange={(e) => setUsername(e.target.value)}
-                                    required
-                                    className="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 focus:outline-none focus:border-orange-400 font-semibold text-sm transition-colors"
-                                />
-                            </div>
-
-                            <div>
-                                <textarea 
-                                    rows={4}
-                                    placeholder={ui.commentPlaceholder}
-                                    value={comment}
-                                    onChange={(e) => setComment(e.target.value)}
-                                    required
-                                    className="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 focus:outline-none focus:border-orange-400 font-medium text-sm transition-colors resize-none"
-                                />
-                            </div>
-
-                            <button
-                                type="submit"
-                                disabled={isSubmitting}
-                                className="w-full bg-slate-900 text-white font-bold py-3 px-6 rounded-xl hover:bg-slate-800 transition-colors disabled:opacity-50 text-sm"
-                            >
-                                {isSubmitting ? "..." : ui.submitReview}
-                            </button>
-                        </form>
-
-                        {/* รายการข้อความรีวิว */}
-                        <div className="space-y-4 max-h-[460px] overflow-y-auto pr-2 custom-scrollbar">
-                            <AnimatePresence initial={false}>
-                                {reviews.length === 0 ? (
-                                    <p className="text-slate-400 font-medium text-center py-10 text-sm">ยังไม่มีรีวิวสำหรับร้านนี้ มารีวิวคนแรกกันเลย!</p>
-                                ) : (
-                                    reviews.map((rev) => (
-                                        <motion.div
-                                            key={rev._id}
-                                            initial={{ opacity: 0, y: -10 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            exit={{ opacity: 0, scale: 0.95 }}
-                                            className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm space-y-2"
-                                        >
-                                            <div className="flex items-center justify-between">
-                                                <h5 className="font-bold text-slate-800 text-sm">{rev.username}</h5>
-                                                <div className="flex items-center gap-0.5">
-                                                    {[...Array(rev.rating)].map((_, i) => (
-                                                        <Star key={i} className="w-3.5 h-3.5 fill-yellow-400 stroke-yellow-400" />
-                                                    ))}
-                                                </div>
-                                            </div>
-                                            <p className="text-slate-600 text-sm leading-relaxed font-medium">{rev.comment}</p>
-                                            <p className="text-[10px] text-slate-400 font-semibold">
-                                                {new Date(rev.createdAt).toLocaleDateString(locale === 'zh' ? 'zh-CN' : locale === 'en' ? 'en-US' : 'th-TH', {
-                                                    year: 'numeric', month: 'short', day: 'numeric'
-                                                })}
-                                            </p>
-                                        </motion.div>
-                                    ))
-                                )}
-                            </AnimatePresence>
-                        </div>
-                    </div>
-                </motion.div>
-
-            </div>
+        <div className="mb-6">
+          <h3 className="text-2xl font-extrabold text-gray-900">{t.writeReview}</h3>
+          <p className="text-sm text-gray-400 mt-1">{t.yourRating}</p>
         </div>
-    );
+
+        {/* Star picker */}
+        <div className="flex gap-2 mb-6">
+          {[1, 2, 3, 4, 5].map(star => (
+            <button
+              key={star}
+              type="button"
+              onClick={() => setFormRating(star)}
+              onMouseEnter={() => setHoverRating(star)}
+              onMouseLeave={() => setHoverRating(0)}
+              className="transition-transform hover:scale-125 active:scale-110"
+            >
+              <Star
+                size={36}
+                className={`transition-colors duration-150 ${star <= (hoverRating || formRating) ? 'text-yellow-400' : 'text-gray-200'}`}
+                fill={star <= (hoverRating || formRating) ? 'currentColor' : 'none'}
+              />
+            </button>
+          ))}
+          <span className="ml-2 self-center text-sm font-semibold text-gray-500">
+            {(hoverRating || formRating)}/5
+          </span>
+        </div>
+
+        {/* Name */}
+        <div className="mb-4">
+          <label className="block text-sm font-semibold text-gray-700 mb-1.5">{t.yourName}</label>
+          <input
+            type="text"
+            value={formName}
+            onChange={e => setFormName(e.target.value)}
+            placeholder={t.namePlaceholder}
+            className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 bg-gray-50 transition"
+          />
+        </div>
+
+        {/* Comment */}
+        <div className="mb-6">
+          <label className="block text-sm font-semibold text-gray-700 mb-1.5">{t.yourComment}</label>
+          <textarea
+            value={formComment}
+            onChange={e => setFormComment(e.target.value)}
+            placeholder={t.commentPlaceholder}
+            rows={4}
+            className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 bg-gray-50 resize-none transition"
+          />
+        </div>
+
+        {/* Actions */}
+        <div className="flex gap-3">
+          <button
+            onClick={onClose}
+            className="flex-1 py-3 text-sm font-semibold text-gray-600 bg-gray-100 rounded-2xl hover:bg-gray-200 transition"
+          >
+            {t.cancel}
+          </button>
+          <button
+            onClick={handleSubmit}
+            disabled={isLoading || !formName.trim() || !formComment.trim()}
+            className="flex-1 py-3 text-sm font-semibold text-white bg-gray-900 rounded-2xl hover:bg-gray-700 transition disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          >
+            {isLoading ? (
+              <>
+                <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                </svg>
+                {t.submitting}
+              </>
+            ) : (
+              <>{t.submitReview}</>
+            )}
+          </button>
+        </div>
+      </div>
+
+      <style>{`
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes slideUp {
+          from { opacity: 0; transform: translateY(40px) scale(0.96); }
+          to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+      `}</style>
+    </div>
+  );
 }
 
-// ─── Component ย่อย GalleryMosaic ───
-function GalleryMosaic({ images, name }: { images: string[]; name: string }) {
-    const [lightbox, setLightbox] = useState<number | null>(null);
+// ---- Bento Grid Gallery ----
+function BentoGallery({ images, name }: { images: string[]; name: string }) {
+  const [isGalleryOpen, setIsGalleryOpen] = useState(false);
+  const [lightboxIdx, setLightboxIdx] = useState(0);
 
-    const prev = () => setLightbox(i => (i! - 1 + images.length) % images.length);
-    const next = () => setLightbox(i => (i! + 1) % images.length);
-    const count = images.length;
+  const openLightbox = (idx = 0) => {
+    setLightboxIdx(idx);
+    setIsGalleryOpen(true);
+  };
 
-    if (count === 1) {
-        return (
-            <div className="w-full h-[260px] md:h-[340px] relative cursor-pointer group overflow-hidden rounded-[1.5rem]" onClick={() => setLightbox(0)}>
-                <img src={images[0]} alt={`${name} 1`} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
+  if (!images || images.length === 0) return null;
+
+  return (
+    <>
+      <div className="relative mb-10">
+        {images.length === 1 && (
+          <div className="h-[500px] rounded-3xl overflow-hidden cursor-pointer" onClick={() => openLightbox(0)}>
+            <img src={images[0]} alt={name} className="w-full h-full object-cover hover:scale-105 transition duration-700" />
+          </div>
+        )}
+        {images.length === 2 && (
+          <div className="grid md:grid-cols-2 gap-3 h-[500px] rounded-3xl overflow-hidden">
+            {images.map((img, idx) => (
+              <div key={idx} className="overflow-hidden cursor-pointer" onClick={() => openLightbox(idx)}>
+                <img src={img} alt={`${name} ${idx + 1}`} className="w-full h-full object-cover hover:scale-105 transition duration-700" />
+              </div>
+            ))}
+          </div>
+        )}
+        {images.length === 3 && (
+          <div className="grid md:grid-cols-3 gap-3 h-[500px] rounded-3xl overflow-hidden">
+            <div className="md:col-span-2 overflow-hidden cursor-pointer" onClick={() => openLightbox(0)}>
+              <img src={images[0]} alt={`${name} 1`} className="w-full h-full object-cover hover:scale-105 transition duration-700" />
             </div>
-        );
-    }
-
-    if (count === 2) {
-        return (
-            <div className="grid grid-cols-2 gap-2 h-[260px] md:h-[340px] rounded-[1.5rem] overflow-hidden">
-                {images.map((src, idx) => (
-                    <div key={idx} className="relative cursor-pointer group overflow-hidden" onClick={() => setLightbox(idx)}>
-                        <img src={src} alt={`${name} ${idx + 1}`} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
+            <div className="grid grid-rows-2 gap-3">
+              {images.slice(1).map((img, idx) => (
+                <div key={idx} className="overflow-hidden cursor-pointer" onClick={() => openLightbox(idx + 1)}>
+                  <img src={img} alt={`${name} ${idx + 2}`} className="w-full h-full object-cover hover:scale-105 transition duration-700" />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+        {images.length >= 4 && (
+          <div className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-3 h-[500px] rounded-3xl overflow-hidden">
+            <div className="md:col-span-2 md:row-span-2 overflow-hidden cursor-pointer" onClick={() => openLightbox(0)}>
+              <img src={images[0]} alt={`${name} 1`} className="w-full h-full object-cover hover:scale-105 transition duration-700" />
+            </div>
+            {images.slice(1, 5).map((img, idx) => {
+              const isLast = idx === 3;
+              const hasMore = images.length > 5;
+              return (
+                <div key={idx} className="relative overflow-hidden cursor-pointer" onClick={() => openLightbox(idx + 1)}>
+                  <img src={img} alt={`${name} ${idx + 2}`} className="w-full h-full object-cover hover:scale-105 transition duration-700" />
+                  {isLast && hasMore && (
+                    <div className="absolute inset-0 bg-black/50 flex items-center justify-center text-white text-3xl font-bold">
+                      +{images.length - 5}
                     </div>
-                ))}
-            </div>
-        );
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* Full Gallery Modal */}
+      <AnimatePresence>
+        {isGalleryOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4"
+            onClick={() => setIsGalleryOpen(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ type: 'spring', damping: 25 }}
+              className="relative max-w-4xl w-full"
+              onClick={e => e.stopPropagation()}
+            >
+              <img
+                src={images[lightboxIdx]}
+                alt={`${name} ${lightboxIdx + 1}`}
+                className="w-full max-h-[80vh] object-contain rounded-2xl"
+              />
+              <p className="text-center text-white/50 text-sm mt-3">
+                {lightboxIdx + 1} / {images.length}
+              </p>
+            </motion.div>
+            <button
+              onClick={e => { e.stopPropagation(); setIsGalleryOpen(false); }}
+              className="absolute top-4 right-4 text-white bg-white/10 hover:bg-white/20 p-2 rounded-full transition-colors"
+            >
+              <X className="w-6 h-6" />
+            </button>
+            {images.length > 1 && (
+              <>
+                <button
+                  onClick={e => { e.stopPropagation(); setLightboxIdx(i => (i - 1 + images.length) % images.length); }}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-white bg-white/10 hover:bg-white/20 p-3 rounded-full transition-colors"
+                >
+                  <ChevronLeft className="w-6 h-6" />
+                </button>
+                <button
+                  onClick={e => { e.stopPropagation(); setLightboxIdx(i => (i + 1) % images.length); }}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-white bg-white/10 hover:bg-white/20 p-3 rounded-full transition-colors"
+                >
+                  <ChevronRight className="w-6 h-6" />
+                </button>
+              </>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+}
+
+// ---- Main Component ----
+export default function RestaurantDetailClient({ restaurant, initialReviews, locale }: ClientProps) {
+  const t = translations[locale] || translations['en'];
+  const data = restaurant.locales[locale] || restaurant.locales.th;
+  const position = restaurant.coords;
+
+  const [reviews, setReviews] = useState<IReviewItem[]>(initialReviews);
+  const [reviewsLoaded, setReviewsLoaded] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // displayRating เริ่มต้นเป็น 0 เสมอ — จะถูก set จริงหลัง fetch รีวิวจาก DB
+  const [displayRating, setDisplayRating] = useState<number>(0);
+
+  // Fetch reviews จาก API ทุกครั้งที่ mount เพื่อให้ข้อมูล sync กับ DB เสมอ
+  // (แก้ปัญหา: รีวิวหายเมื่อกลับมา, รีวิวค้างหลังลบใน DB, ดาวไม่อัปเดต)
+  React.useEffect(() => {
+    const restaurantId = restaurant.id || String((restaurant as any)._id);
+    if (!restaurantId) return;
+
+    fetch(`/api/reviews?targetId=${restaurantId}&targetType=restaurant`)
+      .then(res => res.json())
+      .then(json => {
+        const fetched: IReviewItem[] = json.data || [];
+        setReviews(fetched);
+        // คำนวณดาวเฉลี่ยจาก reviews จริงใน DB ถ้าไม่มีให้เป็น 0
+        if (fetched.length > 0) {
+          const avg = fetched.reduce((s, r) => s + Number(r.rating), 0) / fetched.length;
+          setDisplayRating(Math.round(avg * 10) / 10);
+        } else {
+          setDisplayRating(0);
+        }
+        setReviewsLoaded(true);
+      })
+      .catch(() => setReviewsLoaded(true));
+  }, [restaurant.id]);
+
+  // Gallery: ใช้ restaurant.gallery ถ้ามี ไม่งั้น fallback เป็น image เดียว
+  const galleryImages: string[] = restaurant.gallery && restaurant.gallery.length > 0
+    ? restaurant.gallery
+    : restaurant.image ? [restaurant.image] : [];
+
+  const handleSubmitReview = async (name: string, rating: number, comment: string) => {
+    setIsSubmitting(true);
+    try {
+      const res = await fetch('/api/reviews', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          targetId: restaurant.id,
+          targetType: 'restaurant',
+          username: name,
+          rating,
+          comment,
+        }),
+      });
+      if (!res.ok) throw new Error();
+      const json = await res.json();
+
+      const updatedReviews = [json.data, ...reviews];
+      setReviews(updatedReviews);
+
+      const avg = updatedReviews.reduce((s, r) => s + Number(r.rating), 0) / updatedReviews.length;
+      setDisplayRating(Math.round(avg * 10) / 10);
+
+      setShowModal(false);
+      toast.success(t.reviewSuccess, {
+        duration: 4000,
+        style: { borderRadius: '16px', fontWeight: '600', fontSize: '14px' },
+      });
+    } catch {
+      toast.error(t.reviewError, {
+        duration: 4000,
+        style: { borderRadius: '16px', fontWeight: '600', fontSize: '14px' },
+      });
+    } finally {
+      setIsSubmitting(false);
     }
+  };
 
-    const remaining = images.length - 3;
-    return (
-        <>
-            <div className="grid grid-cols-3 gap-2 h-[260px] md:h-[340px] rounded-[1.5rem] overflow-hidden">
-                <div className="col-span-2 relative cursor-pointer group overflow-hidden" onClick={() => setLightbox(0)}>
-                    <img src={images[0]} alt={`${name} 1`} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
-                </div>
+  return (
+    <div className="bg-gray-50 min-h-screen py-20">
+      <Toaster position="top-center" />
 
-                <div className="col-span-1 flex flex-col gap-2">
-                    {[1, 2].map((idx) => (
-                        <div key={idx} className="flex-1 relative cursor-pointer group overflow-hidden" onClick={() => setLightbox(idx)}>
-                            <img src={images[idx]} alt={`${name} ${idx + 1}`} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                            {idx === 2 && remaining > 0 ? (
-                                <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                                    <span className="text-white text-xl font-black">+{remaining}</span>
-                                </div>
-                            ) : (
-                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
-                            )}
-                        </div>
+      <ReviewModal
+        open={showModal}
+        onClose={() => setShowModal(false)}
+        onSubmit={handleSubmitReview}
+        t={t}
+        isLoading={isSubmitting}
+      />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+
+        {/* Header */}
+        <div className="flex flex-col md:flex-row justify-between items-start gap-4 mb-6">
+          <div>
+            <div className="flex items-center gap-3 mb-2">
+              <span className="inline-block px-3 py-1 rounded-full bg-orange-100 text-orange-600 text-xs font-bold uppercase tracking-widest">
+                {t.recommended}
+              </span>
+              <div className="flex items-center gap-1.5 bg-yellow-400/10 text-yellow-700 px-3 py-1 rounded-lg">
+                <Star className="w-4 h-4 fill-yellow-400 stroke-yellow-400" />
+                <span className="font-bold text-sm">{displayRating > 0 ? displayRating : '—'}</span>
+              </div>
+              <span className="text-sm text-gray-400 font-medium">
+                ({reviews.length} {t.ratingsTotal})
+              </span>
+            </div>
+            <h1 className="text-3xl md:text-5xl font-extrabold text-gray-900 tracking-tight mb-3">
+              {data.name}
+            </h1>
+            <div className="flex items-center text-gray-500 font-medium">
+              <MapPin size={18} className="mr-1.5 text-gray-400 shrink-0" />
+              <span>{data.location}</span>
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <button className="p-2.5 bg-white border border-gray-200 rounded-full text-gray-600 hover:bg-gray-50 hover:text-rose-500 transition shadow-sm">
+              <Heart size={20} />
+            </button>
+            <button className="p-2.5 bg-white border border-gray-200 rounded-full text-gray-600 hover:bg-gray-50 hover:text-blue-500 transition shadow-sm">
+              <Share size={20} />
+            </button>
+          </div>
+        </div>
+
+        {/* Bento Grid Gallery */}
+        <BentoGallery images={galleryImages} name={data.name} />
+
+        {/* Content & Sidebar */}
+        {/*
+          Desktop (lg+): 2-col grid — content ซ้าย | sidebar ขวา
+          Mobile: stack ตามลำดับ DOM:
+            1. About + Dishes  (col-span-2 content)
+            2. Sidebar (Map + Contact)   ← lg:order-last แต่ mobile ขึ้นก่อน Reviews
+            3. Reviews (full-width ด้านล่างสุด)
+        */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+          {/* Left: About + Dishes */}
+          <div className="lg:col-span-2 space-y-10">
+
+            {/* About */}
+            <section>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">{t.aboutRestaurant}</h2>
+              <p className="text-gray-600 leading-relaxed whitespace-pre-line text-lg">{data.desc}</p>
+            </section>
+            <hr />
+
+            {/* Signature Dishes */}
+            {data.recommended && data.recommended.length > 0 && (
+              <>
+                <section>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                    <div className="p-2 bg-orange-500 rounded-lg">
+                      <UtensilsCrossed className="w-5 h-5 text-white" />
+                    </div>
+                    {t.signatureDishes}
+                  </h2>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {data.recommended.map((dish: string, idx: number) => (
+                      <div
+                        key={idx}
+                        className="flex items-center gap-4 p-4 bg-white border border-gray-100 rounded-2xl hover:border-orange-200 hover:shadow-md transition-all"
+                      >
+                        <span className="flex-shrink-0 w-2 h-2 rounded-full bg-orange-500" />
+                        <span className="font-semibold text-gray-700">{dish}</span>
+                      </div>
                     ))}
+                  </div>
+                </section>
+              </>
+            )}
+          </div>
+
+          {/* Right: Sidebar — บนมือถือจะอยู่หลัง About/Dishes แต่ก่อน Reviews */}
+          <aside className="relative">
+            <div className="sticky top-8 space-y-6">
+              <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-6 md:p-8">
+
+                {/* Map */}
+                {position && (
+                  <div className="mb-8">
+                    <h3 className="font-bold text-gray-900 mb-4">{t.location}</h3>
+                    <div className="overflow-hidden rounded-2xl border border-gray-100 h-48">
+                      <MapComponent
+                        lat={position.lat}
+                        lng={position.lng}
+                        name={data.name}
+                        mapLink={restaurant.mapLink}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                <hr className="mb-6" />
+
+                {/* Contact */}
+                <div className="mb-6">
+                  <h3 className="font-bold text-gray-900 mb-4">{t.contact}</h3>
+                  <div className="space-y-4">
+                    {restaurant.tel && (
+                      <a
+                        href={`tel:${restaurant.tel}`}
+                        className="flex items-center text-gray-600 hover:text-emerald-600 transition group"
+                      >
+                        <div className="bg-gray-50 group-hover:bg-emerald-50 p-2 rounded-lg mr-3 transition">
+                          <Phone size={18} />
+                        </div>
+                        <span className="font-medium">{restaurant.tel}</span>
+                      </a>
+                    )}
+                    {restaurant.openHours && (
+                      <div className="flex items-center text-gray-600">
+                        <div className="bg-gray-50 p-2 rounded-lg mr-3">
+                          <Clock size={18} />
+                        </div>
+                        <span className="font-medium">{restaurant.openHours}</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
+
+                {/* Map link */}
+                {restaurant.mapLink && (
+                  <a
+                    href={restaurant.mapLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center w-full gap-2 bg-gray-900 hover:bg-gray-700 text-white font-semibold px-5 py-3 rounded-2xl text-sm transition active:scale-95"
+                  >
+                    <MapPin size={16} />
+                    {locale === 'th' ? 'เปิดใน Google Maps' : locale === 'zh' ? '在 Google Maps 中打开' : 'Open in Google Maps'}
+                  </a>
+                )}
+              </div>
+            </div>
+          </aside>
+
+          {/* Reviews — full width, อยู่ล่างสุดทั้ง mobile และ desktop */}
+          <section className="lg:col-span-3">
+            <hr className="mb-10" />
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
+                  <div className="p-2 bg-blue-500 rounded-lg text-white">
+                    <MessageSquare className="w-5 h-5" />
+                  </div>
+                  {t.reviews}
+                </h2>
+                <p className="text-sm text-gray-500 mt-2 ml-12">
+                  {t.basedOn} {reviews.length} {t.ratingsTotal}
+                  {reviews.length > 0 && (
+                    <>
+                      {' · '}
+                      <span className="font-semibold text-yellow-500">
+                        {displayRating} ★
+                      </span>
+                    </>
+                  )}
+                </p>
+              </div>
+              <button
+                onClick={() => setShowModal(true)}
+                className="flex items-center gap-2 bg-gray-900 hover:bg-gray-700 text-white font-semibold px-5 py-2.5 rounded-2xl text-sm transition active:scale-95"
+              >
+                <Star size={16} fill="currentColor" />
+                {t.writeReview}
+              </button>
             </div>
 
-            <AnimatePresence>
-                {lightbox !== null && (
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4" onClick={() => setLightbox(null)}>
-                        <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} transition={{ type: "spring", damping: 25 }} className="relative max-w-4xl w-full" onClick={e => e.stopPropagation()}>
-                            <img src={images[lightbox]} alt={`${name} ${lightbox + 1}`} className="w-full max-h-[80vh] object-contain rounded-2xl" />
-                            <p className="text-center text-white/50 text-sm mt-3">{lightbox + 1} / {images.length}</p>
-                        </motion.div>
-                        <button onClick={(e) => { e.stopPropagation(); setLightbox(null); }} className="absolute top-4 right-4 text-white bg-white/10 hover:bg-white/20 p-2 rounded-full transition-colors"><X className="w-6 h-6" /></button>
-                        {images.length > 1 && (
-                            <>
-                                <button onClick={(e) => { e.stopPropagation(); prev(); }} className="absolute left-4 top-1/2 -translate-y-1/2 text-white bg-white/10 hover:bg-white/20 p-3 rounded-full transition-colors"><ChevronLeft className="w-6 h-6" /></button>
-                                <button onClick={(e) => { e.stopPropagation(); next(); }} className="absolute right-4 top-1/2 -translate-y-1/2 text-white bg-white/10 hover:bg-white/20 p-3 rounded-full transition-colors"><ChevronRight className="w-6 h-6" /></button>
-                            </>
-                        )}
+            {/* Review list */}
+            {!reviewsLoaded ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {[1, 2, 3].map(i => (
+                  <div key={i} className="animate-pulse bg-gray-100 rounded-3xl h-28" />
+                ))}
+              </div>
+            ) : reviews.length === 0 ? (
+              <p className="text-gray-400 text-center py-10">{t.noReviews}</p>
+            ) : (
+              <AnimatePresence initial={false}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {reviews.map((review) => (
+                    <motion.div
+                      key={review._id}
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                      className="bg-white border border-gray-100 rounded-3xl p-6 shadow-sm"
+                    >
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-full bg-gray-900 text-white flex items-center justify-center font-bold text-sm shrink-0">
+                            {review.username?.[0]?.toUpperCase() || '?'}
+                          </div>
+                          <div>
+                            <p className="font-semibold text-gray-900 text-sm">{review.username}</p>
+                            <p className="text-xs text-gray-400">
+                              {new Date(review.createdAt).toLocaleDateString(
+                                locale === 'th' ? 'th-TH' : locale === 'zh' ? 'zh-CN' : 'en-US',
+                                { year: 'numeric', month: 'long', day: 'numeric' }
+                              )}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-1 bg-yellow-50 px-3 py-1 rounded-xl">
+                          <Star size={14} fill="currentColor" className="text-yellow-400" />
+                          <span className="text-sm font-bold text-yellow-600">{review.rating}</span>
+                        </div>
+                      </div>
+                      <p className="text-gray-600 text-sm leading-relaxed">{review.comment}</p>
                     </motion.div>
-                )}
-            </AnimatePresence>
-        </>
-    );
+                  ))}
+                </div>
+              </AnimatePresence>
+            )}
+          </section>
+        </div>
+      </div>
+    </div>
+  );
 }
