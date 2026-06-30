@@ -1,19 +1,11 @@
 import { NextResponse } from 'next/server';
-import { MongoClient, ObjectId } from 'mongodb';
-
 import { connectDB } from "@/src/lib/mongodb";
+import WebsiteReviewModel from '@/models/WebsiteReview';
 
-async function getCollection() {
-  const client = await connectDB();
-  const db = client.db('TripChiangMai');
-  return db.collection('WebsiteReview');
-}
-
-// GET: ดึงรีวิวทั้งหมด
 export async function GET() {
   try {
-    const collection = await getCollection();
-    const reviews = await collection.find({}).sort({ createdAt: -1 }).toArray();
+    await connectDB();
+    const reviews = await WebsiteReviewModel.find({}).sort({ createdAt: -1 });
     return NextResponse.json(reviews);
   } catch (error) {
     console.error('MongoDB GET Error:', error);
@@ -21,22 +13,20 @@ export async function GET() {
   }
 }
 
-// POST: เพิ่มรีวิวใหม่
 export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { name, rating, comment, tags } = body;
 
-    const collection = await getCollection();
-    const result = await collection.insertOne({
+    await connectDB();
+    const newReview = await WebsiteReviewModel.create({
       name,
       rating,
       comment,
       tags: tags || [],
-      createdAt: new Date(),
     });
 
-    return NextResponse.json({ success: true, id: result.insertedId });
+    return NextResponse.json({ success: true, id: newReview._id });
   } catch (error) {
     console.error('MongoDB POST Error:', error);
     return NextResponse.json({ error: 'Failed to save review' }, { status: 500 });
