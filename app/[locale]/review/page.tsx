@@ -234,7 +234,7 @@ export default function ReviewPage() {
         e.preventDefault();
 
         try {
-            const res = await fetch('/api/review', {
+            const res = await fetch('/api/webreview', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
