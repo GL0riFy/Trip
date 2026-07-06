@@ -36,10 +36,9 @@ export async function POST(req: Request) {
 
     // ยิงไปหา Groq รอบที่ 1
     const response = await groq.chat.completions.create({
-      model: GROQ_MODEL, // <-- เปลี่ยนตรงนี้
+      model: GROQ_MODEL,
       messages: updatedMessages,
-      tools: chatbotTools as any,
-      tool_choice: "auto",
+      tools: chatbotTools as any, // ปิดท้ายด้วย comma ตามปกติ ไม่มีวงเล็บปีกกาเปิดค้างไว้
     });
 
     const responseMessage = response.choices[0].message;
