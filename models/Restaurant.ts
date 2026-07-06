@@ -78,12 +78,8 @@ export interface IRestaurant extends Document {
   };
 }
 
-// ── Model (singleton-safe for Next.js hot-reload) ─────────────────────────
-if (mongoose.models.Restaurant) {
-  delete mongoose.models.Restaurant;
-}
-
 const RestaurantModel: Model<IRestaurant> = 
+  mongoose.models.Restaurant || 
   mongoose.model<IRestaurant>("Restaurant", RestaurantSchema);
 
 export default RestaurantModel;

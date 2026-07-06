@@ -48,6 +48,7 @@ const TouristSchema = new Schema(
 );
 
 const TouristModel: Model<any> =
-  mongoose.models.Tourist || mongoose.model("Tourist", TouristSchema);
+  mongoose.models.Tourist || 
+  mongoose.model("Tourist", TouristSchema);
 
 export default TouristModel;

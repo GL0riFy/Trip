@@ -5,179 +5,108 @@ import { useState, useRef, useEffect } from "react";
 interface Message {
   role: "user" | "assistant";
   content: string;
-  source?: "internal" | "external";
-}
-
-// Simple markdown-to-JSX: bold, links, line breaks
-function renderMarkdown(text: string) {
-  const lines = text.split("\n");
-  return lines.map((line, i) => {
-    // Parse inline: **bold** and [text](url)
-    const parts: React.ReactNode[] = [];
-    const regex = /(\*\*(.+?)\*\*|\[(.+?)\]\((https?:\/\/[^\)]+)\))/g;
-    let last = 0;
-    let match;
-    while ((match = regex.exec(line)) !== null) {
-      if (match.index > last) parts.push(line.slice(last, match.index));
-      if (match[0].startsWith("**")) {
-        parts.push(<strong key={match.index}>{match[2]}</strong>);
-      } else {
-        parts.push(
-          <a
-            key={match.index}
-            href={match[4]}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 underline hover:text-blue-800"
-          >
-            {match[3]}
-          </a>
-        );
-      }
-      last = match.index + match[0].length;
-    }
-    if (last < line.length) parts.push(line.slice(last));
-
-    return (
-      <span key={i}>
-        {parts}
-        {i < lines.length - 1 && <br />}
-      </span>
-    );
-  });
 }
 
 export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false);
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // เลื่อนหน้าจอลงไปล่างสุดเมื่อมีข้อความใหม่
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, loading]);
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
-  const sendMessage = async () => {
-    const text = input.trim();
-    if (!text || loading) return;
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim() || isLoading) return;
 
-    setMessages((prev) => [...prev, { role: "user", content: text }]);
+    const userMessage = input.trim();
     setInput("");
-    setLoading(true);
+    setIsLoading(true);
+
+    // 1. เพิ่มข้อความของผู้ใช้เข้าไปในหน้าจอ
+    const updatedMessages = [...messages, { role: "user", content: userMessage } as Message];
+    setMessages(updatedMessages);
 
     try {
-      const res = await fetch("/api/chat", {
+      // 2. ยิง API ไปที่หลังบ้านที่เราสร้างไว้
+      const response = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: text }),
+        body: JSON.stringify({ messages: updatedMessages }), // ส่งประวัติการคุยทั้งหมดไป
       });
 
-      const data = await res.json();
+      const data = await response.json();
 
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          content: data.reply ?? data.error ?? "ไม่มีคำตอบ",
-          source: data.source,
-        },
-      ]);
-    } catch {
-      setMessages((prev) => [
-        ...prev,
-        { role: "assistant", content: "เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง" },
-      ]);
+      if (response.ok) {
+        // 3. เอาคำตอบจาก Grok มาแสดงบนหน้าจอ
+        setMessages([...updatedMessages, { role: "assistant", content: data.message }]);
+      } else {
+        setMessages([...updatedMessages, { role: "assistant", content: "ขออภัยด้วยครับ ระบบขัดข้องเล็กน้อย ลองใหม่อีกครั้งนะ" }]);
+      }
+    } catch (error) {
+      console.error("Chat Error:", error);
     } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      sendMessage();
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="flex flex-col h-screen max-w-2xl mx-auto">
+    <div className="flex flex-col h-[600px] max-w-2xl mx-auto border border-gray-200 rounded-lg shadow-lg bg-white overflow-hidden my-10">
       {/* Header */}
-      <div className="p-4 border-b bg-white">
-        <h1 className="text-xl font-bold">🧭 AI ผู้ช่วยท่องเที่ยวเชียงใหม่</h1>
-        <p className="text-sm text-gray-500">ถามได้ทุกเรื่อง โรงแรม ร้านอาหาร สถานที่ท่องเที่ยว</p>
+      <div className="bg-amber-500 text-white p-4 font-bold text-lg flex items-center justify-between">
+        <span>เที่ยวเชียงใหม่ AI Assistant (Powered by Grok)</span>
+        <span className="text-xs bg-amber-600 px-2 py-1 rounded-full">Online</span>
       </div>
 
-      {/* Messages */}
+      {/* Messages Box */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
         {messages.length === 0 && (
           <div className="text-center text-gray-400 mt-20">
-            <p className="text-4xl mb-3">🏔️</p>
-            <p>เริ่มต้นด้วยการถามเกี่ยวกับเชียงใหม่เลย!</p>
+            <p className="text-lg font-medium">สวัสดีครับ! ยินดีต้อนรับสู่เชียงใหม่ ⛰️</p>
+            <p className="text-sm mt-2">ถามข้อมูลสินค้า OTOP หรือให้ผมช่วยจัดทริปในคูเมืองได้เลยนะ!</p>
           </div>
         )}
 
-        {messages.map((msg, i) => (
-          <div
-            key={i}
-            className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
-          >
-            <div
-              className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
-                msg.role === "user"
-                  ? "bg-black text-white rounded-br-sm"
-                  : "bg-white text-gray-800 shadow-sm border rounded-bl-sm"
-              }`}
-            >
-              {msg.role === "assistant" && msg.source && (
-                <span
-                  className={`inline-block text-xs px-2 py-0.5 rounded-full mb-2 font-medium ${
-                    msg.source === "internal"
-                      ? "bg-green-100 text-green-700"
-                      : "bg-orange-100 text-orange-700"
-                  }`}
-                >
-                  {msg.source === "internal" ? "✅ ข้อมูลจากเว็บเรา" : "🌐 ข้อมูลจากอินเทอร์เน็ต"}
-                </span>
-              )}
-              <div>{msg.role === "assistant" ? renderMarkdown(msg.content) : msg.content}</div>
+        {messages.map((msg, index) => (
+          <div key={index} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+            <div className={`max-w-[75%] p-3 rounded-lg text-sm ${msg.role === "user" ? "bg-amber-500 text-white rounded-tr-none" : "bg-white text-gray-800 border border-gray-200 rounded-tl-none shadow-sm"}`}>
+              {/* ใช้ whitespace-pre-wrap เพื่อให้เวลา Grok เอนเทอร์ขึ้นบรรทัดใหม่ จัดทริปเป็นข้อๆ แล้วแสดงผลสวยงาม */}
+              <p className="whitespace-pre-wrap leading-relaxed">{msg.content}</p>
             </div>
           </div>
         ))}
-
-        {loading && (
+        
+        {isLoading && (
           <div className="flex justify-start">
-            <div className="bg-white border shadow-sm rounded-2xl rounded-bl-sm px-4 py-3">
-              <span className="flex gap-1 items-center text-gray-400 text-sm">
-                <span className="animate-bounce">●</span>
-                <span className="animate-bounce [animation-delay:0.15s]">●</span>
-                <span className="animate-bounce [animation-delay:0.3s]">●</span>
-              </span>
+            <div className="bg-gray-200 text-gray-500 p-3 rounded-lg text-sm rounded-tl-none animate-pulse">
+              กำลังค้นหาข้อมูลในระบบแป๊บหนึ่งนะ...
             </div>
           </div>
         )}
-
-        <div ref={bottomRef} />
+        <div ref={messagesEndRef} />
       </div>
 
-      {/* Input */}
-      <div className="p-4 border-t bg-white flex gap-2 items-end">
-        <textarea
-          className="flex-1 border rounded-xl px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-black"
-          rows={2}
-          placeholder="ถามเกี่ยวกับเชียงใหม่... (Enter เพื่อส่ง, Shift+Enter ขึ้นบรรทัดใหม่)"
+      {/* Input Form */}
+      <form onSubmit={handleSubmit} className="p-4 border-t border-gray-200 bg-white flex gap-2">
+        <input
+          type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          onKeyDown={handleKeyDown}
-          disabled={loading}
+          placeholder="พิมพ์คำถามของคุณที่นี่..."
+          disabled={isLoading}
+          className="flex-1 border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 disabled:bg-gray-100"
         />
         <button
-          onClick={sendMessage}
-          disabled={loading || !input.trim()}
-          className="bg-black text-white px-4 py-2 rounded-xl text-sm font-medium disabled:opacity-40 hover:bg-gray-800 transition-colors h-fit"
+          type="submit"
+          disabled={isLoading}
+          className="bg-amber-500 hover:bg-amber-600 text-white px-5 py-2 rounded-md text-sm font-medium transition-colors disabled:bg-amber-300"
         >
           ส่ง
         </button>
-      </div>
+      </form>
     </div>
   );
 }
