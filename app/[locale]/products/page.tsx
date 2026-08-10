@@ -1,8 +1,9 @@
 "use client";
 
 import { motion, Variants, AnimatePresence } from "framer-motion";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { useLocale } from "next-intl";
+import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { verifiedDistrictLocationOverrides } from "@/src/data/verified-product-locations";
 
@@ -168,8 +169,10 @@ const filterFade: Variants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.6, delay: 0.5, ease: [0.22, 1, 0.36, 1] } },
 };
 
-export default function RefactoredProductShowcase() {
+function ProductShowcaseInner() {
   const locale = useLocale();
+  const searchParams = useSearchParams();
+  const autoOpenedFromLinkRef = useRef(false);
 
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -240,6 +243,24 @@ export default function RefactoredProductShowcase() {
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, []);
+
+  // เปิด Modal สินค้าอัตโนมัติ ถ้ามาจากลิงก์ที่มี query param ?item=slug (เช่น ลิงก์ที่แชทบอทส่งให้ผู้ใช้)
+  useEffect(() => {
+    if (autoOpenedFromLinkRef.current) return;
+    if (isLoading || products.length === 0) return;
+
+    const itemSlug = searchParams.get("item");
+    if (!itemSlug) {
+      autoOpenedFromLinkRef.current = true;
+      return;
+    }
+
+    const matched = products.find((p) => p.slug === itemSlug);
+    if (matched) {
+      handleProductClick(matched);
+    }
+    autoOpenedFromLinkRef.current = true;
+  }, [isLoading, products, searchParams]);
 
   useEffect(() => {
     document.body.style.overflow = selectedProduct ? "hidden" : "";
@@ -1248,5 +1269,15 @@ export default function RefactoredProductShowcase() {
         </AnimatePresence>
       </div>
     </>
+  );
+}
+
+// ⚠️ ต้องห่อด้วย Suspense เพราะ useSearchParams() ต้องการ Suspense boundary
+// ไม่งั้น Next.js จะ error ตอน build (prerendering)
+export default function RefactoredProductShowcase() {
+  return (
+    <Suspense fallback={null}>
+      <ProductShowcaseInner />
+    </Suspense>
   );
 }
