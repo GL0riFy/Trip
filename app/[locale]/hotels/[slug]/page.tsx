@@ -6,10 +6,10 @@ import HotelDetailClient from './HotelDetailClient';
 type Locale = 'th' | 'en' | 'zh';
 
 interface Props {
-  params: {
+  params: Promise<{
     locale: Locale;
     slug: string;
-  };
+  }>;
 }
 
 async function connectDB() {
