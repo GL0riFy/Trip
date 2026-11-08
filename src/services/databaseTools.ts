@@ -66,7 +66,7 @@ export async function searchProducts(args: { keyword: string }) {
       { "locales.th.name": { $regex: searchWord, $options: "i" } },
       { "locales.th.description": { $regex: searchWord, $options: "i" } }
     ]
-  }).select("locales.th.name price locales.th.description locales.th.shopName slug").limit(3).lean();
+  }).select("locales.th.name locales.th.address locales.th.district locales.th.shopName price slug").limit(3).lean();
 
   const withLinks = data.map((item: any) => ({
     ...item,
@@ -89,7 +89,7 @@ export async function searchTouristPlaces(args: { locationKeyword: string; tag?:
   if (zone) {
     // โซนยอดฮิตในเมือง (คูเมือง/นิมมาน) ใช้พิกัดในการสแกน
     const rawData = await TouristModel.find(query)
-      .select("locales.th.name locales.th.desc locales.th.location locales.th.hours coords slug")
+      .select("locales.th.name locales.th.desc locales.th.location district coords slug")
       .lean();
     const filtered = filterByRadius(rawData, zone.lat, zone.lng, zone.radius);
     return JSON.stringify(attachWebsiteUrl(filtered.slice(0, 4)));
@@ -101,7 +101,7 @@ export async function searchTouristPlaces(args: { locationKeyword: string; tag?:
       { "locales.th.desc": { $regex: searchWord, $options: "i" } }
     ];
     const data = await TouristModel.find(query)
-      .select("locales.th.name locales.th.desc locales.th.location locales.th.hours coords slug")
+      .select("locales.th.name locales.th.desc locales.th.location district coords slug")
       .limit(4)
       .lean();
     return JSON.stringify(attachWebsiteUrl(data));
@@ -123,7 +123,7 @@ export async function searchRestaurants(args: { locationKeyword: string; foodTag
   if (zone) {
     // โซนคูเมือง/นิมมาน: กวาดร้านอาหารมาคำนวณรัศมี (เฮือนเพ็ญจะผ่านตรงนี้ฉลุย)
     const rawData = await RestaurantModel.find(query)
-      .select("locales.th.name locales.th.desc locales.th.location openHours coords slug")
+      .select("locales.th.name locales.th.desc locales.th.location coords slug")
       .lean();
     const filtered = filterByRadius(rawData, zone.lat, zone.lng, zone.radius);
     return JSON.stringify(attachWebsiteUrl(filtered.slice(0, 4)));
@@ -134,7 +134,7 @@ export async function searchRestaurants(args: { locationKeyword: string; foodTag
       { "locales.th.name": { $regex: searchWord, $options: "i" } }
     ];
     const data = await RestaurantModel.find(query)
-      .select("locales.th.name locales.th.desc locales.th.location openHours coords slug")
+      .select("locales.th.name locales.th.desc locales.th.location coords slug")
       .limit(4)
       .lean();
     return JSON.stringify(attachWebsiteUrl(data));
@@ -149,7 +149,7 @@ export async function searchRestaurants(args: { locationKeyword: string; foodTag
 // เลือกเฉพาะฟิลด์ราคาที่ "จำเป็น" (minPrice = ราคาเริ่มต้นต่อคืน) ไม่ดึงราคาทุกประเภทห้องมา
 // เพื่อให้ AI ตอบแบบสรุปสั้นๆ ตามที่ระบุใน system prompt (route.ts)
 const HOTEL_SELECT_FIELDS =
-  "locales.th.name locales.th.desc locales.th.location minPrice priceRange starRating averageRating type coords slug";
+  "locales.th.name locales.th.desc locales.th.location locales.th.address minPrice starRating averageRating type coords slug";
 
 export async function searchHotels(args: { locationKeyword?: string; type?: string }) {
   const searchWord = args?.locationKeyword?.trim() || "";
