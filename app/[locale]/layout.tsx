@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { connection } from "next/server";
 // นำเข้าฟอนต์ Prompt และ Itim
 import { Prompt, Itim } from "next/font/google";
 import Navigation from "../components/navigation";
@@ -43,6 +44,7 @@ export default async function LocaleLayout({
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
 }) {
+  await connection();
   const { locale } = await params;
 
   let messages;
